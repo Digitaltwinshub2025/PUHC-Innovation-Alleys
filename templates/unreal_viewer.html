@@ -1,0 +1,1788 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explore Water Alley in 3D | PUHC Innovation Alleys</title>
+    <meta name="description" content="Interactive 3D visualization of Water Alley design interventions - explore the modeled environment and spatial scenarios in Unreal Engine.">
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='images/favicon.svg') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/global-theme.css') }}">
+    <script src="{{ url_for('static', filename='js/cache-buster.js') }}"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            background: var(--primary);
+            min-height: 100vh;
+            position: relative;
+        }
+        
+        /* Particle background effect */
+        body::before {
+            content: '';
+            display: none;
+        }
+        
+        @keyframes twinkle {
+            0% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        /* Page Container */
+        .page-container {
+            padding-top: 70px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Header Section */
+        .page-header {
+            text-align: center;
+            padding: 40px 40px 30px;
+        }
+
+        .page-header h1 {
+            font-size: 2.5rem;
+            color: white;
+            margin: 0 0 12px 0;
+            font-weight: 700;
+        }
+
+        /* Technology Badges */
+        .tech-badges {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .tech-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            background: rgba(15, 164, 175, 0.12);
+            border: 1px solid rgba(15, 164, 175, 0.35);
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--highlight);
+            letter-spacing: 0.3px;
+        }
+
+        .tech-badge-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--accent);
+            border-radius: 50%;
+            animation: pulse-dot 2s infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        .prototype-status {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+
+        .page-header .subtitle {
+            font-size: 1.05rem;
+            color: rgba(255,255,255,0.6);
+            max-width: 600px;
+            margin: 0 auto 16px;
+            line-height: 1.5;
+        }
+
+        /* Explore Cards Section */
+        .explore-section {
+            max-width: 900px;
+            margin: 0 auto 30px;
+            padding: 0 40px;
+        }
+
+        .explore-instruction {
+            text-align: center;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.45);
+            margin-bottom: 16px;
+            font-weight: 500;
+        }
+
+        /* Primary Action Card - Launch 3D Viewer */
+        .explore-primary {
+            margin-bottom: 16px;
+        }
+
+        .explore-card-primary {
+            background: linear-gradient(135deg, rgba(15, 164, 175, 0.2) 0%, rgba(0, 30, 35, 0.8) 100%);
+            border: 2px solid var(--highlight);
+            border-radius: 14px;
+            padding: 28px 32px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            box-shadow: 0 4px 20px rgba(15, 164, 175, 0.15);
+        }
+
+        .explore-card-primary:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 40px rgba(15, 164, 175, 0.3), 0 0 0 1px rgba(15, 164, 175, 0.5);
+            background: linear-gradient(135deg, rgba(15, 164, 175, 0.3) 0%, rgba(0, 30, 35, 0.9) 100%);
+        }
+
+        .explore-card-primary .explore-card-icon {
+            width: 64px;
+            height: 64px;
+            background: var(--highlight);
+            border: none;
+            border-radius: 12px;
+            font-size: 1.5rem;
+            color: white;
+            font-weight: 700;
+        }
+
+        .explore-card-primary .explore-card-title {
+            font-size: 1.35rem;
+            margin-bottom: 6px;
+        }
+
+        .explore-card-primary .explore-card-subtitle {
+            font-size: 0.95rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .explore-card-primary .explore-card-arrow {
+            font-size: 1.5rem;
+            opacity: 0.7;
+            transform: translateX(0);
+        }
+
+        .explore-card-primary:hover .explore-card-arrow {
+            opacity: 1;
+            transform: translateX(4px);
+        }
+
+        /* Secondary Cards Grid */
+        .explore-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+        }
+
+        .explore-card {
+            background: rgba(0, 30, 35, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            text-decoration: none;
+            display: block;
+        }
+
+        .explore-card:hover {
+            border-color: rgba(15, 164, 175, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .explore-card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .explore-card-icon {
+            width: 36px;
+            height: 36px;
+            background: rgba(15, 164, 175, 0.1);
+            border: 1px solid rgba(15, 164, 175, 0.2);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            color: var(--highlight);
+            flex-shrink: 0;
+        }
+
+        .explore-card-text {
+            flex: 1;
+        }
+
+        .explore-card-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.85);
+            margin: 0 0 2px 0;
+        }
+
+        .explore-card-subtitle {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.4);
+            margin: 0;
+            line-height: 1.3;
+        }
+
+        .explore-card-arrow {
+            display: none;
+        }
+
+        .viewer-primary {
+            max-width: 1100px;
+            margin: 0 auto 24px;
+            padding: 0 40px;
+        }
+
+        .viewer-shell {
+            background: rgba(0, 30, 35, 0.6);
+            border: 1px solid rgba(15, 164, 175, 0.2);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .viewer-topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 14px 16px;
+            border-bottom: 1px solid rgba(15, 164, 175, 0.15);
+            background: rgba(0, 0, 0, 0.15);
+        }
+
+        .viewer-title {
+            font-weight: 700;
+            color: var(--text-primary);
+            font-size: 1rem;
+        }
+
+        .viewer-actions {
+            display: inline-flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .viewer-frame {
+            position: relative;
+            width: 100%;
+            min-height: 500px;
+            aspect-ratio: 16 / 9;
+            background: rgba(0, 0, 0, 0.45);
+        }
+
+        .viewer-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: none;
+        }
+
+        .viewer-placeholder {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 24px;
+            color: rgba(255,255,255,0.7);
+        }
+
+        .viewer-placeholder strong {
+            color: var(--accent);
+        }
+
+        /* Gallery hover effects */
+        .gallery-thumb {
+            cursor: pointer;
+        }
+
+        .gallery-thumb:hover img {
+            transform: scale(1.05);
+        }
+
+        .gallery-thumb > div {
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .gallery-thumb:hover > div {
+            border-color: rgba(15, 164, 175, 0.4);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Carousel Styles */
+        .carousel-container {
+            position: relative;
+            max-width: 1100px;
+            margin: 0 auto 24px;
+            padding: 0 40px;
+        }
+
+        .carousel-wrapper {
+            position: relative;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            border: 2px solid rgba(15, 164, 175, 0.3);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+            cursor: pointer;
+        }
+
+        .carousel-wrapper:hover {
+            border-color: var(--highlight);
+        }
+
+        .carousel-slides {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .carousel-slide {
+            min-width: 100%;
+            position: relative;
+        }
+
+        .carousel-slide img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .carousel-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, transparent 50%);
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            padding: var(--spacing-lg);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .carousel-wrapper:hover .carousel-overlay {
+            opacity: 1;
+        }
+
+        .carousel-cta {
+            background: linear-gradient(135deg, var(--highlight), #0CB5C2);
+            color: var(--text-primary);
+            padding: 12px 24px;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            font-size: 1rem;
+            border: none;
+            cursor: pointer;
+            box-shadow: var(--shadow-lg);
+            transition: all 0.3s ease;
+        }
+
+        .carousel-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .carousel-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(15, 164, 175, 0.3);
+            border: 2px solid var(--highlight);
+            color: white;
+            font-size: 24px;
+            padding: 12px 16px;
+            cursor: pointer;
+            border-radius: 8px;
+            z-index: 10;
+            transition: all 0.3s ease;
+        }
+
+        .carousel-arrow:hover {
+            background: rgba(15, 164, 175, 0.6);
+        }
+
+        .carousel-arrow.left {
+            left: 20px;
+        }
+
+        .carousel-arrow.right {
+            right: 20px;
+        }
+
+        .carousel-dots {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 10;
+        }
+
+        .carousel-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .carousel-dot.active {
+            background: var(--highlight);
+            width: 30px;
+            border-radius: 5px;
+        }
+
+        .carousel-caption {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: var(--spacing-md);
+        }
+
+        .options-toggle {
+            max-width: 1200px;
+            margin: 0 auto 10px;
+            padding: 0 40px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .options-toggle-btn {
+            background: rgba(15, 164, 175, 0.12);
+            border: 1px solid rgba(15, 164, 175, 0.35);
+            color: var(--text-primary);
+            padding: 10px 14px;
+            border-radius: 999px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .options-toggle-btn:hover {
+            background: rgba(15, 164, 175, 0.2);
+            transform: translateY(-1px);
+        }
+
+        /* Connection Cards Grid */
+        .cards-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 40px 30px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        /* Glass Card */
+        .glass-card {
+            background: rgba(0, 30, 35, 0.6);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(15, 164, 175, 0.2);
+            border-radius: 16px;
+            padding: 28px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .glass-card:hover {
+            border-color: rgba(15, 164, 175, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .glass-card.active {
+            border-color: var(--accent);
+            box-shadow: 0 0 20px rgba(15, 164, 175, 0.2);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .card-icon {
+            width: 36px;
+            height: 36px;
+            background: rgba(15, 164, 175, 0.15);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: white;
+            margin: 0;
+        }
+
+        .card-help {
+            margin-left: auto;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 1px solid rgba(255,255,255,0.3);
+            color: rgba(255,255,255,0.5);
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: help;
+        }
+
+        .card-description {
+            color: rgba(255,255,255,0.6);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        /* Card Buttons */
+        .card-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: none;
+        }
+
+        .card-btn-primary {
+            background: linear-gradient(135deg, var(--accent), #0fa4af);
+            color: white;
+        }
+
+        .card-btn-primary:hover {
+            box-shadow: 0 4px 15px rgba(15, 164, 175, 0.4);
+            transform: translateY(-1px);
+        }
+
+        .card-btn-secondary {
+            background: rgba(15, 164, 175, 0.15);
+            color: var(--accent);
+            border: 1px solid var(--accent);
+        }
+
+        .card-btn-secondary:hover {
+            background: rgba(15, 164, 175, 0.25);
+        }
+
+        .card-url {
+            display: block;
+            margin-top: 12px;
+            color: rgba(255,255,255,0.4);
+            font-size: 0.85rem;
+            font-family: monospace;
+        }
+
+        /* Room Code Input */
+        .room-input-group {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .room-input {
+            flex: 1;
+            padding: 12px 16px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+            font-family: monospace;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .room-input::placeholder {
+            color: rgba(255,255,255,0.3);
+            letter-spacing: 2px;
+        }
+
+        .room-input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        /* Room Code Display */
+        .room-code-display {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-top: 12px;
+            display: none;
+        }
+
+        .room-code-display.visible {
+            display: block;
+        }
+
+        .room-code-value {
+            font-family: monospace;
+            font-size: 1.3rem;
+            color: var(--accent);
+            letter-spacing: 3px;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .room-code-hint {
+            font-size: 0.75rem;
+            color: rgba(255,255,255,0.4);
+            text-align: center;
+            margin-top: 6px;
+        }
+
+        /* Stream List */
+        .stream-list {
+            margin-top: 16px;
+            display: none;
+        }
+
+        .stream-list.visible {
+            display: block;
+        }
+
+        .stream-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            margin-bottom: 8px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .stream-item:hover {
+            border-color: var(--accent);
+            background: rgba(15, 164, 175, 0.1);
+        }
+
+        .stream-item-name {
+            font-weight: 500;
+        }
+
+        .stream-item-connect {
+            color: var(--accent);
+            font-size: 0.85rem;
+        }
+
+        /* Card Footer */
+        .card-footer {
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-radio {
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            position: relative;
+        }
+
+        .card-radio.active {
+            border-color: var(--accent);
+        }
+
+        .card-radio.active::after {
+            content: '';
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 6px;
+            height: 6px;
+            background: var(--accent);
+            border-radius: 50%;
+        }
+
+        .card-footer-text {
+            font-size: 0.85rem;
+            color: rgba(255,255,255,0.5);
+            flex: 1;
+        }
+
+        .card-footer-link {
+            color: var(--accent);
+            font-size: 0.85rem;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .card-footer-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Advanced Section */
+        .advanced-section {
+            max-width: 1200px;
+            margin: 0 auto 40px;
+            padding: 0 40px;
+        }
+
+        .advanced-toggle {
+            background: rgba(0, 30, 35, 0.4);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            color: rgba(255,255,255,0.6);
+            transition: all 0.2s ease;
+        }
+
+        .advanced-toggle:hover {
+            border-color: rgba(255,255,255,0.2);
+        }
+
+        .advanced-toggle-text {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .advanced-content {
+            background: rgba(0, 30, 35, 0.4);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-top: none;
+            border-radius: 0 0 12px 12px;
+            padding: 20px 24px;
+            display: none;
+        }
+
+        .advanced-content.visible {
+            display: block;
+        }
+
+        .advanced-input-group {
+            display: flex;
+            gap: 12px;
+        }
+
+        .advanced-input {
+            flex: 1;
+            padding: 12px 16px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+        }
+
+        .advanced-input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        /* Alley Control Panel */
+        .alley-control-panel {
+            max-width: 1200px;
+            margin: 0 auto 30px;
+            padding: 0 40px;
+        }
+
+        .control-section {
+            background: rgba(0, 30, 35, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(15, 164, 175, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .control-section-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--accent);
+            margin: 0 0 16px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .alley-select {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+
+        .alley-select:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .alley-select option {
+            background: #001a1d;
+            color: white;
+        }
+
+        .alley-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            background: rgba(15, 164, 175, 0.2);
+            border: 1px solid var(--accent);
+            border-radius: 20px;
+            font-size: 0.75rem;
+            color: var(--accent);
+            margin-top: 10px;
+        }
+
+
+        /* Page Footer */
+        .page-footer {
+            margin-top: auto;
+            text-align: center;
+            padding: 30px 40px;
+            color: rgba(255,255,255,0.4);
+            font-size: 0.85rem;
+        }
+
+        .page-footer span {
+            margin: 0 8px;
+        }
+
+        /* Hidden elements */
+        .unreal-container {
+            position: fixed;
+            top: 70px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #000;
+            display: none;
+            z-index: 100;
+        }
+
+        .unreal-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .loading-overlay {
+            position: fixed;
+            top: 70px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--primary);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+            transition: opacity 0.5s;
+        }
+
+        .loading-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* Status indicator in nav */
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.7);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #666;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .cards-container {
+                grid-template-columns: 1fr;
+                max-width: 500px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .page-header h1 {
+                font-size: 1.75rem;
+            }
+
+            .page-header .subtitle {
+                font-size: 0.95rem;
+            }
+
+            .cards-container {
+                padding: 0 20px 30px;
+            }
+
+            .advanced-section {
+                padding: 0 20px;
+            }
+
+            .viewer-primary {
+                padding: 0 20px 10px;
+            }
+
+            .options-toggle {
+                padding: 0 20px;
+            }
+        }
+    </style>
+    {% include 'includes/edit_mode.html' ignore missing %}
+</head>
+<body data-edit-page="unreal_viewer">
+    <!-- Global Navigation -->
+    <nav class="global-nav">
+        <div class="nav-container">
+            <a href="/" class="nav-logo">
+                <span class="nav-logo-text">PUHC Innovation Alleys</span>
+            </a>
+            
+            <ul class="nav-tabs" id="navTabs">
+                <li class="nav-tab"><a href="/">Alley 3</a></li>
+                <li class="nav-tab"><a href="/existing">Before</a></li>
+                <li class="nav-tab"><a href="/fence-map">Fence Map</a></li>
+                <li class="nav-tab active"><a href="/unreal-viewer">Explore</a></li>
+                <li class="nav-tab"><a href="/compare">Compare</a></li>
+            </ul>
+            
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+                ☰
+            </button>
+        </div>
+    </nav>
+
+    <!-- Page Container -->
+    <div class="page-container" id="pageContainer">
+        <!-- Header Section -->
+        <header class="page-header">
+            <h1>Digital Twin: Innovation Alley 3</h1>
+            <div class="tech-badges">
+                <span class="tech-badge"><span class="tech-badge-dot"></span> Powered by Unreal Engine 5</span>
+                <span class="tech-badge"><span class="tech-badge-dot"></span> Interactive Pixel Streaming</span>
+            </div>
+            <p class="subtitle">This evaluation tool allows you to toggle design interventions on and off, assess spatial relationships, and compare before-and-after conditions in a site-accurate 3D environment.</p>
+            <p class="prototype-status" style="background: rgba(15, 164, 175, 0.1); border: 1px solid rgba(15, 164, 175, 0.3); padding: 12px 20px; border-radius: 8px; max-width: 700px; margin: 0 auto;">Use this viewer to test how shade structures, murals, and urban farming interventions change the spatial experience of Water Alley before physical implementation.</p>
+        </header>
+
+        <!-- Explore Cards Section -->
+        <section class="explore-section">
+            <p class="explore-instruction">Choose how you'd like to explore Water Alley</p>
+            
+            <!-- Primary Action -->
+            <div class="explore-primary">
+                <a class="explore-card-primary" onclick="connectToLocal(); return false;" href="#">
+                    <div class="explore-card-icon">3D</div>
+                    <div class="explore-card-text">
+                        <h3 class="explore-card-title">Launch 3D Viewer</h3>
+                        <p class="explore-card-subtitle">Navigate the modeled environment, compare interventions, and explore spatial design</p>
+                    </div>
+                    <span class="explore-card-arrow">--></span>
+                </a>
+            </div>
+            
+            <!-- Secondary Actions -->
+            <div class="explore-grid">
+                <a class="explore-card" href="/existing">
+                    <div class="explore-card-header">
+                        <div class="explore-card-icon">ST</div>
+                        <div class="explore-card-text">
+                            <h3 class="explore-card-title">Existing Conditions</h3>
+                            <p class="explore-card-subtitle">Documented baseline photos</p>
+                        </div>
+                    </div>
+                </a>
+                <a class="explore-card" href="/compare">
+                    <div class="explore-card-header">
+                        <div class="explore-card-icon">BA</div>
+                        <div class="explore-card-text">
+                            <h3 class="explore-card-title">Before & After</h3>
+                            <p class="explore-card-subtitle">Visual comparison view</p>
+                        </div>
+                    </div>
+                </a>
+                <a class="explore-card" href="/">
+                    <div class="explore-card-header">
+                        <div class="explore-card-icon">IN</div>
+                        <div class="explore-card-text">
+                            <h3 class="explore-card-title">Design Interventions</h3>
+                            <p class="explore-card-subtitle">Explore each proposal</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+        
+        <!-- Flythrough Video -->
+        <div style="max-width: 960px; margin: 0 auto var(--spacing-lg); padding: 0 20px;">
+            <div style="position: relative; border-radius: var(--radius-lg); overflow: hidden; border: 1px solid rgba(15, 164, 175, 0.2); box-shadow: 0 8px 32px rgba(0,0,0,0.4);">
+                <video autoplay muted loop playsinline style="width: 100%; display: block; aspect-ratio: 16/9; object-fit: cover; background: #000;">
+                    <source src="/static/videos/alley3-flythrough-compressed.mp4" type="video/mp4">
+                </video>
+                <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 12px 16px; background: linear-gradient(transparent, rgba(0,0,0,0.7));">
+                    <p style="margin: 0; color: rgba(255,255,255,0.7); font-size: 0.75rem; text-align: center;">Alley 3 flythrough -- Unreal Engine 5</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Image Carousel -->
+        <div class="carousel-container">
+            <div class="carousel-wrapper" onclick="launchDigitalTwin()">
+                <div class="carousel-slides" id="carouselSlides">
+                    <div class="carousel-slide">
+                        <img src="/static/images/unreal/photo-2.jpg" alt="Alley 3 with shade canopy and planter boxes">
+                    </div>
+                    <div class="carousel-slide">
+                        <img src="/static/images/unreal/photo-3.jpg" alt="Alley 3 canopy frame looking north">
+                    </div>
+                    <div class="carousel-slide">
+                        <img src="/static/images/unreal/photo-4.jpg" alt="Alley 3 iron fencing with murals and canopy">
+                    </div>
+                    <div class="carousel-slide">
+                        <img src="/static/images/unreal/photo-5.jpg" alt="Alley 3 water-themed murals on walls">
+                    </div>
+                    <div class="carousel-slide">
+                        <img src="/static/images/unreal/photo-6.jpg" alt="Alley 3 large water mural elevated view">
+                    </div>
+                    <div class="carousel-slide">
+                        <img src="/static/images/unreal/photo-7.jpg" alt="Alley 3 full corridor elevated view">
+                    </div>
+                </div>
+                <div class="carousel-overlay">
+                    <button class="carousel-cta" onclick="event.stopPropagation(); launchDigitalTwin();">Launch 3D View</button>
+                </div>
+                <button class="carousel-arrow left" onclick="event.stopPropagation(); changeCarouselSlide(-1)">&#10094;</button>
+                <button class="carousel-arrow right" onclick="event.stopPropagation(); changeCarouselSlide(1)">&#10095;</button>
+                <div class="carousel-dots" id="carouselDots"></div>
+            </div>
+            <p class="carousel-caption" id="carouselCaption">Aerial view of Innovation Alley 3 — Water Alley</p>
+        </div>
+
+        <section class="viewer-primary">
+            <div class="viewer-shell">
+                <div class="viewer-topbar">
+                    <div class="viewer-title">3D Visualization Stream</div>
+                    <div class="viewer-actions">
+                        <button class="card-btn card-btn-primary" onclick="connectToLocal()">Connect</button>
+                        <button class="card-btn card-btn-secondary" onclick="openStreamFullscreen()">Open in New Tab</button>
+                    </div>
+                </div>
+                <div class="viewer-frame">
+                    <iframe id="embeddedIframe" class="viewer-iframe" src="" allow="autoplay; fullscreen; microphone; camera" allowfullscreen></iframe>
+                    <div class="viewer-placeholder" id="viewerPlaceholder">
+                        <div style="font-size: 1.15rem; font-weight: 700; margin-bottom: 10px; color: white;">Ready to Explore</div>
+                        <div style="max-width: 500px; line-height: 1.6; color: rgba(255,255,255,0.6); font-size: 0.95rem;">
+                            Click <strong style="color: var(--highlight);">Connect</strong> to load the 3D visualization. Once connected, you can navigate through the alley, view design interventions, and explore spatial relationships.
+                        </div>
+                        <div style="margin-top: 16px;">
+                            <button style="background: transparent; border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.5); padding: 6px 12px; border-radius: 4px; font-size: 0.75rem; cursor: pointer;" onclick="toggleDevInfo()">Developer Info</button>
+                        </div>
+                        <div id="devInfo" style="display: none; margin-top: 12px; font-size: 0.8rem; color: rgba(255,255,255,0.4); background: rgba(0,0,0,0.3); padding: 10px 14px; border-radius: 6px;">
+                            Stream URL: <code style="color: rgba(255,255,255,0.6);">localhost:80</code><br>
+                            Requires Unreal Engine Pixel Streaming to be running.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Photo Gallery Section -->
+        <section style="max-width: 800px; margin: 0 auto 16px; padding: 0 40px;">
+            <p style="text-align: center; color: rgba(255,255,255,0.35); font-size: 0.75rem; margin-bottom: 10px; font-weight: 500; letter-spacing: 0.3px;">Preview images from the 3D environment (available if streaming is unavailable)</p>
+            <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px;">
+                <div class="gallery-thumb" onclick="openLightbox(0)">
+                    <div style="position: relative; width: 100%; padding-bottom: 56.25%; overflow: hidden; border-radius: 6px; background: rgba(0,0,0,0.3);">
+                        <img src="/static/images/unreal/photo-2.jpg" alt="Shade canopy with planters" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; cursor: pointer; transition: transform 0.2s ease;">
+                    </div>
+                </div>
+                <div class="gallery-thumb" onclick="openLightbox(1)">
+                    <div style="position: relative; width: 100%; padding-bottom: 56.25%; overflow: hidden; border-radius: 6px; background: rgba(0,0,0,0.3);">
+                        <img src="/static/images/unreal/photo-3.jpg" alt="Canopy frame north" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; cursor: pointer; transition: transform 0.2s ease;">
+                    </div>
+                </div>
+                <div class="gallery-thumb" onclick="openLightbox(2)">
+                    <div style="position: relative; width: 100%; padding-bottom: 56.25%; overflow: hidden; border-radius: 6px; background: rgba(0,0,0,0.3);">
+                        <img src="/static/images/unreal/photo-4.jpg" alt="Iron fencing with murals" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; cursor: pointer; transition: transform 0.2s ease;">
+                    </div>
+                </div>
+                <div class="gallery-thumb" onclick="openLightbox(3)">
+                    <div style="position: relative; width: 100%; padding-bottom: 56.25%; overflow: hidden; border-radius: 6px; background: rgba(0,0,0,0.3);">
+                        <img src="/static/images/unreal/photo-5.jpg" alt="Water murals on walls" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; cursor: pointer; transition: transform 0.2s ease;">
+                    </div>
+                </div>
+                <div class="gallery-thumb" onclick="openLightbox(4)">
+                    <div style="position: relative; width: 100%; padding-bottom: 56.25%; overflow: hidden; border-radius: 6px; background: rgba(0,0,0,0.3);">
+                        <img src="/static/images/unreal/photo-6.jpg" alt="Large mural elevated view" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; cursor: pointer; transition: transform 0.2s ease;">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Lightbox Modal -->
+        <div id="lightbox" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.97); z-index: 9999; align-items: center; justify-content: center;" onclick="closeLightbox()">
+            <button onclick="closeLightbox()" style="position: absolute; top: 20px; right: 30px; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.2); color: white; font-size: 24px; width: 40px; height: 40px; cursor: pointer; z-index: 10001; border-radius: 6px; line-height: 1;">&times;</button>
+            <!-- 16:9 Image Container -->
+            <div id="lightboxContainer" style="position: relative; width: 85%; max-width: 1200px; aspect-ratio: 16/9; background: #000; border-radius: 8px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.5);" onclick="event.stopPropagation()">
+                <img id="lightboxImg" src="" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;">
+                <!-- Navigation arrows inside frame -->
+                <button onclick="event.stopPropagation(); changeLightboxImage(-1)" style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.2); color: white; font-size: 20px; width: 44px; height: 44px; cursor: pointer; border-radius: 6px; z-index: 10000; transition: background 0.2s;">&#10094;</button>
+                <button onclick="event.stopPropagation(); changeLightboxImage(1)" style="position: absolute; right: 16px; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.2); color: white; font-size: 20px; width: 44px; height: 44px; cursor: pointer; border-radius: 6px; z-index: 10000; transition: background 0.2s;">&#10095;</button>
+                <!-- Caption inside frame at bottom -->
+                <div style="position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,0.8)); padding: 40px 20px 16px;">
+                    <p id="lightboxCaption" style="color: white; font-size: 0.9rem; text-align: center; margin: 0; opacity: 0.9;"></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="options-toggle">
+            <button class="options-toggle-btn" id="optionsToggleBtn" onclick="toggleAdvancedOptions()">Connection Options</button>
+        </div>
+
+        <div id="advancedOptions" style="display: none;">
+
+        <!-- Connection Cards -->
+        <section class="cards-container">
+            <!-- Card 1: My Project -->
+            <div class="glass-card" id="cardMyProject">
+                <div class="card-header">
+                    <div class="card-icon">PC</div>
+                    <h2 class="card-title">My Project</h2>
+                    <span class="card-help" title="Stream your local Unreal Engine project">?</span>
+                </div>
+                <p class="card-description">Connect to a locally running Unreal Engine visualization on this computer.</p>
+                
+                <button class="card-btn card-btn-primary" onclick="connectToLocal()">
+                    Connect to Localhost
+                </button>
+                <span class="card-url">localhost:80</span>
+                
+                <div class="card-footer">
+                    <div class="card-radio" id="radioLocal"></div>
+                    <span class="card-footer-text">Directly stream your local Unreal Engine project</span>
+                </div>
+            </div>
+            
+            <!-- Card 2: Room Code -->
+            <div class="glass-card" id="cardRoomCode">
+                <div class="card-header">
+                    <div class="card-icon">ROOM</div>
+                    <h2 class="card-title">Room Code</h2>
+                    <span class="card-help" title="Create or join a room to share streams">?</span>
+                </div>
+                <p class="card-description">Create or join a room to share streams with others.</p>
+                
+                <div class="room-input-group">
+                    <input type="text" class="room-input" id="joinRoomCode" placeholder="ALLEY-X0000">
+                    <button class="card-btn card-btn-secondary" onclick="joinRoom()">Join</button>
+                </div>
+                
+                <div class="room-code-display" id="roomCodeDisplay">
+                    <div class="room-code-value" id="myRoomCode" onclick="copyRoomCode()">-</div>
+                    <p class="room-code-hint">Click to copy</p>
+                </div>
+                
+                <div class="card-footer">
+                    <div class="card-radio" id="radioRoom"></div>
+                    <span class="card-footer-text">Share streams with others via a unique room code.</span>
+                </div>
+                
+                <div style="margin-top: 12px; display: flex; justify-content: space-between; align-items: center;">
+                    <button class="card-btn card-btn-secondary" onclick="createRoom()" style="font-size: 0.85rem; padding: 8px 16px;">+ Create Room</button>
+                    <span class="card-footer-link" onclick="embedStream()">Connect ›</span>
+                </div>
+            </div>
+            
+            <!-- Card 3: Scan Network -->
+            <div class="glass-card" id="cardScanNetwork">
+                <div class="card-header">
+                    <div class="card-icon">SCAN</div>
+                    <h2 class="card-title">Scan Network</h2>
+                    <span class="card-help" title="Find available streams on your local network">?</span>
+                </div>
+                <p class="card-description">Find available streams on your local network.</p>
+                
+                <button class="card-btn card-btn-secondary" onclick="scanForStreams()">
+                    Scan for Streams
+                </button>
+                
+                <div class="stream-list" id="discoveredStreams">
+                    <div id="streamsList">
+                        <!-- Streams will be listed here -->
+                    </div>
+                </div>
+                
+                <div class="card-footer">
+                    <div class="card-radio" id="radioScan"></div>
+                    <span class="card-footer-text">Discover and connect to streams on your local network.</span>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Advanced Section -->
+        <section class="advanced-section">
+            <div class="advanced-toggle" onclick="toggleAdvanced()">
+                <div class="advanced-toggle-text">
+                    <span>CONFIG</span>
+                    <span>Advanced Direct IP Connection</span>
+                </div>
+                <span id="advancedArrow">›</span>
+            </div>
+            <div class="advanced-content" id="advancedContent">
+                <div class="advanced-input-group">
+                    <input type="text" class="advanced-input" id="peerIpInput" placeholder="Enter IP address (e.g., 192.168.1.50)">
+                    <button class="card-btn card-btn-primary" onclick="connectToPeer()">Connect</button>
+                </div>
+                <p style="margin-top: 12px; font-size: 0.85rem; color: rgba(255,255,255,0.5);">
+                    Share link: <code id="shareableLink" style="cursor: pointer; background: rgba(0,0,0,0.3); padding: 4px 8px; border-radius: 4px;" onclick="copyShareLink()">-</code>
+                </p>
+            </div>
+        </section>
+
+        </div>
+        
+        <!-- Footer -->
+        <footer class="page-footer">
+            Powered by <strong>Unreal Engine 5</strong> <span>•</span> Pixel Streaming <span>•</span> PUHC Innovation Alleys
+        </footer>
+    </div>
+
+    <!-- Loading Overlay (hidden by default) -->
+    <div class="loading-overlay hidden" id="loadingOverlay">
+        <div class="loading-text">Connecting to stream...</div>
+    </div>
+
+    <!-- Unreal Viewer Container (hidden by default) -->
+    <div class="unreal-container" id="unrealContainer">
+        <iframe id="unrealIframe" class="unreal-iframe" src="" allow="autoplay; fullscreen; microphone; camera" allowfullscreen></iframe>
+    </div>
+
+    <script>
+        // Configuration
+        let SIGNALING_SERVER_URL = localStorage.getItem('pixelStreamingUrl') || 'http://localhost:80';
+        
+        // Current state
+        let currentAlley = 'alley3';
+
+        // Alley data matching app.py PICO_UNION_COORDS
+        const ALLEY_DATA = {
+            'alley1': { name: 'Energy', badge: 'Energy Alley' },
+            'alley2': { name: 'Sun', badge: 'Sun Alley' },
+            'alley3': { name: 'Water', badge: 'Primary Prototype' },
+            'alley4': { name: 'Universe', badge: 'Universe Alley' },
+            'alley5': { name: 'Air', badge: 'Air Alley' },
+            'alley6': { name: 'Earth', badge: 'Earth Alley' },
+            'alley7': { name: 'Humanity', badge: 'Humanity Alley' },
+            'alley8': { name: 'Animals', badge: 'Animals Alley' },
+            'alley9': { name: 'Plants', badge: 'Plants Alley' },
+            'alley10': { name: 'Minerals', badge: 'Minerals Alley' },
+            'alley11': { name: 'Insects', badge: 'Insects Alley' },
+            'alley12': { name: 'Prosperity', badge: 'Prosperity Alley' }
+        };
+
+        // Change alley selection
+        function changeAlley(alleyId) {
+            currentAlley = alleyId;
+            const alleyInfo = ALLEY_DATA[alleyId];
+            
+            // Update badge
+            const badge = document.getElementById('alleyBadge');
+            badge.textContent = alleyInfo.badge;
+            
+            // Update page title
+            const title = document.querySelector('.page-header h1');
+            title.textContent = `Digital Twin: Innovation Alley ${alleyId.replace('alley', '')}`;
+            
+            // Store selection
+            localStorage.setItem('selectedAlley', alleyId);
+            
+            // Dispatch event for Unreal Engine integration
+            window.dispatchEvent(new CustomEvent('alley-changed', {
+                detail: { alleyId, alleyName: alleyInfo.name }
+            }));
+            
+            showNotification(`Switched to ${alleyInfo.name} Alley`, 'success');
+        }
+
+        // Show notification
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                padding: 16px 24px;
+                background: ${type === 'success' ? 'rgba(16, 185, 129, 0.9)' : 'rgba(15, 164, 175, 0.9)'};
+                color: white;
+                border-radius: 8px;
+                font-weight: 500;
+                z-index: 9999;
+                animation: slideIn 0.3s ease;
+            `;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                notification.style.transition = 'opacity 0.3s';
+                setTimeout(() => notification.remove(), 300);
+            }, 2000);
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            // Check for ?stream= URL parameter (shareable link)
+            const urlParams = new URLSearchParams(window.location.search);
+            const streamParam = urlParams.get('stream');
+            const roomParam = urlParams.get('room');
+            
+            if (streamParam) {
+                // Auto-connect to peer's stream from URL
+                const peerUrl = streamParam.includes('://') ? streamParam : `http://${streamParam}:80`;
+                SIGNALING_SERVER_URL = peerUrl;
+                // Auto-launch the stream
+                setTimeout(() => embedStream(), 500);
+            }
+            
+            if (roomParam) {
+                // Auto-join room from URL
+                document.getElementById('joinRoomCode').value = roomParam;
+                setTimeout(() => joinRoom(), 500);
+            }
+            
+            // Set saved URL in peer IP input field
+            const peerInput = document.getElementById('peerIpInput');
+            if (peerInput) {
+                const ip = SIGNALING_SERVER_URL.replace('http://', '').replace(':80', '');
+                peerInput.value = ip !== 'localhost' ? ip : '';
+            }
+            
+            // Update shareable link display
+            updateShareableLink();
+        });
+        
+        // Connect to peer by IP
+        function connectToPeer() {
+            const peerIp = document.getElementById('peerIpInput').value.trim();
+            if (!peerIp) {
+                alert('Please enter an IP address');
+                return;
+            }
+            
+            // Format URL and connect
+            SIGNALING_SERVER_URL = `http://${peerIp}:80`;
+            localStorage.setItem('pixelStreamingUrl', SIGNALING_SERVER_URL);
+            updateShareableLink();
+            embedStream();
+        }
+        
+        // Generate and update shareable link
+        function updateShareableLink() {
+            const linkEl = document.getElementById('shareableLink');
+            // Extract IP from current URL
+            const ip = SIGNALING_SERVER_URL.replace('http://', '').replace(':80', '').replace(':8888', '');
+            const shareUrl = `${window.location.origin}/digital-twin?stream=${ip}`;
+            linkEl.textContent = shareUrl;
+            linkEl.dataset.url = shareUrl;
+        }
+        
+        // Copy shareable link to clipboard
+        function copyShareLink() {
+            const linkEl = document.getElementById('shareableLink');
+            const url = linkEl.dataset.url || linkEl.textContent;
+            navigator.clipboard.writeText(url).then(() => {
+                const original = linkEl.textContent;
+                linkEl.textContent = '✓ Copied!';
+                setTimeout(() => { linkEl.textContent = original; }, 2000);
+            });
+        }
+
+        // Launch 3D viewer in popup
+        function embedStream() {
+            const iframe = document.getElementById('embeddedIframe');
+            const placeholder = document.getElementById('viewerPlaceholder');
+            if (!iframe || !placeholder) return;
+
+            iframe.src = SIGNALING_SERVER_URL;
+            iframe.style.display = 'block';
+            placeholder.style.display = 'none';
+            iframe.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        
+        // Open in new tab
+        function openStreamFullscreen() {
+            window.open(SIGNALING_SERVER_URL, '_blank');
+        }
+
+        function toggleDevInfo() {
+            const devInfo = document.getElementById('devInfo');
+            if (devInfo) {
+                devInfo.style.display = devInfo.style.display === 'none' ? 'block' : 'none';
+            }
+        }
+
+        function toggleAdvancedOptions() {
+            const panel = document.getElementById('advancedOptions');
+            const btn = document.getElementById('optionsToggleBtn');
+            if (!panel || !btn) return;
+            const isOpen = panel.style.display !== 'none';
+            panel.style.display = isOpen ? 'none' : 'block';
+            btn.textContent = isOpen ? 'Advanced Options' : 'Hide Advanced Options';
+        }
+        
+        // Connect to local project (localhost)
+        function connectToLocal() {
+            SIGNALING_SERVER_URL = 'http://localhost:80';
+            localStorage.setItem('pixelStreamingUrl', SIGNALING_SERVER_URL);
+            updateShareableLink();
+            
+            // Highlight the card and open stream
+            document.getElementById('cardMyProject').classList.add('active');
+            document.getElementById('radioLocal').classList.add('active');
+            embedStream();
+        }
+        
+        // Room Code System
+        let myRoomCode = null;
+        
+        async function createRoom() {
+            try {
+                const response = await fetch('/api/rooms/create', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ ip: 'localhost' })
+                });
+                const data = await response.json();
+                
+                if (data.code) {
+                    myRoomCode = data.code;
+                    document.getElementById('myRoomCode').textContent = data.code;
+                    document.getElementById('roomCodeDisplay').classList.add('visible');
+                }
+            } catch (e) {
+                // Fallback: generate local code
+                myRoomCode = 'ALLEY-' + Math.random().toString(36).substring(2, 6).toUpperCase();
+                document.getElementById('myRoomCode').textContent = myRoomCode;
+                document.getElementById('roomCodeDisplay').classList.add('visible');
+                
+                // Store locally (works for same-server testing)
+                localStorage.setItem('room_' + myRoomCode, 'localhost:80');
+            }
+        }
+        
+        async function joinRoom() {
+            const code = document.getElementById('joinRoomCode').value.trim().toUpperCase();
+            if (!code) {
+                alert('Please enter a room code');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/rooms/' + code);
+                const data = await response.json();
+                
+                if (data.ip) {
+                    SIGNALING_SERVER_URL = `http://${data.ip}:80`;
+                    localStorage.setItem('pixelStreamingUrl', SIGNALING_SERVER_URL);
+                    document.getElementById('cardRoomCode').classList.add('active');
+                    document.getElementById('radioRoom').classList.add('active');
+                    embedStream();
+                } else {
+                    alert('Room not found');
+                }
+            } catch (e) {
+                // Fallback: check localStorage
+                const storedIp = localStorage.getItem('room_' + code);
+                if (storedIp) {
+                    SIGNALING_SERVER_URL = `http://${storedIp}`;
+                    embedStream();
+                } else {
+                    alert('Room not found: ' + code);
+                }
+            }
+        }
+        
+        function copyRoomCode() {
+            if (myRoomCode) {
+                navigator.clipboard.writeText(myRoomCode).then(() => {
+                    const el = document.getElementById('myRoomCode');
+                    el.textContent = '✓ Copied!';
+                    setTimeout(() => { el.textContent = myRoomCode; }, 2000);
+                });
+            }
+        }
+        
+        // Auto-Discovery
+        async function scanForStreams() {
+            const streamsList = document.getElementById('streamsList');
+            const container = document.getElementById('discoveredStreams');
+            
+            streamsList.innerHTML = '<p style="color: #fbbf24; padding: 12px;">Scanning network...</p>';
+            container.classList.add('visible');
+            
+            // Get local IP range and scan common ports
+            const commonIPs = ['localhost', '127.0.0.1'];
+            const foundStreams = [];
+            
+            // Check localhost first
+            try {
+                const controller = new AbortController();
+                setTimeout(() => controller.abort(), 1000);
+                await fetch('http://localhost:80', { method: 'HEAD', mode: 'no-cors', signal: controller.signal });
+                foundStreams.push({ name: 'Your Project', ip: 'localhost' });
+            } catch (e) {}
+            
+            // Try to discover via API
+            try {
+                const response = await fetch('/api/rooms/list');
+                const data = await response.json();
+                if (data.rooms) {
+                    data.rooms.forEach(room => {
+                        foundStreams.push({ name: 'Room: ' + room.code, ip: room.ip });
+                    });
+                }
+            } catch (e) {}
+            
+            // Display results
+            if (foundStreams.length === 0) {
+                streamsList.innerHTML = '<p style="color: rgba(255,255,255,0.5); padding: 12px;">No streams found. Start Pixel Streaming in UE5.</p>';
+            } else {
+                streamsList.innerHTML = foundStreams.map(stream => `
+                    <div class="stream-item" onclick="connectToDiscovered('${stream.ip}')">
+                        <span class="stream-item-name">${stream.name}</span>
+                        <span class="stream-item-connect">Connect →</span>
+                    </div>
+                `).join('');
+            }
+        }
+        
+        function connectToDiscovered(ip) {
+            SIGNALING_SERVER_URL = `http://${ip}:80`;
+            localStorage.setItem('pixelStreamingUrl', SIGNALING_SERVER_URL);
+            document.getElementById('cardScanNetwork').classList.add('active');
+            document.getElementById('radioScan').classList.add('active');
+            embedStream();
+        }
+        
+        // Save custom URL
+        function saveCustomUrl() {
+            const urlInput = document.getElementById('signalingUrl');
+            if (urlInput && urlInput.value) {
+                SIGNALING_SERVER_URL = urlInput.value;
+                localStorage.setItem('pixelStreamingUrl', SIGNALING_SERVER_URL);
+                checkStreamAvailability();
+                alert('URL saved: ' + SIGNALING_SERVER_URL);
+            }
+        }
+        
+        // Check if stream is available
+        async function checkStreamAvailability() {
+            try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 2000);
+                
+                await fetch(SIGNALING_SERVER_URL, { 
+                    method: 'HEAD', 
+                    mode: 'no-cors',
+                    signal: controller.signal
+                });
+                clearTimeout(timeoutId);
+                
+                // Stream available - activate the local card
+                setActiveCard('cardMyProject');
+            } catch (e) {
+                // Stream not available
+            }
+        }
+        
+        // Toggle advanced section
+        function toggleAdvanced() {
+            const content = document.getElementById('advancedContent');
+            const arrow = document.getElementById('advancedArrow');
+            content.classList.toggle('visible');
+            arrow.textContent = content.classList.contains('visible') ? '⌄' : '›';
+        }
+        
+        // Set active card styling
+        function setActiveCard(cardId) {
+            // Remove active from all cards
+            document.querySelectorAll('.glass-card').forEach(card => {
+                card.classList.remove('active');
+            });
+            document.querySelectorAll('.card-radio').forEach(radio => {
+                radio.classList.remove('active');
+            });
+            
+            // Add active to selected card
+            const card = document.getElementById(cardId);
+            if (card) {
+                card.classList.add('active');
+                const radio = card.querySelector('.card-radio');
+                if (radio) radio.classList.add('active');
+            }
+            
+            // Open the viewer
+            embedStream();
+        }
+
+        // Carousel
+        const carouselImages = [
+            {src: '/static/images/unreal/photo-2.jpg', caption: 'Shade canopy with planter boxes'},
+            {src: '/static/images/unreal/photo-3.jpg', caption: 'Canopy frame looking north'},
+            {src: '/static/images/unreal/photo-4.jpg', caption: 'Iron fencing with murals and canopy'},
+            {src: '/static/images/unreal/photo-5.jpg', caption: 'Water-themed murals on walls'},
+            {src: '/static/images/unreal/photo-6.jpg', caption: 'Large water mural elevated view'},
+            {src: '/static/images/unreal/photo-7.jpg', caption: 'Full corridor elevated view'}
+        ];
+        let currentCarouselIndex = 0;
+
+        function initCarousel() {
+            const dotsContainer = document.getElementById('carouselDots');
+            carouselImages.forEach((_, index) => {
+                const dot = document.createElement('div');
+                dot.className = 'carousel-dot' + (index === 0 ? ' active' : '');
+                dot.onclick = (e) => {
+                    e.stopPropagation();
+                    goToCarouselSlide(index);
+                };
+                dotsContainer.appendChild(dot);
+            });
+        }
+
+        function changeCarouselSlide(direction) {
+            currentCarouselIndex += direction;
+            if (currentCarouselIndex < 0) currentCarouselIndex = carouselImages.length - 1;
+            if (currentCarouselIndex >= carouselImages.length) currentCarouselIndex = 0;
+            updateCarousel();
+        }
+
+        function goToCarouselSlide(index) {
+            currentCarouselIndex = index;
+            updateCarousel();
+        }
+
+        function updateCarousel() {
+            const slides = document.getElementById('carouselSlides');
+            const caption = document.getElementById('carouselCaption');
+            const dots = document.querySelectorAll('.carousel-dot');
+            
+            slides.style.transform = `translateX(-${currentCarouselIndex * 100}%)`;
+            caption.textContent = carouselImages[currentCarouselIndex].caption;
+            
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentCarouselIndex);
+            });
+        }
+
+        function launchDigitalTwin() {
+            connectToLocal();
+        }
+
+        // Gallery Lightbox
+        const galleryImages = [
+            {src: '/static/images/unreal/photo-2.jpg', caption: 'Shade canopy with planter boxes'},
+            {src: '/static/images/unreal/photo-3.jpg', caption: 'Canopy frame looking north'},
+            {src: '/static/images/unreal/photo-4.jpg', caption: 'Iron fencing with murals and canopy'},
+            {src: '/static/images/unreal/photo-5.jpg', caption: 'Water-themed murals on walls'},
+            {src: '/static/images/unreal/photo-6.jpg', caption: 'Large water mural elevated view'}
+        ];
+        let currentLightboxIndex = 0;
+
+        function openLightbox(index) {
+            currentLightboxIndex = index;
+            const lightbox = document.getElementById('lightbox');
+            const img = document.getElementById('lightboxImg');
+            const caption = document.getElementById('lightboxCaption');
+            img.src = galleryImages[index].src;
+            caption.textContent = galleryImages[index].caption;
+            lightbox.style.display = 'flex';
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightbox').style.display = 'none';
+        }
+
+        function changeLightboxImage(direction) {
+            currentLightboxIndex += direction;
+            if (currentLightboxIndex < 0) currentLightboxIndex = galleryImages.length - 1;
+            if (currentLightboxIndex >= galleryImages.length) currentLightboxIndex = 0;
+            document.getElementById('lightboxImg').src = galleryImages[currentLightboxIndex].src;
+            document.getElementById('lightboxCaption').textContent = galleryImages[currentLightboxIndex].caption;
+        }
+
+        // Keyboard navigation for lightbox
+        document.addEventListener('keydown', function(e) {
+            const lightbox = document.getElementById('lightbox');
+            if (lightbox.style.display === 'flex') {
+                if (e.key === 'Escape') closeLightbox();
+                if (e.key === 'ArrowLeft') changeLightboxImage(-1);
+                if (e.key === 'ArrowRight') changeLightboxImage(1);
+            }
+        });
+
+        // Initialize carousel on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            initCarousel();
+        });
+
+        // Highlight active nav tab
+        const currentPath = window.location.pathname;
+        document.querySelectorAll('.nav-tab a').forEach(link => {
+            if (link.getAttribute('href') === currentPath) {
+                link.parentElement.classList.add('active');
+            }
+        });
+    </script>
+</body>
+</html>

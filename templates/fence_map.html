@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Fence Map | PUHC Innovation Alleys</title>
+    <meta name="description" content="Interactive spatial map of Alley 3 fence segments. Click a segment to view existing conditions, repair cost estimates, and design options.">
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='images/favicon.svg') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/global-theme.css') }}">
+    <script src="{{ url_for('static', filename='js/cache-buster.js') }}"></script>
+    <style>
+        .fmap-page {
+            min-height: 100vh;
+            padding: 90px var(--spacing-lg) var(--spacing-xl);
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        .fmap-header {
+            text-align: center;
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .fmap-header h1 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .fmap-header p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.6;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .fmap-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-lg);
+            align-items: start;
+        }
+
+        /* Left Column - Alley Diagram */
+        .fmap-diagram-col {
+            position: sticky;
+            top: 90px;
+        }
+
+        .fmap-diagram-wrap {
+            background: var(--secondary);
+            border: 1px solid rgba(15, 164, 175, 0.2);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .fmap-diagram-title {
+            padding: 12px 16px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid rgba(15, 164, 175, 0.15);
+        }
+
+        .fmap-svg-container {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 3 / 5;
+            background: linear-gradient(180deg, rgba(10, 25, 35, 0.95) 0%, rgba(15, 30, 40, 0.98) 100%);
+        }
+
+        .fmap-svg-container svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* SVG Hotspot Styles */
+        .fence-segment {
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .fence-segment rect,
+        .fence-segment polygon {
+            fill: rgba(15, 164, 175, 0.12);
+            stroke: rgba(15, 164, 175, 0.4);
+            stroke-width: 1.5;
+            transition: all 0.2s ease;
+        }
+
+        .fence-segment:hover rect,
+        .fence-segment:hover polygon {
+            fill: rgba(15, 164, 175, 0.3);
+            stroke: var(--accent);
+            stroke-width: 2;
+        }
+
+        .fence-segment.active rect,
+        .fence-segment.active polygon {
+            fill: rgba(15, 164, 175, 0.35);
+            stroke: var(--accent);
+            stroke-width: 2.5;
+            filter: drop-shadow(0 0 6px rgba(15, 164, 175, 0.5));
+        }
+
+        .fence-segment text {
+            fill: var(--text-muted);
+            font-size: 7px;
+            font-weight: 600;
+            pointer-events: none;
+            text-anchor: middle;
+            dominant-baseline: central;
+            transition: fill 0.2s ease;
+        }
+
+        .fence-segment:hover text,
+        .fence-segment.active text {
+            fill: var(--text-primary);
+        }
+
+        .fence-label {
+            fill: rgba(15, 164, 175, 0.7);
+            font-size: 5.5px;
+            font-weight: 400;
+            pointer-events: none;
+            text-anchor: middle;
+        }
+
+        .fence-segment:hover .fence-label,
+        .fence-segment.active .fence-label {
+            fill: var(--accent);
+        }
+
+        /* Area zone labels */
+        .area-zone-label {
+            fill: rgba(255, 255, 255, 0.15);
+            font-size: 10px;
+            font-weight: 800;
+            text-anchor: middle;
+            letter-spacing: 2px;
+            pointer-events: none;
+        }
+
+        /* Alley center line */
+        .alley-center {
+            stroke: rgba(255, 255, 255, 0.08);
+            stroke-width: 0.5;
+            stroke-dasharray: 3 3;
+        }
+
+        /* Legend */
+        .fmap-legend {
+            padding: 10px 16px;
+            border-top: 1px solid rgba(15, 164, 175, 0.15);
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .fmap-legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.65rem;
+            color: var(--text-muted);
+        }
+
+        .fmap-legend-swatch {
+            width: 12px;
+            height: 12px;
+            border-radius: 2px;
+            border: 1px solid;
+        }
+
+        /* Right Column - Info Panel */
+        .fmap-panel-col {
+            min-height: 400px;
+        }
+
+        .fmap-panel {
+            background: var(--secondary);
+            border: 1px solid rgba(15, 164, 175, 0.2);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            transition: border-color 0.3s ease;
+        }
+
+        .fmap-panel.has-data {
+            border-color: rgba(15, 164, 175, 0.4);
+        }
+
+        .fmap-panel-title {
+            padding: 12px 16px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid rgba(15, 164, 175, 0.15);
+        }
+
+        .fmap-panel-body {
+            padding: 20px;
+        }
+
+        .fmap-empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            line-height: 1.6;
+        }
+
+        .fmap-empty-state .arrow-hint {
+            font-size: 1.5rem;
+            margin-bottom: var(--spacing-sm);
+            opacity: 0.4;
+        }
+
+        /* Panel Content */
+        .fmap-project-header {
+            margin-bottom: var(--spacing-md);
+        }
+
+        .fmap-project-title {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .fmap-area-badge {
+            display: inline-block;
+            padding: 3px 10px;
+            background: rgba(15, 164, 175, 0.15);
+            border: 1px solid rgba(15, 164, 175, 0.3);
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-right: 8px;
+        }
+
+        .fmap-sections-badge {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .fmap-image-wrap {
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            border: 1px solid rgba(15, 164, 175, 0.2);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .fmap-image-wrap img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .fmap-image-caption {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            padding: 6px 10px;
+            background: rgba(0, 0, 0, 0.3);
+            line-height: 1.4;
+        }
+
+        .fmap-scope {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: var(--spacing-md);
+            padding: var(--spacing-sm);
+            background: rgba(0, 0, 0, 0.15);
+            border-radius: var(--radius-sm);
+        }
+
+        .fmap-cost-summary {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .fmap-cost-card {
+            padding: 12px;
+            background: rgba(15, 164, 175, 0.06);
+            border: 1px solid rgba(15, 164, 175, 0.15);
+            border-radius: var(--radius-sm);
+            text-align: center;
+        }
+
+        .fmap-cost-label {
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .fmap-cost-value {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: var(--accent);
+            font-variant-numeric: tabular-nums;
+        }
+
+        .fmap-cost-value.grand {
+            font-size: 1.3rem;
+        }
+
+        .fmap-grand-total {
+            padding: 14px;
+            background: rgba(15, 164, 175, 0.1);
+            border: 1px solid rgba(15, 164, 175, 0.25);
+            border-radius: var(--radius-md);
+            text-align: center;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .fmap-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .fmap-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 18px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            border: none;
+        }
+
+        .fmap-btn-primary {
+            background: var(--accent);
+            color: var(--primary);
+        }
+
+        .fmap-btn-primary:hover {
+            filter: brightness(1.15);
+        }
+
+        .fmap-btn-secondary {
+            background: rgba(15, 164, 175, 0.12);
+            color: var(--accent);
+            border: 1px solid rgba(15, 164, 175, 0.3);
+        }
+
+        .fmap-btn-secondary:hover {
+            background: rgba(15, 164, 175, 0.2);
+            border-color: var(--accent);
+        }
+
+        .fmap-notes {
+            margin-top: var(--spacing-md);
+            padding: var(--spacing-sm);
+            background: rgba(0, 0, 0, 0.15);
+            border-radius: var(--radius-sm);
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .fmap-notes strong {
+            color: var(--text-secondary);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .fmap-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .fmap-diagram-col {
+                position: static;
+            }
+
+            .fmap-svg-container {
+                aspect-ratio: 3 / 4;
+            }
+
+            .fmap-header h1 {
+                font-size: 1.4rem;
+            }
+
+            .fmap-cost-summary {
+                grid-template-columns: 1fr;
+            }
+
+            .fmap-actions {
+                flex-direction: column;
+            }
+
+            .fmap-btn {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Global Navigation -->
+    <nav class="global-nav">
+        <div class="nav-container">
+            <a href="/" class="nav-logo">
+                <span class="nav-logo-text">PUHC Innovation Alleys</span>
+            </a>
+            <ul class="nav-tabs" id="navTabs">
+                <li class="nav-tab"><a href="/">Alley 3</a></li>
+                <li class="nav-tab"><a href="/existing">Before</a></li>
+                <li class="nav-tab active"><a href="/fence-map">Fence Map</a></li>
+                <li class="nav-tab"><a href="/unreal-viewer">Explore</a></li>
+                <li class="nav-tab"><a href="/compare">Compare</a></li>
+            </ul>
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">&#9776;</button>
+        </div>
+    </nav>
+
+    <div class="fmap-page">
+        <!-- Header -->
+        <div class="fmap-header">
+            <h1>Interactive Fence Map -- Alley 3</h1>
+            <p>Click a fence segment to view existing conditions, repair estimates, and design options.</p>
+        </div>
+
+        <!-- Main Two-Column Layout -->
+        <div class="fmap-layout">
+            <!-- LEFT: Alley Diagram -->
+            <div class="fmap-diagram-col">
+                <div class="fmap-diagram-wrap">
+                    <div class="fmap-diagram-title">Alley 3 Segment Map</div>
+                    <div class="fmap-svg-container">
+                        <svg viewBox="0 0 200 340" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Alley background structure -->
+                            <rect x="60" y="10" width="80" height="320" fill="rgba(255,255,255,0.03)" rx="2"/>
+                            <line x1="100" y1="10" x2="100" y2="330" class="alley-center"/>
+
+                            <!-- Area zone labels -->
+                            <text x="100" y="55" class="area-zone-label">AREA A</text>
+                            <text x="100" y="140" class="area-zone-label">AREA B</text>
+                            <text x="100" y="215" class="area-zone-label">AREA C</text>
+                            <text x="100" y="300" class="area-zone-label">AREA D</text>
+
+                            <!-- Area dividers -->
+                            <line x1="60" y1="95" x2="140" y2="95" stroke="rgba(255,255,255,0.1)" stroke-width="0.5" stroke-dasharray="2 2"/>
+                            <line x1="60" y1="175" x2="140" y2="175" stroke="rgba(255,255,255,0.1)" stroke-width="0.5" stroke-dasharray="2 2"/>
+                            <line x1="60" y1="255" x2="140" y2="255" stroke="rgba(255,255,255,0.1)" stroke-width="0.5" stroke-dasharray="2 2"/>
+
+                            <!-- AREA A - Projects 2 & 3 (top section, left and right sides) -->
+                            <g class="fence-segment" data-project="project-2" onclick="selectProject('project-2')">
+                                <rect x="15" y="18" width="40" height="35" rx="3"/>
+                                <text x="35" y="33">P2</text>
+                                <text x="35" y="42" class="fence-label">S1-S6</text>
+                            </g>
+                            <g class="fence-segment" data-project="project-3" onclick="selectProject('project-3')">
+                                <rect x="145" y="18" width="40" height="35" rx="3"/>
+                                <text x="165" y="33">P3</text>
+                                <text x="165" y="42" class="fence-label">S1-S7</text>
+                            </g>
+
+                            <!-- Connector lines from segments to alley -->
+                            <line x1="55" y1="35" x2="60" y2="35" stroke="rgba(15,164,175,0.2)" stroke-width="0.5"/>
+                            <line x1="140" y1="35" x2="145" y2="35" stroke="rgba(15,164,175,0.2)" stroke-width="0.5"/>
+
+                            <!-- AREA A continued -->
+                            <g class="fence-segment" data-project="project-2" onclick="selectProject('project-2')">
+                                <rect x="15" y="58" width="40" height="30" rx="3"/>
+                                <text x="35" y="70">P2</text>
+                                <text x="35" y="79" class="fence-label">cont.</text>
+                            </g>
+                            <g class="fence-segment" data-project="project-3" onclick="selectProject('project-3')">
+                                <rect x="145" y="58" width="40" height="30" rx="3"/>
+                                <text x="165" y="70">P3</text>
+                                <text x="165" y="79" class="fence-label">cont.</text>
+                            </g>
+
+                            <!-- AREA B - Projects 4 & 5 -->
+                            <g class="fence-segment" data-project="project-4" onclick="selectProject('project-4')">
+                                <rect x="15" y="103" width="40" height="30" rx="3"/>
+                                <text x="35" y="115">P4</text>
+                                <text x="35" y="124" class="fence-label">S1-S3</text>
+                            </g>
+                            <g class="fence-segment" data-project="project-5" onclick="selectProject('project-5')">
+                                <rect x="145" y="103" width="40" height="30" rx="3"/>
+                                <text x="165" y="115">P5</text>
+                                <text x="165" y="124" class="fence-label">S1-S3</text>
+                            </g>
+
+                            <line x1="55" y1="118" x2="60" y2="118" stroke="rgba(15,164,175,0.2)" stroke-width="0.5"/>
+                            <line x1="140" y1="118" x2="145" y2="118" stroke="rgba(15,164,175,0.2)" stroke-width="0.5"/>
+
+                            <g class="fence-segment" data-project="project-4" onclick="selectProject('project-4')">
+                                <rect x="15" y="138" width="40" height="30" rx="3"/>
+                                <text x="35" y="150">P4</text>
+                                <text x="35" y="159" class="fence-label">cont.</text>
+                            </g>
+                            <g class="fence-segment" data-project="project-5" onclick="selectProject('project-5')">
+                                <rect x="145" y="138" width="40" height="30" rx="3"/>
+                                <text x="165" y="150">P5</text>
+                                <text x="165" y="159" class="fence-label">cont.</text>
+                            </g>
+
+                            <!-- AREA C - Projects 6, 7, 8 -->
+                            <g class="fence-segment" data-project="project-6" onclick="selectProject('project-6')">
+                                <rect x="15" y="183" width="40" height="25" rx="3"/>
+                                <text x="35" y="196">P6</text>
+                            </g>
+                            <g class="fence-segment" data-project="project-7" onclick="selectProject('project-7')">
+                                <rect x="145" y="183" width="40" height="25" rx="3"/>
+                                <text x="165" y="196">P7</text>
+                            </g>
+
+                            <line x1="55" y1="195" x2="60" y2="195" stroke="rgba(15,164,175,0.2)" stroke-width="0.5"/>
+                            <line x1="140" y1="195" x2="145" y2="195" stroke="rgba(15,164,175,0.2)" stroke-width="0.5"/>
+
+                            <g class="fence-segment" data-project="project-7" onclick="selectProject('project-7')">
+                                <rect x="15" y="213" width="40" height="18" rx="3"/>
+                                <text x="35" y="223">P7</text>
+                            </g>
+                            <g class="fence-segment" data-project="project-8" onclick="selectProject('project-8')">
+                                <rect x="145" y="213" width="40" height="18" rx="3"/>
+                                <text x="165" y="223">P8</text>
+                            </g>
+
+                            <g class="fence-segment" data-project="project-8" onclick="selectProject('project-8')">
+                                <rect x="15" y="236" width="40" height="14" rx="3"/>
+                                <text x="35" y="244">P8</text>
+                            </g>
+
+                            <!-- AREA D - Projects 9 & 10 -->
+                            <g class="fence-segment" data-project="project-9" onclick="selectProject('project-9')">
+                                <rect x="15" y="263" width="40" height="28" rx="3"/>
+                                <text x="35" y="274">P9</text>
+                                <text x="35" y="283" class="fence-label">S1-S7</text>
+                            </g>
+                            <g class="fence-segment" data-project="project-10" onclick="selectProject('project-10')">
+                                <rect x="145" y="263" width="40" height="28" rx="3"/>
+                                <text x="165" y="274">P10</text>
+                                <text x="165" y="283" class="fence-label">S1-S8</text>
+                            </g>
+
+                            <line x1="55" y1="277" x2="60" y2="277" stroke="rgba(15,164,175,0.2)" stroke-width="0.5"/>
+                            <line x1="140" y1="277" x2="145" y2="277" stroke="rgba(15,164,175,0.2)" stroke-width="0.5"/>
+
+                            <g class="fence-segment" data-project="project-9" onclick="selectProject('project-9')">
+                                <rect x="15" y="296" width="40" height="25" rx="3"/>
+                                <text x="35" y="309">P9</text>
+                                <text x="35" y="317" class="fence-label">cont.</text>
+                            </g>
+                            <g class="fence-segment" data-project="project-10" onclick="selectProject('project-10')">
+                                <rect x="145" y="296" width="40" height="25" rx="3"/>
+                                <text x="165" y="309">P10</text>
+                                <text x="165" y="317" class="fence-label">cont.</text>
+                            </g>
+
+                            <!-- Street labels -->
+                            <text x="10" y="8" fill="rgba(255,255,255,0.2)" font-size="5" font-weight="600">WEST SIDE</text>
+                            <text x="155" y="8" fill="rgba(255,255,255,0.2)" font-size="5" font-weight="600">EAST SIDE</text>
+                            <text x="82" y="338" fill="rgba(255,255,255,0.15)" font-size="4.5">ALLEY 3 (N-S)</text>
+                        </svg>
+                    </div>
+                    <div class="fmap-legend">
+                        <div class="fmap-legend-item">
+                            <div class="fmap-legend-swatch" style="background: rgba(15,164,175,0.12); border-color: rgba(15,164,175,0.4);"></div>
+                            Fence Segment
+                        </div>
+                        <div class="fmap-legend-item">
+                            <div class="fmap-legend-swatch" style="background: rgba(15,164,175,0.35); border-color: var(--accent);"></div>
+                            Selected
+                        </div>
+                        <div class="fmap-legend-item">
+                            <div class="fmap-legend-swatch" style="background: rgba(255,255,255,0.03); border-color: rgba(255,255,255,0.1);"></div>
+                            Alley Corridor
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT: Info Panel -->
+            <div class="fmap-panel-col">
+                <div class="fmap-panel" id="infoPanel">
+                    <div class="fmap-panel-title">Segment Details</div>
+                    <div class="fmap-panel-body" id="panelBody">
+                        <div class="fmap-empty-state" id="emptyState">
+                            <div class="arrow-hint">&#8592;</div>
+                            <p>Select a fence segment to view details.</p>
+                            <p style="font-size: 0.75rem; margin-top: 8px; opacity: 0.6;">Click any highlighted zone on the alley map to load project data.</p>
+                        </div>
+                        <div id="projectContent" style="display: none;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Nav Toggle -->
+    <script>
+        document.getElementById('navToggle').addEventListener('click', function () {
+            document.getElementById('navTabs').classList.toggle('active');
+        });
+    </script>
+
+    <!-- Fence Map Logic -->
+    <script>
+        var costData = null;
+        var activeProject = null;
+
+        // Load cost data on page init
+        fetch('/api/cost-data')
+            .then(function (r) { return r.json(); })
+            .then(function (data) {
+                costData = data;
+            })
+            .catch(function (err) {
+                console.error('Failed to load cost data:', err);
+            });
+
+        function selectProject(projectId) {
+            if (!costData) return;
+
+            // Find project in data
+            var project = null;
+            for (var i = 0; i < costData.projects.length; i++) {
+                if (costData.projects[i].id === projectId) {
+                    project = costData.projects[i];
+                    break;
+                }
+            }
+            if (!project) return;
+
+            activeProject = projectId;
+
+            // Update SVG active states
+            var segments = document.querySelectorAll('.fence-segment');
+            for (var s = 0; s < segments.length; s++) {
+                if (segments[s].getAttribute('data-project') === projectId) {
+                    segments[s].classList.add('active');
+                } else {
+                    segments[s].classList.remove('active');
+                }
+            }
+
+            // Build grand total
+            var grandLow = 0;
+            var grandHigh = 0;
+            var gt = project.cost_table.grand_total;
+            if (gt) {
+                grandLow = gt.low;
+                grandHigh = gt.high;
+            }
+
+            // Build category notes
+            var notes = '';
+            if (project.wall_description) {
+                notes += '<strong>Wall:</strong> ' + project.wall_description + '<br>';
+            }
+            if (project.pavement_description) {
+                notes += '<strong>Pavement:</strong> ' + project.pavement_description + '<br>';
+            }
+            if (project.roof_description) {
+                notes += '<strong>Roof:</strong> ' + project.roof_description;
+            }
+
+            // Rhino file link
+            var rhinoHref = project.rhino_file || '#';
+            var rhinoLabel = 'Download Rhino Design File';
+
+            // Build panel HTML
+            var html = '';
+            html += '<div class="fmap-project-header">';
+            html += '  <div class="fmap-project-title">' + escapeHtml(project.title) + '</div>';
+            html += '  <span class="fmap-area-badge">Area ' + escapeHtml(project.area) + '</span>';
+            html += '  <span class="fmap-sections-badge">' + escapeHtml(project.sections) + '</span>';
+            if (project.map_label) {
+                html += '  <span class="fmap-sections-badge" style="margin-left: 8px; opacity: 0.6;">' + escapeHtml(project.map_label) + '</span>';
+            }
+            html += '</div>';
+
+            // Image
+            if (project.primary_image) {
+                html += '<div class="fmap-image-wrap">';
+                html += '  <img src="' + encodeURI(project.primary_image) + '" alt="' + escapeHtml(project.image_caption || project.title) + '" loading="lazy">';
+                if (project.image_caption) {
+                    html += '  <div class="fmap-image-caption">' + escapeHtml(project.image_caption) + '</div>';
+                }
+                html += '</div>';
+            }
+
+            // Scope
+            html += '<div class="fmap-scope">' + escapeHtml(project.scope) + '</div>';
+
+            // Cost summary
+            html += '<div class="fmap-cost-summary">';
+            html += '  <div class="fmap-cost-card">';
+            html += '    <div class="fmap-cost-label">Low Estimate</div>';
+            html += '    <div class="fmap-cost-value">$' + numberWithCommas(grandLow) + '</div>';
+            html += '  </div>';
+            html += '  <div class="fmap-cost-card">';
+            html += '    <div class="fmap-cost-label">High Estimate</div>';
+            html += '    <div class="fmap-cost-value">$' + numberWithCommas(grandHigh) + '</div>';
+            html += '  </div>';
+            html += '</div>';
+
+            // Grand total
+            html += '<div class="fmap-grand-total">';
+            html += '  <div class="fmap-cost-label">Grand Total Range</div>';
+            html += '  <div class="fmap-cost-value grand">$' + numberWithCommas(grandLow) + ' - $' + numberWithCommas(grandHigh) + '</div>';
+            html += '</div>';
+
+            // Action buttons
+            html += '<div class="fmap-actions">';
+            html += '  <a href="' + rhinoHref + '" class="fmap-btn fmap-btn-secondary" target="_blank">' + rhinoLabel + '</a>';
+            html += '  <a href="/customize/' + encodeURIComponent(project.id) + '" class="fmap-btn fmap-btn-primary">Launch Customization</a>';
+            html += '</div>';
+
+            // Notes
+            if (notes) {
+                html += '<div class="fmap-notes">' + notes + '</div>';
+            }
+
+            // Render
+            document.getElementById('emptyState').style.display = 'none';
+            var contentEl = document.getElementById('projectContent');
+            contentEl.innerHTML = html;
+            contentEl.style.display = 'block';
+            document.getElementById('infoPanel').classList.add('has-data');
+
+            // Scroll panel into view on mobile
+            if (window.innerWidth <= 768) {
+                document.getElementById('infoPanel').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            var div = document.createElement('div');
+            div.appendChild(document.createTextNode(str));
+            return div.innerHTML;
+        }
+
+        function numberWithCommas(x) {
+            if (x === 0 || !x) return '0';
+            return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        }
+    </script>
+</body>
+</html>

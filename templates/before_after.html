@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Before & After - PUHC Innovation Alleys</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/global-theme.css') }}">
+    <script src="{{ url_for('static', filename='js/cache-buster.js') }}"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: var(--font-primary);
+            background: var(--primary);
+            color: var(--text-primary);
+        }
+
+        .page-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: var(--spacing-xl) var(--spacing-xl);
+            margin-top: 70px;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .page-title {
+            font-size: 2.75rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .page-subtitle {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+
+        .disclaimer {
+            background: rgba(15, 164, 175, 0.05);
+            border-left: 3px solid var(--highlight);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-lg);
+            margin-top: var(--spacing-xl);
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+
+        .disclaimer-title {
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        @media (max-width: 768px) {
+            .page-title {
+                font-size: 1.75rem;
+            }
+        }
+    </style>
+    {% include 'includes/edit_mode.html' ignore missing %}
+</head>
+<body data-edit-page="before_after">
+    <nav class="global-nav">
+        <div class="nav-container">
+
+            <a href="/" class="nav-logo">
+                <span class="nav-logo-text">PUHC Innovation Alleys</span>
+            </a>
+            <ul class="nav-tabs" id="navTabs">
+                <li class="nav-tab"><a href="/">Alley 3</a></li>
+                <li class="nav-tab"><a href="/existing">Before</a></li>
+                <li class="nav-tab"><a href="/fence-map">Fence Map</a></li>
+                <li class="nav-tab"><a href="/unreal-viewer">Explore</a></li>
+                <li class="nav-tab"><a href="/compare">Compare</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="page-container">
+        <div class="page-header">
+            <div style="display: inline-block; padding: 6px 14px; background: rgba(15, 164, 175, 0.15); border: 1px solid rgba(15, 164, 175, 0.4); border-radius: 4px; margin-bottom: var(--spacing-md); font-size: 0.7rem; font-weight: 600; color: var(--highlight); letter-spacing: 1px; text-transform: uppercase;">BEFORE & AFTER</div>
+            <h1 class="page-title">Water Alley Transformation</h1>
+            <p class="page-subtitle">Side-by-side comparison of existing conditions and proposed design interventions for Alley 3 in Pico-Union, Los Angeles.</p>
+        </div>
+
+        <!-- Overview Comparison -->
+        <section style="margin-bottom: var(--spacing-xxl);">
+            <h2 style="font-size: 1.4rem; font-weight: 700; color: var(--text-primary); margin-bottom: var(--spacing-sm); text-align: center;">Overall Site Comparison</h2>
+            <p style="text-align: center; color: var(--text-secondary); font-size: 0.9rem; margin-bottom: var(--spacing-lg); max-width: 700px; margin-left: auto; margin-right: auto;">
+                Water Alley is a 300-foot service corridor between W 11th and W 12th Street. Three integrated interventions -- shade structures, community murals, and urban farming -- address heat exposure, cultural identity, and food access.
+            </p>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-lg); max-width: 1000px; margin: 0 auto;">
+                <div>
+                    <div style="background: rgba(0,0,0,0.3); border-radius: var(--radius-lg); overflow: hidden; border: 1px solid rgba(15, 164, 175, 0.2);">
+                        <div style="padding: 10px 16px; background: rgba(198, 40, 40, 0.15); border-bottom: 1px solid rgba(198, 40, 40, 0.3);">
+                            <span style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #ef5350;">BEFORE</span>
+                        </div>
+                        <img src="/static/images/existing-alley.jpg" alt="Existing alley conditions -- exposed asphalt, no shade, no infrastructure" style="width: 100%; height: 320px; object-fit: cover; display: block;" loading="lazy">
+                    </div>
+                    <p style="text-align: center; color: var(--text-muted); font-size: 0.8rem; margin-top: var(--spacing-xs);">Exposed asphalt corridor / no shade, greenery, or community infrastructure</p>
+                </div>
+                <div>
+                    <div style="background: rgba(0,0,0,0.3); border-radius: var(--radius-lg); overflow: hidden; border: 1px solid rgba(15, 164, 175, 0.2);">
+                        <div style="padding: 10px 16px; background: rgba(46, 125, 50, 0.15); border-bottom: 1px solid rgba(46, 125, 50, 0.3);">
+                            <span style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #66bb6a;">AFTER</span>
+                        </div>
+                        <img src="/static/images/unreal/photo-4.jpg" alt="Alley 3 with all interventions - Unreal Engine render" style="width: 100%; height: 320px; object-fit: cover; display: block;" loading="lazy">
+                    </div>
+                    <p style="text-align: center; color: var(--text-muted); font-size: 0.8rem; margin-top: var(--spacing-xs);">Integrated interventions / shade canopy, murals, and container gardens</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Projected Impact Metrics -->
+        <section style="margin-bottom: var(--spacing-xxl);">
+            <h2 style="font-size: 1.4rem; font-weight: 700; color: var(--text-primary); margin-bottom: var(--spacing-lg); text-align: center;">Projected Impact</h2>
+            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--spacing-md); max-width: 900px; margin: 0 auto;">
+                <div style="text-align: center; padding: var(--spacing-lg); background: var(--secondary); border-radius: var(--radius-lg); border: 1px solid rgba(15, 164, 175, 0.2);">
+                    <div style="font-size: 1.8rem; font-weight: 700; color: var(--highlight);">-15 F</div>
+                    <div style="color: var(--text-secondary); font-size: 0.8rem; margin-top: var(--spacing-xs);">Ground Temperature</div>
+                </div>
+                <div style="text-align: center; padding: var(--spacing-lg); background: var(--secondary); border-radius: var(--radius-lg); border: 1px solid rgba(15, 164, 175, 0.2);">
+                    <div style="font-size: 1.8rem; font-weight: 700; color: var(--highlight);">85%</div>
+                    <div style="color: var(--text-secondary); font-size: 0.8rem; margin-top: var(--spacing-xs);">Shade Coverage</div>
+                </div>
+                <div style="text-align: center; padding: var(--spacing-lg); background: var(--secondary); border-radius: var(--radius-lg); border: 1px solid rgba(15, 164, 175, 0.2);">
+                    <div style="font-size: 1.8rem; font-weight: 700; color: var(--highlight);">200 lbs</div>
+                    <div style="color: var(--text-secondary); font-size: 0.8rem; margin-top: var(--spacing-xs);">Annual Produce</div>
+                </div>
+                <div style="text-align: center; padding: var(--spacing-lg); background: var(--secondary); border-radius: var(--radius-lg); border: 1px solid rgba(15, 164, 175, 0.2);">
+                    <div style="font-size: 1.8rem; font-weight: 700; color: var(--highlight);">20</div>
+                    <div style="color: var(--text-secondary); font-size: 0.8rem; margin-top: var(--spacing-xs);">Families Served</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Intervention-by-Intervention Comparison -->
+        <section style="margin-bottom: var(--spacing-xxl);">
+            <h2 style="font-size: 1.4rem; font-weight: 700; color: var(--text-primary); margin-bottom: var(--spacing-sm); text-align: center;">Intervention-by-Intervention</h2>
+            <p style="text-align: center; color: var(--text-secondary); font-size: 0.9rem; margin-bottom: var(--spacing-xl); max-width: 700px; margin-left: auto; margin-right: auto;">
+                Each intervention targets specific zones based on existing conditions and spatial compatibility.
+            </p>
+
+            <!-- Shade Structures -->
+            <div style="margin-bottom: var(--spacing-xxl);">
+                <div style="text-align: center; margin-bottom: var(--spacing-md);">
+                    <div style="display: inline-block; padding: 6px 14px; background: rgba(15, 164, 175, 0.15); border: 1px solid rgba(15, 164, 175, 0.4); border-radius: 4px; font-size: 0.7rem; font-weight: 600; color: var(--accent); letter-spacing: 0.5px; text-transform: uppercase;">Intervention 1</div>
+                    <h3 style="font-size: 1.3rem; color: var(--text-primary); font-weight: 600; margin: var(--spacing-sm) 0 0;">Shade Structures -- Areas B & C</h3>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-lg); max-width: 1000px; margin: 0 auto;">
+                    <div>
+                        <div style="background: rgba(0,0,0,0.3); border-radius: var(--radius-lg); overflow: hidden; border: 1px solid rgba(15, 164, 175, 0.2);">
+                            <img src="/static/images/alley_zones/area_b/existing/Red Fence Gate 1.png" alt="Area B existing -- red fence gate, no shade" style="width: 100%; height: 260px; object-fit: cover; display: block;" loading="lazy">
+                        </div>
+                        <p style="text-align: center; color: var(--text-muted); font-size: 0.78rem; margin-top: var(--spacing-xs);">Before: Exposed corridor at Area B / 120 F+ ground temps in summer</p>
+                    </div>
+                    <div>
+                        <div style="background: rgba(0,0,0,0.3); border-radius: var(--radius-lg); overflow: hidden; border: 1px solid rgba(15, 164, 175, 0.2);">
+                            <img src="/static/images/unreal/photo-3.jpg" alt="Shade canopy looking north - Unreal Engine render" style="width: 100%; height: 260px; object-fit: cover; display: block;" loading="lazy">
+                        </div>
+                        <p style="text-align: center; color: var(--text-muted); font-size: 0.78rem; margin-top: var(--spacing-xs);">After: Overhead solar canopy + trellises / 85% shade coverage</p>
+                    </div>
+                </div>
+                <p style="text-align: center; color: var(--text-secondary); font-size: 0.85rem; max-width: 700px; margin: var(--spacing-md) auto 0; line-height: 1.6;">
+                    Tensile fabric canopy with integrated solar panels mounted 12-15 ft above ground. Vertical trellises support native climbing plants. Water-themed medallions reinforce alley identity.
+                </p>
+                <div style="text-align: center; margin-top: var(--spacing-md);">
+                    <a href="/solar-shades" style="color: var(--accent); font-size: 0.85rem; font-weight: 600; text-decoration: none; border-bottom: 1px solid var(--accent);">View full Shade Structures page</a>
+                </div>
+            </div>
+
+            <!-- Community Murals -->
+            <div style="margin-bottom: var(--spacing-xxl);">
+                <div style="text-align: center; margin-bottom: var(--spacing-md);">
+                    <div style="display: inline-block; padding: 6px 14px; background: rgba(15, 164, 175, 0.15); border: 1px solid rgba(15, 164, 175, 0.4); border-radius: 4px; font-size: 0.7rem; font-weight: 600; color: var(--accent); letter-spacing: 0.5px; text-transform: uppercase;">Intervention 2</div>
+                    <h3 style="font-size: 1.3rem; color: var(--text-primary); font-weight: 600; margin: var(--spacing-sm) 0 0;">Community Murals -- Areas C & D</h3>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-lg); max-width: 1000px; margin: 0 auto;">
+                    <div>
+                        <div style="background: rgba(0,0,0,0.3); border-radius: var(--radius-lg); overflow: hidden; border: 1px solid rgba(15, 164, 175, 0.2);">
+                            <img src="/static/images/alley_zones/area_c/existing/Concrete Wall with Graffiti, Chipping, and Surface Burn 1.png" alt="Area C existing -- blank concrete with graffiti" style="width: 100%; height: 260px; object-fit: cover; display: block;" loading="lazy">
+                        </div>
+                        <p style="text-align: center; color: var(--text-muted); font-size: 0.78rem; margin-top: var(--spacing-xs);">Before: Blank concrete walls / graffiti and surface damage</p>
+                    </div>
+                    <div>
+                        <div style="background: rgba(0,0,0,0.3); border-radius: var(--radius-lg); overflow: hidden; border: 1px solid rgba(15, 164, 175, 0.2);">
+                            <img src="/static/images/unreal/photo-5.jpg" alt="Water-themed murals on alley walls - Unreal Engine render" style="width: 100%; height: 260px; object-fit: cover; display: block;" loading="lazy">
+                        </div>
+                        <p style="text-align: center; color: var(--text-muted); font-size: 0.78rem; margin-top: var(--spacing-xs);">After: Water-themed murals / community identity and wayfinding</p>
+                    </div>
+                </div>
+                <p style="text-align: center; color: var(--text-secondary); font-size: 0.85rem; max-width: 700px; margin: var(--spacing-md) auto 0; line-height: 1.6;">
+                    Wall-based cultural infrastructure transforms blank concrete into community landmarks. Water-themed imagery connects to alley identity. Two existing murals preserved; 12 walls prepared for new designs.
+                </p>
+                <div style="text-align: center; margin-top: var(--spacing-md);">
+                    <a href="/murals" style="color: var(--accent); font-size: 0.85rem; font-weight: 600; text-decoration: none; border-bottom: 1px solid var(--accent);">View full Community Murals page</a>
+                </div>
+            </div>
+
+            <!-- Urban Farming -->
+            <div style="margin-bottom: var(--spacing-xl);">
+                <div style="text-align: center; margin-bottom: var(--spacing-md);">
+                    <div style="display: inline-block; padding: 6px 14px; background: rgba(15, 164, 175, 0.15); border: 1px solid rgba(15, 164, 175, 0.4); border-radius: 4px; font-size: 0.7rem; font-weight: 600; color: var(--accent); letter-spacing: 0.5px; text-transform: uppercase;">Intervention 3</div>
+                    <h3 style="font-size: 1.3rem; color: var(--text-primary); font-weight: 600; margin: var(--spacing-sm) 0 0;">Urban Farming -- Areas A & B</h3>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-lg); max-width: 1000px; margin: 0 auto;">
+                    <div>
+                        <div style="background: rgba(0,0,0,0.3); border-radius: var(--radius-lg); overflow: hidden; border: 1px solid rgba(15, 164, 175, 0.2);">
+                            <img src="/static/images/alley_zones/area_a/existing/Overgrown Fence with Vegetation and Cracked Pavement 1.png" alt="Area A existing -- cracked pavement, overgrown vegetation" style="width: 100%; height: 260px; object-fit: cover; display: block;" loading="lazy">
+                        </div>
+                        <p style="text-align: center; color: var(--text-muted); font-size: 0.78rem; margin-top: var(--spacing-xs);">Before: Cracked pavement / no productive ground use</p>
+                    </div>
+                    <div>
+                        <div style="background: rgba(0,0,0,0.3); border-radius: var(--radius-lg); overflow: hidden; border: 1px solid rgba(15, 164, 175, 0.2);">
+                            <img src="/static/images/unreal/photo-2.jpg" alt="Planter boxes along alley corridor - Unreal Engine render" style="width: 100%; height: 260px; object-fit: cover; display: block;" loading="lazy">
+                        </div>
+                        <p style="text-align: center; color: var(--text-muted); font-size: 0.78rem; margin-top: var(--spacing-xs);">After: Raised bed containers / fresh produce for 20 families</p>
+                    </div>
+                </div>
+                <p style="text-align: center; color: var(--text-secondary); font-size: 0.85rem; max-width: 700px; margin: var(--spacing-md) auto 0; line-height: 1.6;">
+                    Modular raised bed containers along alley edges produce fresh vegetables for neighborhood families. Pico-Union is classified as a food desert -- this intervention addresses food access within steps of residents' homes.
+                </p>
+                <div style="text-align: center; margin-top: var(--spacing-md);">
+                    <a href="/urban-farming" style="color: var(--accent); font-size: 0.85rem; font-weight: 600; text-decoration: none; border-bottom: 1px solid var(--accent);">View full Urban Farming page</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Zone-by-Zone Existing Conditions -->
+        <section style="margin-bottom: var(--spacing-xxl);">
+            <h2 style="font-size: 1.4rem; font-weight: 700; color: var(--text-primary); margin-bottom: var(--spacing-sm); text-align: center;">Existing Conditions by Zone</h2>
+            <p style="text-align: center; color: var(--text-secondary); font-size: 0.9rem; margin-bottom: var(--spacing-lg); max-width: 700px; margin-left: auto; margin-right: auto;">
+                Water Alley is divided into four zones (A through D), each with distinct infrastructure conditions documented through site photography.
+            </p>
+            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--spacing-md); max-width: 1100px; margin: 0 auto;">
+                <div style="background: var(--secondary); border-radius: var(--radius-lg); overflow: hidden; border: 1px solid rgba(15, 164, 175, 0.15);">
+                    <img src="/static/images/alley_zones/area_a/existing/White Wooden Fence (Graffiti Removal + Repaint + Ground Detailing) 1.png" alt="Area A -- white fence, residential gateway" style="width: 100%; height: 160px; object-fit: cover; display: block;" loading="lazy">
+                    <div style="padding: 12px;">
+                        <div style="font-size: 0.8rem; font-weight: 700; color: var(--accent);">Area A</div>
+                        <div style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 2px;">North Entrance Zone</div>
+                        <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 4px;">Urban Farming</div>
+                    </div>
+                </div>
+                <div style="background: var(--secondary); border-radius: var(--radius-lg); overflow: hidden; border: 1px solid rgba(15, 164, 175, 0.15);">
+                    <img src="/static/images/alley_zones/area_b/existing/Red Fence Gate 1.png" alt="Area B -- red fence gate, widest corridor" style="width: 100%; height: 160px; object-fit: cover; display: block;" loading="lazy">
+                    <div style="padding: 12px;">
+                        <div style="font-size: 0.8rem; font-weight: 700; color: var(--accent);">Area B</div>
+                        <div style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 2px;">Mid-North / Red Trellis Zone</div>
+                        <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 4px;">Shade + Farming</div>
+                    </div>
+                </div>
+                <div style="background: var(--secondary); border-radius: var(--radius-lg); overflow: hidden; border: 1px solid rgba(15, 164, 175, 0.15);">
+                    <img src="/static/images/alley_zones/area_c/murals/Large Mural Wall with Pipe Detail 1.png" alt="Area C -- concrete walls with murals" style="width: 100%; height: 160px; object-fit: cover; display: block;" loading="lazy">
+                    <div style="padding: 12px;">
+                        <div style="font-size: 0.8rem; font-weight: 700; color: var(--accent);">Area C</div>
+                        <div style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 2px;">Mid-South / Mural Zone</div>
+                        <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 4px;">Shade + Murals</div>
+                    </div>
+                </div>
+                <div style="background: var(--secondary); border-radius: var(--radius-lg); overflow: hidden; border: 1px solid rgba(15, 164, 175, 0.15);">
+                    <img src="/static/images/alley_zones/area_d/existing/Garage Doors + Wall Sections (Excludes Roof) 1.png" alt="Area D -- garage structures, blank walls" style="width: 100%; height: 160px; object-fit: cover; display: block;" loading="lazy">
+                    <div style="padding: 12px;">
+                        <div style="font-size: 0.8rem; font-weight: 700; color: var(--accent);">Area D</div>
+                        <div style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 2px;">South Exit / Rear Zone</div>
+                        <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 4px;">Murals</div>
+                    </div>
+                </div>
+            </div>
+            <div style="text-align: center; margin-top: var(--spacing-lg);">
+                <a href="/existing" style="display: inline-block; padding: 10px 24px; background: transparent; color: var(--accent); text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 0.85rem; border: 1px solid var(--accent);">View Full Existing Conditions Documentation</a>
+            </div>
+        </section>
+
+        <!-- Cost Reference -->
+        <section style="margin-bottom: var(--spacing-xxl);">
+            <div style="background: var(--secondary); border: 1px solid rgba(15, 164, 175, 0.2); border-radius: var(--radius-lg); padding: var(--spacing-xl); max-width: 800px; margin: 0 auto; text-align: center;">
+                <h3 style="color: var(--text-primary); font-size: 1.1rem; font-weight: 700; margin-bottom: var(--spacing-sm);">Cost Estimates & Documentation</h3>
+                <p style="color: var(--text-secondary); font-size: 0.9rem; line-height: 1.6; margin-bottom: var(--spacing-md);">
+                    Detailed cost estimates for fence repairs, wall restoration, and pavement work across Areas A through C have been documented. These estimates cover 15+ sections of infrastructure preparation that form the foundation for all three interventions.
+                </p>
+                <a href="/static/docs/AREAS A - C Information.pdf" target="_blank" style="display: inline-block; padding: 12px 28px; background: var(--accent); color: var(--primary); text-decoration: none; border-radius: 6px; font-weight: 700; font-size: 0.85rem; letter-spacing: 0.3px;">Detailed Cost Estimates (PDF)</a>
+                <p style="color: var(--text-muted); font-size: 0.75rem; margin-top: var(--spacing-sm);">AREAS A-C Information -- fence, wall, and pavement repair estimates</p>
+            </div>
+        </section>
+
+        <!-- CTA -->
+        <section style="text-align: center; padding: var(--spacing-xl) 0; border-top: 1px solid rgba(15, 164, 175, 0.15);">
+            <h2 style="font-size: 1.5rem; color: var(--text-primary); margin-bottom: var(--spacing-sm);">Explore the Transformation</h2>
+            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: var(--spacing-lg); max-width: 600px; margin-left: auto; margin-right: auto;">
+                See how all three interventions work together in the 3D Digital Twin, or view the side-by-side comparison on the Compare page.
+            </p>
+            <div style="display: flex; gap: var(--spacing-md); justify-content: center; flex-wrap: wrap;">
+                <a href="/unreal-viewer" style="display: inline-block; padding: 14px 28px; background: var(--accent); color: var(--primary); text-decoration: none; border-radius: 6px; font-weight: 700; font-size: 0.9rem;">Launch Digital Twin</a>
+                <a href="/compare" style="display: inline-block; padding: 14px 28px; background: transparent; color: var(--accent); text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 0.9rem; border: 1px solid var(--accent);">View Compare Page</a>
+                <a href="/" style="display: inline-block; padding: 14px 28px; background: transparent; color: var(--text-secondary); text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 0.9rem; border: 1px solid rgba(255,255,255,0.2);">Back to Alley 3</a>
+            </div>
+        </section>
+
+        <div class="disclaimer">
+            <div class="disclaimer-title">Visualization Note</div>
+            <p>Concept images represent design intent and are subject to refinement during detailed design. Impact metrics are projected estimates based on comparable urban greening projects in Los Angeles.</p>
+        </div>
+    </div>
+
+    <script>
+        const navToggle = document.getElementById('navToggle');
+        const navTabs = document.getElementById('navTabs');
+        if (navToggle) {
+            navToggle.addEventListener('click', () => { navTabs.classList.toggle('active'); });
+            document.addEventListener('click', (e) => {
+                if (!navToggle.contains(e.target) && !navTabs.contains(e.target)) { navTabs.classList.remove('active'); }
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alley Bloom - 10 Minute Presentation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1a3e 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .presentation {
+            width: 100%;
+            max-width: 1400px;
+            height: 90vh;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 80px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* HEADER - TITLE */
+        .header {
+            background: linear-gradient(90deg, #0a0e27 0%, #1a4d6d 50%, #0a0e27 100%);
+            color: white;
+            padding: 30px 60px;
+            text-align: center;
+            border-bottom: 3px solid #00d4ff;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+
+        /* CONTENT AREA */
+        .content-area {
+            flex: 1;
+            padding: 60px;
+            overflow-y: auto;
+            background: linear-gradient(135deg, #0f1729 0%, #1a2a4d 100%);
+            color: white;
+        }
+
+        .slide {
+            display: none;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .slide.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .slide h2 {
+            font-size: 2.5rem;
+            margin-bottom: 40px;
+            color: #00d4ff;
+            font-weight: 700;
+        }
+
+        .slide-content {
+            font-size: 1.3rem;
+            line-height: 2;
+        }
+
+        .bullet-group {
+            margin-bottom: 30px;
+            padding-left: 30px;
+        }
+
+        .bullet-group strong {
+            color: #00d4ff;
+            font-size: 1.4rem;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .bullet-item {
+            margin-left: 20px;
+            margin-bottom: 8px;
+            color: #e0e0e0;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-top: 30px;
+        }
+
+        .grid-4 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .box {
+            background: rgba(0, 212, 255, 0.1);
+            border: 2px solid #00d4ff;
+            padding: 25px;
+            border-radius: 10px;
+        }
+
+        .box h3 {
+            color: #00d4ff;
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+        }
+
+        .box p {
+            color: #e0e0e0;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        /* FOOTER - INFO */
+        .footer {
+            background: linear-gradient(90deg, #0a0e27 0%, #1a4d6d 50%, #0a0e27 100%);
+            color: white;
+            padding: 20px 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 3px solid #00d4ff;
+            font-size: 1rem;
+        }
+
+        .footer-left {
+            display: flex;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .footer-info {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .footer-info span {
+            opacity: 0.9;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        button {
+            background: #00d4ff;
+            color: #0a0e27;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 0.95rem;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background: #00ffff;
+            transform: scale(1.05);
+        }
+
+        button:disabled {
+            background: #666;
+            color: #999;
+            cursor: not-allowed;
+            transform: scale(1);
+        }
+
+        .slide-counter {
+            color: #00d4ff;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .dots {
+            display: flex;
+            gap: 8px;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #666;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .dot:hover {
+            background: #00d4ff;
+        }
+
+        .dot.active {
+            background: #00d4ff;
+            transform: scale(1.3);
+        }
+
+        @media (max-width: 768px) {
+            .header h1 { font-size: 2rem; }
+            .slide h2 { font-size: 1.8rem; }
+            .content-area { padding: 30px; }
+            .grid-2, .grid-4 { grid-template-columns: 1fr; }
+            .footer { flex-direction: column; gap: 15px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation">
+        <!-- HEADER -->
+        <div class="header">
+            <h1>PUHC Innovation Alleys Update</h1>
+        </div>
+
+        <!-- CONTENT AREA -->
+        <div class="content-area">
+            <!-- SLIDE 1 -->
+            <div class="slide active">
+                <h2>🌿 Alley Bloom</h2>
+                <div class="slide-content">
+                    <div class="bullet-group">
+                        <strong>Innovation Alleys Digital Twin Platform</strong>
+                        <div class="bullet-item">• Complete platform for designing and visualizing alley transformations</div>
+                        <div class="bullet-item">• Real-time collaboration for teams</div>
+                        <div class="bullet-item">• Live environmental data integration</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SLIDE 2 -->
+            <div class="slide">
+                <h2>What Is Alley Bloom?</h2>
+                <div class="slide-content">
+                    <div class="grid-2">
+                        <div class="box">
+                            <h3>🎯 Purpose</h3>
+                            <p>Digital twin platform for 12 Innovation Alleys in Pico-Union. Enables teams to design and visualize alley transformations.</p>
+                        </div>
+                        <div class="box">
+                            <h3>👥 Users</h3>
+                            <p>Urban planners, designers, community members, and stakeholders all collaborate in real-time on alley designs.</p>
+                        </div>
+                        <div class="box">
+                            <h3>🌍 Real-time Collaboration</h3>
+                            <p>Multiple users work simultaneously on the same designs with live updates and shared workspaces.</p>
+                        </div>
+                        <div class="box">
+                            <h3>📊 Live Data</h3>
+                            <p>Real-time environmental metrics: air quality, weather, solar radiation, biodiversity from 8 APIs.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SLIDE 3 -->
+            <div class="slide">
+                <h2>Key Features</h2>
+                <div class="slide-content">
+                    <div class="bullet-group">
+                        <strong>10 Fully Functional Pages</strong>
+                        <div class="bullet-item">Home • Visualization Studio • Before & After • Design Workspace • Scenarios • Live Dashboard • Plant Library • Innovation Map • 3D Viewer • Design Brief</div>
+                    </div>
+                    <div class="bullet-group">
+                        <strong>8 API Integrations</strong>
+                        <div class="bullet-item">Google Cloud (Air Quality, Places, Elevation) • NASA (Solar Data) • iNaturalist (Biodiversity) • OpenWeatherMap (Weather)</div>
+                    </div>
+                    <div class="bullet-group">
+                        <strong>Design Tools</strong>
+                        <div class="bullet-item">Drag-and-drop canvas • Layer management • Auto-save • Export to PNG/JSON</div>
+                    </div>
+                    <div class="bullet-group">
+                        <strong>Advanced Features</strong>
+                        <div class="bullet-item">3D Visualization (Unreal Engine) • Interactive Maps (Street View) • Responsive Design (Mobile/Tablet/Desktop)</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SLIDE 4 -->
+            <div class="slide">
+                <h2>Technical Stack</h2>
+                <div class="slide-content">
+                    <div class="grid-4">
+                        <div class="box">
+                            <h3>Backend</h3>
+                            <p>Flask 3.0 + SocketIO for real-time WebSocket communication</p>
+                        </div>
+                        <div class="box">
+                            <h3>Frontend</h3>
+                            <p>HTML5, CSS3, JavaScript - responsive and interactive</p>
+                        </div>
+                        <div class="box">
+                            <h3>Database</h3>
+                            <p>SQLite (dev), PostgreSQL (production) with SQLAlchemy ORM</p>
+                        </div>
+                        <div class="box">
+                            <h3>3D Graphics</h3>
+                            <p>Unreal Engine with Pixel Streaming for immersive visualization</p>
+                        </div>
+                    </div>
+                    <div class="bullet-group" style="margin-top: 40px;">
+                        <strong>Status: Production-ready, fully tested, comprehensive documentation included</strong>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SLIDE 5 -->
+            <div class="slide">
+                <h2>Ready to Deploy</h2>
+                <div class="slide-content">
+                    <div class="grid-4">
+                        <div class="box">
+                            <h3>⚡ Heroku</h3>
+                            <p><strong>5 minutes</strong><br>Recommended. Free tier available. Auto-deploy from GitHub.</p>
+                        </div>
+                        <div class="box">
+                            <h3>🚂 Railway</h3>
+                            <p><strong>5 minutes</strong><br>Modern platform. Excellent performance. Free tier available.</p>
+                        </div>
+                        <div class="box">
+                            <h3>☁️ AWS</h3>
+                            <p><strong>30 minutes</strong><br>Enterprise-grade. Highly scalable. Complete documentation.</p>
+                        </div>
+                        <div class="box">
+                            <h3>🔵 Google Cloud</h3>
+                            <p><strong>30 minutes</strong><br>Integrated APIs. Advanced analytics. Production-ready.</p>
+                        </div>
+                    </div>
+                    <div class="bullet-group" style="margin-top: 40px;">
+                        <strong>Next Steps: Deploy to production • Test with users • Gather feedback • Iterate</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FOOTER -->
+        <div class="footer">
+            <div class="footer-left">
+                <div class="footer-info">
+                    <span>Michael Lee / Research (3)</span>
+                    <span>Week 01/09/26</span>
+                </div>
+            </div>
+            <div class="controls">
+                <button id="prevBtn" onclick="changeSlide(-1)">← Previous</button>
+                <div class="dots" id="dotsContainer"></div>
+                <span class="slide-counter"><span id="current">1</span> / <span id="total">5</span></span>
+                <button id="nextBtn" onclick="changeSlide(1)">Next →</button>
+            </div>
+            <div class="footer-info">
+                <span>leemb5974@student.iaccd.edu</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let current = 1;
+        const total = 5;
+
+        function showSlide(n) {
+            const slides = document.querySelectorAll('.slide');
+            if (n > total) current = total;
+            if (n < 1) current = 1;
+            
+            slides.forEach(s => s.classList.remove('active'));
+            slides[current - 1].classList.add('active');
+            
+            document.getElementById('current').textContent = current;
+            document.getElementById('prevBtn').disabled = current === 1;
+            document.getElementById('nextBtn').disabled = current === total;
+            
+            document.querySelectorAll('.dot').forEach((d, i) => {
+                d.classList.toggle('active', i === current - 1);
+            });
+        }
+
+        function changeSlide(n) {
+            current += n;
+            showSlide(current);
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') changeSlide(-1);
+            if (e.key === 'ArrowRight') changeSlide(1);
+        });
+
+        for (let i = 0; i < total; i++) {
+            const dot = document.createElement('div');
+            dot.className = 'dot';
+            dot.onclick = () => { current = i + 1; showSlide(current); };
+            document.getElementById('dotsContainer').appendChild(dot);
+        }
+
+        showSlide(current);
+    </script>
+</body>
+</html>

@@ -1,0 +1,1688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scenario Testing - PUHC Innovation Alleys</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/global-theme.css') }}">
+    <script src="{{ url_for('static', filename='js/cache-buster.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/alleys-data.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/scenarios-enhanced.js') }}"></script>
+    <style>
+        .scenarios-container {
+            max-width: 1400px;
+            margin: 90px auto 40px auto;
+            padding: 0 var(--spacing-md);
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: var(--spacing-xl);
+            padding-top: var(--spacing-md);
+        }
+
+        .page-header .tagline {
+            display: inline-block;
+            padding: 6px 16px;
+            background: transparent;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-sm);
+            border: none;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .page-header h1 {
+            font-size: 3rem;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-sm);
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .page-header .subtitle {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            max-width: 800px;
+            margin: 0 auto var(--spacing-xl) auto;
+            line-height: 1.6;
+        }
+
+        /* Comparison Cards Section */
+        .comparison-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-lg);
+            margin-bottom: var(--spacing-xl);
+            align-items: center;
+        }
+
+        .comparison-card {
+            background: var(--secondary);
+            border: 1px solid rgba(15, 164, 175, 0.2);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            text-align: center;
+        }
+
+        .comparison-card h3 {
+            font-size: 0.875rem;
+            font-weight: 700;
+            color: var(--highlight);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .comparison-card p {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        .comparison-arrow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: var(--highlight);
+            grid-column: 1 / -1;
+            margin: var(--spacing-md) 0;
+        }
+
+        .how-it-works {
+            background: rgba(15, 164, 175, 0.05);
+            border: 1px solid rgba(15, 164, 175, 0.2);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            text-align: center;
+            margin-bottom: var(--spacing-xl);
+            grid-column: 1 / -1;
+        }
+
+        .how-it-works p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin: 0;
+        }
+
+        /* Alley Selector */
+        .alley-selector-section {
+            margin-bottom: var(--spacing-xl);
+            padding: var(--spacing-lg);
+            background: rgba(15, 164, 175, 0.05);
+            border: 1px solid rgba(15, 164, 175, 0.2);
+            border-radius: var(--radius-lg);
+        }
+
+        .alley-selector-label {
+            font-size: 0.875rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: var(--spacing-md);
+            display: block;
+        }
+
+        .alley-selector-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-md);
+        }
+
+        .alley-option {
+            padding: var(--spacing-md);
+            background: var(--secondary);
+            border: 2px solid rgba(15, 164, 175, 0.2);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .alley-option:hover {
+            border-color: var(--highlight);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(15, 164, 175, 0.2);
+        }
+
+        .alley-option.active {
+            background: var(--highlight);
+            border-color: var(--highlight);
+            color: var(--primary);
+        }
+
+        .alley-option.active .alley-name {
+            color: var(--primary);
+        }
+
+        .alley-option.active .alley-theme {
+            color: rgba(0, 49, 53, 0.7);
+        }
+
+        .alley-name {
+            font-weight: 600;
+            font-size: 1rem;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .alley-theme {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .action-bar {
+            display: flex;
+            justify-content: center;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-xl);
+            flex-wrap: wrap;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .comparison-section {
+                grid-template-columns: 1fr;
+            }
+
+            .alley-selector-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+
+            .action-bar {
+                flex-direction: column;
+            }
+
+            .create-scenario-btn,
+            .compare-btn {
+                width: 100%;
+            }
+
+            .scenarios-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .scenarios-container {
+                padding: 0 var(--spacing-sm);
+            }
+
+            .page-header h1 {
+                font-size: 2rem;
+            }
+
+            .alley-selector-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .create-scenario-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-md) var(--spacing-lg);
+            background: var(--highlight);
+            color: var(--primary);
+            border: none;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .create-scenario-btn:hover {
+            background: #0CB5C2;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .create-scenario-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+        }
+
+        .compare-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-md) var(--spacing-lg);
+            background: var(--secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--highlight);
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+        }
+
+        .compare-btn:hover {
+            background: var(--highlight);
+            color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .compare-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Status Bar */
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--spacing-md);
+            background: rgba(15, 164, 175, 0.1);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--spacing-xl);
+            border: 1px solid rgba(15, 164, 175, 0.2);
+        }
+
+        .status-left {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-lg);
+        }
+
+        .status-right {
+            display: flex;
+            gap: var(--spacing-sm);
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: #4CAF50;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .last-updated {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .btn-icon {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--secondary);
+            border: none;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            color: var(--text-primary);
+        }
+
+        .btn-icon:hover {
+            background: var(--highlight);
+            transform: scale(1.1);
+        }
+
+        .scenarios-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: var(--spacing-lg);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        /* Empty State */
+        .empty-state {
+            grid-column: 1/-1;
+            text-align: center;
+            padding: 80px 20px;
+            background: var(--secondary);
+            border-radius: var(--radius-lg);
+            border: 2px dashed rgba(15, 164, 175, 0.3);
+        }
+
+        .empty-icon {
+            font-size: 4rem;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .empty-state h3 {
+            font-size: 1.5rem;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .empty-state p {
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-lg);
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .empty-state .btn-primary {
+            padding: var(--spacing-md) var(--spacing-xl);
+            background: var(--highlight);
+            color: var(--primary);
+            border: none;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .empty-state .btn-primary:hover {
+            background: #0CB5C2;
+            transform: translateY(-2px);
+        }
+
+        .empty-state .link {
+            display: inline-block;
+            margin-top: var(--spacing-md);
+            color: var(--highlight);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .empty-state .link:hover {
+            text-decoration: underline;
+        }
+
+        .scenario-card {
+            background: var(--secondary);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            border: 1px solid rgba(15, 164, 175, 0.1);
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .scenario-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--highlight), var(--neutral));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .scenario-card:hover {
+            border-color: rgba(15, 164, 175, 0.3);
+            transform: translateY(-6px);
+            box-shadow: 0 20px 25px rgba(0, 0, 0, 0.15), 0 10px 10px rgba(0, 0, 0, 0.04), 0 0 20px rgba(15, 164, 175, 0.2);
+        }
+
+        .scenario-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .scenario-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .scenario-title {
+            font-size: 1.5rem;
+            color: var(--text-primary);
+            margin: 0 0 var(--spacing-xs) 0;
+        }
+
+        .scenario-status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .status-baseline {
+            background: rgba(255, 193, 7, 0.2);
+            color: #FFC107;
+        }
+
+        .status-vision {
+            background: rgba(15, 164, 175, 0.2);
+            color: var(--highlight);
+        }
+
+        .status-hybrid {
+            background: rgba(156, 39, 176, 0.2);
+            color: #9C27B0;
+        }
+
+        .scenario-meta {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-sm);
+            margin-bottom: var(--spacing-md);
+            padding: var(--spacing-md);
+            background: rgba(2, 73, 80, 0.3);
+            border-radius: var(--radius-md);
+        }
+
+        .meta-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .meta-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .meta-value {
+            font-size: 1rem;
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .scenario-layers {
+            margin-bottom: var(--spacing-md);
+        }
+
+        .layers-title {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-sm);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .layer-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--spacing-xs);
+        }
+
+        .layer-tag {
+            padding: 4px 10px;
+            background: rgba(15, 164, 175, 0.15);
+            color: var(--highlight);
+            border-radius: 6px;
+            font-size: 0.875rem;
+        }
+
+        .scenario-actions {
+            display: flex;
+            gap: var(--spacing-sm);
+            margin-top: var(--spacing-md);
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: var(--spacing-sm) var(--spacing-md);
+            border: none;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+        }
+
+        .btn-primary {
+            background: var(--highlight);
+            color: var(--text-primary);
+        }
+
+        .btn-primary:hover {
+            background: #0CB5C2;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-secondary:active {
+            transform: translateY(0);
+        }
+
+        .environmental-data {
+            background: rgba(2, 73, 80, 0.5);
+            padding: var(--spacing-md);
+            border-radius: var(--radius-md);
+            margin-top: var(--spacing-md);
+        }
+
+        .env-title {
+            font-size: 0.875rem;
+            color: var(--highlight);
+            margin-bottom: var(--spacing-sm);
+            font-weight: 600;
+        }
+
+        .env-metrics {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--spacing-sm);
+        }
+
+        .env-metric {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .env-metric-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-bottom: 2px;
+        }
+
+        .env-metric-value {
+            font-size: 1.125rem;
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .env-metric-change {
+            font-size: 0.75rem;
+            margin-top: 2px;
+        }
+
+        .change-positive {
+            color: #4CAF50;
+        }
+
+        .change-negative {
+            color: #F44336;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--secondary);
+            padding: var(--spacing-xl);
+            border-radius: var(--radius-lg);
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .modal-title {
+            font-size: 1.75rem;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .form-group {
+            margin-bottom: var(--spacing-md);
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-xs);
+            font-weight: 600;
+        }
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+            width: 100%;
+            padding: var(--spacing-sm) var(--spacing-md);
+            background: rgba(2, 73, 80, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius-md);
+            color: var(--text-primary);
+            font-size: 1rem;
+            font-family: inherit;
+        }
+
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--highlight);
+        }
+
+        @media (max-width: 768px) {
+            .scenarios-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .scenario-meta {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    {% include 'includes/edit_mode.html' ignore missing %}
+</head>
+<body data-edit-page="scenarios">
+    <!-- Global Navigation -->
+    <nav class="global-nav">
+        <div class="nav-container">
+            <a href="/" class="nav-logo">
+                <span class="nav-logo-text">PUHC Innovation Alleys</span>
+            </a>
+            
+            <ul class="nav-tabs" id="navTabs">
+                <li class="nav-tab"><a href="/">Alley 3</a></li>
+                <li class="nav-tab"><a href="/unreal-viewer">Digital Twin</a></li>
+                <li class="nav-tab"><a href="/fence-map">Fence Map</a></li>
+                <li class="nav-tab"><a href="/before-after">Compare</a></li>
+                <li class="nav-tab"><a href="/design-workspace">Build</a></li>
+            </ul>
+            
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+                ☰
+            </button>
+        </div>
+    </nav>
+
+        <!-- Main Content -->
+    <div class="scenarios-container">
+        <div class="page-header">
+            <span class="tagline">COMPARE TRANSFORMATION RESULTS</span>
+            <h1>Before & After</h1>
+            <p class="subtitle">See how your alley transformation improves temperature, shade, and environmental conditions.</p>
+        </div>
+
+        <!-- Alley Selector -->
+        <div class="alley-selector-section">
+            <label class="alley-selector-label">Select an Alley to Compare</label>
+            <div class="alley-selector-grid" id="alleySelectorGrid">
+                <!-- Alley options will be populated by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Comparison Section -->
+        <div class="comparison-section">
+            <div class="comparison-card">
+                <h3>BASELINE CONDITIONS</h3>
+                <p><strong id="baselineAddress">S Alvarado to S Lake St</strong><br>
+                   <span id="baselineLocation">Pico-Union, Los Angeles</span><br>
+                   <br>
+                   Temperature: <span id="baselineTemp">95</span>°F<br>
+                   Shade Coverage: <span id="baselineShade">5</span>%<br>
+                   Air Quality: <span id="baselineAir">Poor</span></p>
+            </div>
+            
+            <div class="comparison-card">
+                <h3>VISION SCENARIO</h3>
+                <p><strong id="visionAddress">S Alvarado to S Lake St</strong><br>
+                   <span id="visionLocation">Pico-Union, Los Angeles</span><br>
+                   <br>
+                   Temperature: <span id="visionTemp">87</span>°F (-8°F)<br>
+                   Shade Coverage: <span id="visionShade">65</span>%<br>
+                   Air Quality: <span id="visionAir">Good</span></p>
+            </div>
+            
+            <div class="how-it-works">
+                <p><strong>How it works:</strong> Create different design ideas for your alley and compare them side-by-side to calculate impact with the highest impact.</p>
+            </div>
+        </div>
+
+        <!-- Action Bar -->
+        <div class="action-bar">
+            <button class="create-scenario-btn" onclick="openCreateModal()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 5v14M5 12h14"/>
+                </svg>
+                Create Scenario
+            </button>
+            <button class="create-scenario-btn" onclick="generateSampleData()" style="background: linear-gradient(135deg, rgba(15, 164, 175, 0.3), rgba(150, 71, 52, 0.3)); color: var(--text-primary); border: 1px solid var(--highlight);">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                </svg>
+                Generate Sample Data
+            </button>
+            <button class="compare-btn" onclick="toggleCompareMode()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M9 3v18M15 3v18M3 9h18M3 15h18"/>
+                </svg>
+                Compare Side-by-Side
+            </button>
+            <button class="compare-btn" onclick="exportScenarios()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+                </svg>
+                Download Report
+            </button>
+        </div>
+
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <div class="status-left">
+                <span class="status-indicator">
+                    <span class="status-dot"></span>
+                    <span id="scenarioCount">Loading...</span>
+                </span>
+                <span class="last-updated" id="lastUpdated">Updated just now</span>
+            </div>
+            <div class="status-right">
+                <button class="btn-icon" onclick="showHelp()" title="Help (?)">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3M12 17h.01"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Scenarios Grid -->
+        <div class="scenarios-grid" id="scenariosGrid">
+            <!-- Scenarios will be loaded dynamically from API -->
+            <div style="grid-column: 1/-1; text-align: center; padding: 60px 20px;">
+                <div class="loading-spinner" style="margin: 0 auto 20px auto;"></div>
+                <p style="color: var(--text-secondary);">Loading scenarios...</p>
+            </div>
+            <!-- Demo Scenario 1: Alley 3 Baseline (will be replaced by API data) -->
+            <div class="scenario-card">
+                <div class="scenario-header">
+                    <div>
+                        <h3 class="scenario-title">Alley 3 - Baseline</h3>
+                        <span class="scenario-status status-baseline">Baseline</span>
+                    </div>
+                </div>
+
+                <div class="scenario-meta">
+                    <div class="meta-item">
+                        <span class="meta-label">Location</span>
+                        <span class="meta-value">Pico-Union</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">Last Updated</span>
+                        <span class="meta-value">Today</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">Dimensions</span>
+                        <span class="meta-value">150ft × 12ft</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">Phase</span>
+                        <span class="meta-value">Analysis</span>
+                    </div>
+                </div>
+
+                <div class="scenario-layers">
+                    <div class="layers-title">Active Layers</div>
+                    <div class="layer-tags">
+                        <span class="layer-tag">As-Built Model</span>
+                        <span class="layer-tag">Current Conditions</span>
+                    </div>
+                </div>
+
+                <div class="environmental-data">
+                    <div class="env-title">Environmental Baseline</div>
+                    <div class="env-metrics">
+                        <div class="env-metric">
+                            <span class="env-metric-label">Temperature</span>
+                            <span class="env-metric-value">95°F</span>
+                        </div>
+                        <div class="env-metric">
+                            <span class="env-metric-label">Water Runoff</span>
+                            <span class="env-metric-value">100%</span>
+                        </div>
+                        <div class="env-metric">
+                            <span class="env-metric-label">Shade Coverage</span>
+                            <span class="env-metric-value">5%</span>
+                        </div>
+                        <div class="env-metric">
+                            <span class="env-metric-label">Biodiversity</span>
+                            <span class="env-metric-value">Low</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="scenario-actions">
+                    <a href="/design-workspace?scenario=alley3-baseline" class="action-btn btn-secondary">Edit</a>
+                    <a href="/unreal-viewer?scenario=alley3-baseline" class="action-btn btn-primary">View in 3D</a>
+                </div>
+            </div>
+
+            <!-- Demo Scenario 2: Alley 3 Vision -->
+            <div class="scenario-card">
+                <div class="scenario-header">
+                    <div>
+                        <h3 class="scenario-title">Alley 3 - Vision</h3>
+                        <span class="scenario-status status-vision">Vision</span>
+                    </div>
+                </div>
+
+                <div class="scenario-meta">
+                    <div class="meta-item">
+                        <span class="meta-label">Location</span>
+                        <span class="meta-value">Pico-Union</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">Last Updated</span>
+                        <span class="meta-value">Today</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">Dimensions</span>
+                        <span class="meta-value">150ft × 12ft</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">Phase</span>
+                        <span class="meta-value">Design</span>
+                    </div>
+                </div>
+
+                <div class="scenario-layers">
+                    <div class="layers-title">Active Layers</div>
+                    <div class="layer-tags">
+                        <span class="layer-tag">Murals</span>
+                        <span class="layer-tag">Canopy</span>
+                        <span class="layer-tag">Native Plants</span>
+                        <span class="layer-tag">Water Features</span>
+                    </div>
+                </div>
+
+                <div class="environmental-data">
+                    <div class="env-title">Environmental Impact</div>
+                    <div class="env-metrics">
+                        <div class="env-metric">
+                            <span class="env-metric-label">Temperature</span>
+                            <span class="env-metric-value">87°F</span>
+                            <span class="env-metric-change change-positive">↓ 8°F reduction</span>
+                        </div>
+                        <div class="env-metric">
+                            <span class="env-metric-label">Water Capture</span>
+                            <span class="env-metric-value">500 gal/yr</span>
+                            <span class="env-metric-change change-positive">↑ 500 gal captured</span>
+                        </div>
+                        <div class="env-metric">
+                            <span class="env-metric-label">Shade Coverage</span>
+                            <span class="env-metric-value">65%</span>
+                            <span class="env-metric-change change-positive">↑ 60% increase</span>
+                        </div>
+                        <div class="env-metric">
+                            <span class="env-metric-label">Biodiversity</span>
+                            <span class="env-metric-value">High</span>
+                            <span class="env-metric-change change-positive">↑ 12 native species</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="scenario-actions">
+                    <a href="/design-workspace?scenario=alley3-vision" class="action-btn btn-secondary">Edit</a>
+                    <a href="/unreal-viewer?scenario=alley3-vision" class="action-btn btn-primary">View in 3D</a>
+                </div>
+            </div>
+
+            <!-- Demo Scenario 3: Hybrid -->
+            <div class="scenario-card">
+                <div class="scenario-header">
+                    <div>
+                        <h3 class="scenario-title">Alley 3 - Murals Only</h3>
+                        <span class="scenario-status status-hybrid">Hybrid</span>
+                    </div>
+                </div>
+
+                <div class="scenario-meta">
+                    <div class="meta-item">
+                        <span class="meta-label">Location</span>
+                        <span class="meta-value">Pico-Union</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">Last Updated</span>
+                        <span class="meta-value">Yesterday</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">Dimensions</span>
+                        <span class="meta-value">150ft × 12ft</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">Phase</span>
+                        <span class="meta-value">Testing</span>
+                    </div>
+                </div>
+
+                <div class="scenario-layers">
+                    <div class="layers-title">Active Layers</div>
+                    <div class="layer-tags">
+                        <span class="layer-tag">Murals</span>
+                    </div>
+                </div>
+
+                <div class="environmental-data">
+                    <div class="env-title">Cultural Impact</div>
+                    <div class="env-metrics">
+                        <div class="env-metric">
+                            <span class="env-metric-label">Temperature</span>
+                            <span class="env-metric-value">94°F</span>
+                            <span class="env-metric-change change-positive">↓ 1°F reduction</span>
+                        </div>
+                        <div class="env-metric">
+                            <span class="env-metric-label">Community Art</span>
+                            <span class="env-metric-value">5 murals</span>
+                            <span class="env-metric-change change-positive">↑ Cultural identity</span>
+                        </div>
+                        <div class="env-metric">
+                            <span class="env-metric-label">Cost</span>
+                            <span class="env-metric-value">$5,000</span>
+                            <span class="env-metric-change">Phase 1 budget</span>
+                        </div>
+                        <div class="env-metric">
+                            <span class="env-metric-label">Timeline</span>
+                            <span class="env-metric-value">2 weeks</span>
+                            <span class="env-metric-change">Quick win</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="scenario-actions">
+                    <a href="/design-workspace?scenario=alley3-murals" class="action-btn btn-secondary">Edit</a>
+                    <a href="/unreal-viewer?scenario=alley3-murals" class="action-btn btn-primary">View in 3D</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Scenario Modal -->
+    <div class="modal" id="createModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Create Design Scenario</h2>
+                <button class="close-modal" onclick="closeCreateModal()">×</button>
+            </div>
+
+            <form id="createScenarioForm">
+                <div class="form-group">
+                    <label class="form-label">Design Type</label>
+                    <select class="form-select" id="scenarioTemplate" onchange="loadTemplate()" required>
+                        <option value="">Choose a design type...</option>
+                        <option value="baseline-current">Before: Current Alley (as-is)</option>
+                        <option value="vision-full">After: Full Green Transformation</option>
+                        <option value="vision-shade">After: More Shade & Cooling</option>
+                        <option value="vision-water">After: Water & Stormwater</option>
+                        <option value="vision-art">After: Art & Community Murals</option>
+                        <option value="custom">Custom Design</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Design Name</label>
+                    <input type="text" id="scenarioName" class="form-input" placeholder="e.g., 'Alley 3 with Rain Gardens'" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Location</label>
+                    <input type="text" id="scenarioLocation" class="form-input" value="Alley corridor between W 11th & W 12th St, Pico-Union" readonly>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <textarea id="scenarioDescription" class="form-textarea" placeholder="Describe this scenario..." rows="4"></textarea>
+                </div>
+
+                <div class="scenario-actions">
+                    <button type="button" class="action-btn btn-secondary" onclick="closeCreateModal()">Cancel</button>
+                    <button type="submit" class="action-btn btn-primary">Save & Compare</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Mobile navigation
+        const navToggle = document.getElementById('navToggle');
+        const navTabs = document.getElementById('navTabs');
+        
+        navToggle.addEventListener('click', () => {
+            navTabs.classList.toggle('active');
+        });
+
+        // Modal functions
+        function openCreateModal() {
+            document.getElementById('createModal').classList.add('active');
+        }
+
+        function closeCreateModal() {
+            document.getElementById('createModal').classList.remove('active');
+        }
+
+        // Template data
+        const templates = {
+            'baseline-current': {
+                name: 'BEFORE: Current Alley',
+                type: 'baseline',
+                description: 'Hot concrete (96°F), no shade, no plants, poor air quality. This is what we have now.',
+                environmental_data: {
+                    temperature: 96,
+                    shade_coverage: 0,
+                    air_quality: 92,
+                    green_space: 0
+                }
+            },
+            'vision-full': {
+                name: 'AFTER: Full Green Alley',
+                type: 'vision',
+                description: '8°F cooler with trees, rain gardens, murals, and native plants. Clean air, shaded walkways, and rainwater capture.',
+                environmental_data: {
+                    temperature: 88,
+                    shade_coverage: 65,
+                    air_quality: 62,
+                    green_space: 65
+                }
+            },
+            'vision-shade': {
+                name: 'AFTER: Shade & Cooling',
+                type: 'vision',
+                description: 'Focus on trees and shade canopies. 80% shade coverage keeps the alley 6°F cooler even on hot days.',
+                environmental_data: {
+                    temperature: 90,
+                    shade_coverage: 80,
+                    air_quality: 75,
+                    green_space: 40
+                }
+            },
+            'vision-water': {
+                name: 'AFTER: Rain Gardens',
+                type: 'vision',
+                description: 'Capture 500+ gallons of rainwater every month. No more flooding, plants stay green year-round.',
+                environmental_data: {
+                    temperature: 91,
+                    shade_coverage: 50,
+                    air_quality: 68,
+                    green_space: 55
+                }
+            },
+            'vision-art': {
+                name: 'AFTER: Art & Culture',
+                type: 'vision',
+                description: 'Vibrant murals celebrating our community, plus native plants and shade trees. 4°F cooler with beautiful art.',
+                environmental_data: {
+                    temperature: 92,
+                    shade_coverage: 45,
+                    air_quality: 78,
+                    green_space: 35
+                }
+            }
+        };
+
+        // Load template
+        function loadTemplate() {
+            const templateId = document.getElementById('scenarioTemplate').value;
+            if (!templateId || templateId === 'custom') {
+                document.getElementById('scenarioName').value = '';
+                document.getElementById('scenarioDescription').value = '';
+                return;
+            }
+            
+            const template = templates[templateId];
+            if (template) {
+                document.getElementById('scenarioName').value = template.name;
+                document.getElementById('scenarioDescription').value = template.description;
+            }
+        }
+
+        // Form submission
+        document.getElementById('createScenarioForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const form = e.target;
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const templateId = document.getElementById('scenarioTemplate').value;
+            const template = templates[templateId] || {};
+            
+            // Get form data
+            const formData = {
+                id: `alley-${Date.now()}`,
+                name: document.getElementById('scenarioName').value,
+                type: template.type || 'baseline',
+                location: {
+                    name: document.getElementById('scenarioLocation').value,
+                    address: 'Pico-Union, Los Angeles',
+                    coordinates: { lat: 34.04927, lng: -118.28129 }
+                },
+                dimensions: {
+                    length: 150,
+                    width: 12,
+                    unit: 'ft'
+                },
+                phase: 'Planning',
+                last_updated: new Date().toISOString().split('T')[0],
+                layers: [],
+                environmental_data: template.environmental_data || {
+                    temperature: 96,
+                    shade_coverage: 0,
+                    air_quality: 92,
+                    green_space: 0
+                },
+                notes: document.getElementById('scenarioDescription').value
+            };
+            
+            // Show loading
+            submitBtn.classList.add('loading');
+            submitBtn.disabled = true;
+            
+            try {
+                const response = await fetch('/api/scenarios', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData)
+                });
+                
+                if (response.ok) {
+                    showNotification('Success', 'Scenario created successfully', 'success');
+                    closeCreateModal();
+                    form.reset();
+                    // Reload scenarios
+                    if (window.scenariosAPI) {
+                        window.scenariosAPI.loadScenarios();
+                    }
+                } else {
+                    throw new Error('Failed to create scenario');
+                }
+            } catch (error) {
+                console.error('Error creating scenario:', error);
+                showNotification('Error', 'Failed to create scenario. Please try again.', 'error');
+            } finally {
+                submitBtn.classList.remove('loading');
+                submitBtn.disabled = false;
+            }
+        });
+        
+        // Parse dimensions string
+        function parseDimensions(dimStr) {
+            const match = dimStr.match(/(\d+)\s*(?:ft|feet)?\s*[×x]\s*(\d+)\s*(?:ft|feet)?/i);
+            if (match) {
+                return {
+                    length: parseInt(match[1]),
+                    width: parseInt(match[2]),
+                    unit: 'ft'
+                };
+            }
+            return { length: 150, width: 12, unit: 'ft' };
+        }
+        
+        // Show notification
+        function showNotification(title, message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <div class="notification-title">${title}</div>
+                <div class="notification-message">${message}</div>
+            `;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) reverse';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        // Close modal on outside click
+        document.getElementById('createModal').addEventListener('click', (e) => {
+            if (e.target.id === 'createModal') {
+                closeCreateModal();
+            }
+        });
+
+        // Utility Functions
+        let compareMode = false;
+        let selectedScenarios = [];
+
+        function toggleCompareMode(evt) {
+            compareMode = !compareMode;
+            const btn = (evt && evt.target ? evt.target.closest('button') : null) || document.querySelector('.compare-btn');
+            
+            if (compareMode) {
+                btn.style.background = 'var(--highlight)';
+                btn.style.color = 'var(--primary)';
+                showNotification('Compare Mode Active', 'Click on 2 scenario cards to compare them', 'success');
+                selectedScenarios = [];
+                
+                // Add click listeners to all scenario cards
+                document.querySelectorAll('.scenario-card').forEach(card => {
+                    card.style.cursor = 'pointer';
+                    card.addEventListener('click', handleScenarioClick);
+                });
+            } else {
+                btn.style.background = '';
+                btn.style.color = '';
+                selectedScenarios = [];
+                
+                // Remove selection highlights and click listeners
+                document.querySelectorAll('.scenario-card').forEach(card => {
+                    card.style.border = '';
+                    card.style.cursor = '';
+                    card.removeEventListener('click', handleScenarioClick);
+                });
+            }
+        }
+        
+        function handleScenarioClick(event) {
+            if (!compareMode) return;
+            
+            const card = event.currentTarget;
+            const scenarioId = card.dataset.scenarioId;
+            
+            // Check if already selected
+            const index = selectedScenarios.findIndex(s => s.id === scenarioId);
+            
+            if (index > -1) {
+                // Deselect
+                selectedScenarios.splice(index, 1);
+                card.style.border = '';
+            } else {
+                // Select (max 2)
+                if (selectedScenarios.length >= 2) {
+                    showNotification('Maximum Reached', 'You can only compare 2 scenarios at a time. Deselect one first.', 'error');
+                    return;
+                }
+                
+                // Find scenario data
+                const scenarioData = window.allScenarios?.find(s => s.id === scenarioId);
+                if (scenarioData) {
+                    selectedScenarios.push(scenarioData);
+                    card.style.border = '3px solid var(--highlight)';
+                    card.style.boxShadow = '0 0 20px rgba(15, 164, 175, 0.4)';
+                }
+            }
+            
+            // If 2 selected, show comparison
+            if (selectedScenarios.length === 2) {
+                showComparison();
+            }
+        }
+        
+        function showComparison() {
+            const [scenario1, scenario2] = selectedScenarios;
+            
+            const modal = document.createElement('div');
+            modal.className = 'modal active';
+            modal.innerHTML = `
+                <div class="modal-content" style="max-width: 1000px;">
+                    <div class="modal-header">
+                        <h2 class="modal-title">Side-by-Side Comparison</h2>
+                        <button class="close-modal" onclick="this.remove(); this.closest('.modal').remove()">×</button>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; padding: var(--spacing-lg) 0;">
+                        ${renderComparisonCard(scenario1)}
+                        ${renderComparisonCard(scenario2)}
+                    </div>
+                    
+                    <div style="text-align: center; margin-top: var(--spacing-md);">
+                        <button class="action-btn btn-primary" onclick="this.closest('.modal').remove()">Close Comparison</button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            
+            // Close on outside click
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.remove();
+                }
+            });
+        }
+        
+        function renderComparisonCard(scenario) {
+            const env = scenario.environmental_data || {};
+            const getValue = (field) => {
+                if (!field) return 'N/A';
+                return typeof field === 'object' ? field.value : field;
+            };
+            
+            return `
+                <div style="padding: 1.5rem; background: rgba(15, 164, 175, 0.05); border-radius: var(--radius-md); border: 1px solid rgba(175, 221, 229, 0.3);">
+                    <h3 style="color: var(--highlight); margin-bottom: var(--spacing-sm);">${scenario.name}</h3>
+                    <span class="scenario-status ${scenario.type === 'baseline' ? 'status-baseline' : 'status-vision'}">${scenario.type}</span>
+                    
+                    <div style="margin-top: var(--spacing-md);">
+                        <div style="padding: 0.75rem; background: var(--primary); border-radius: 6px; margin-bottom: 0.75rem;">
+                            <div style="color: var(--text-tertiary); font-size: 0.8rem; margin-bottom: 4px;">Temperature</div>
+                            <div style="color: var(--text-primary); font-size: 1.5rem; font-weight: 600;">${getValue(env.temperature)}°F</div>
+                        </div>
+                        
+                        <div style="padding: 0.75rem; background: var(--primary); border-radius: 6px; margin-bottom: 0.75rem;">
+                            <div style="color: var(--text-tertiary); font-size: 0.8rem; margin-bottom: 4px;">Shade Coverage</div>
+                            <div style="color: var(--text-primary); font-size: 1.5rem; font-weight: 600;">${getValue(env.shade_coverage)}%</div>
+                        </div>
+                        
+                        <div style="padding: 0.75rem; background: var(--primary); border-radius: 6px; margin-bottom: 0.75rem;">
+                            <div style="color: var(--text-tertiary); font-size: 0.8rem; margin-bottom: 4px;">Air Quality (AQI)</div>
+                            <div style="color: var(--text-primary); font-size: 1.5rem; font-weight: 600;">${getValue(env.air_quality)}</div>
+                        </div>
+                        
+                        ${env.green_space ? `
+                        <div style="padding: 0.75rem; background: var(--primary); border-radius: 6px;">
+                            <div style="color: var(--text-tertiary); font-size: 0.8rem; margin-bottom: 4px;">Green Space</div>
+                            <div style="color: var(--text-primary); font-size: 1.5rem; font-weight: 600;">${getValue(env.green_space)}%</div>
+                        </div>
+                        ` : ''}
+                    </div>
+                    
+                    <div style="margin-top: var(--spacing-md); padding-top: var(--spacing-md); border-top: 1px solid rgba(175, 221, 229, 0.2);">
+                        <p style="color: var(--text-secondary); font-size: 0.9rem; line-height: 1.5; margin: 0;">${scenario.notes || 'No description available.'}</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        async function exportScenarios(evt) {
+            const btn = (evt && evt.target ? evt.target.closest('button') : null) || document.querySelector('.action-bar button[onclick^="exportScenarios"]');
+            if (btn) {
+                btn.classList.add('loading');
+                btn.disabled = true;
+            }
+            
+            try {
+                const response = await fetch('/api/scenarios');
+                const data = await response.json();
+                
+                // Create CSV export
+                let csv = 'Scenario Name,Type,Location,Last Updated,Temperature,Water Capture,Shade Coverage\n';
+                
+                data.scenarios.forEach(scenario => {
+                    const env = scenario.environmental_data || {};
+                    csv += `"${scenario.name}",`;
+                    csv += `"${scenario.type}",`;
+                    csv += `"${scenario.location?.name || 'N/A'}",`;
+                    csv += `"${scenario.last_updated}",`;
+                    csv += `"${env.temperature?.value || 'N/A'}",`;
+                    csv += `"${env.water_capture?.value || 'N/A'}",`;
+                    csv += `"${env.shade_coverage?.value || 'N/A'}"\n`;
+                });
+                
+                // Download CSV
+                const blob = new Blob([csv], { type: 'text/csv' });
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `alley-bloom-scenarios-${new Date().toISOString().split('T')[0]}.csv`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
+                
+                showNotification('Export Complete', `${data.scenarios.length} scenarios exported to CSV`, 'success');
+            } catch (error) {
+                console.error('Export error:', error);
+                showNotification('Export Failed', 'Could not export scenarios. Please try again.', 'error');
+            } finally {
+                if (btn) {
+                    btn.classList.remove('loading');
+                    btn.disabled = false;
+                }
+            }
+        }
+
+        async function seedDemoData(evt) {
+            const btn = (evt && evt.target ? evt.target.closest('button') : null);
+            if (btn) {
+                btn.classList.add('loading');
+                btn.disabled = true;
+            }
+            
+            try {
+                showNotification('Seeding...', 'Fetching real data from Google + NASA APIs...', 'success');
+                
+                const response = await fetch('/api/scenarios/seed', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok && result.success) {
+                    const sources = result.data_sources || {};
+                    const sourceList = [];
+                    if (sources.google_air_quality) sourceList.push('Google Air Quality');
+                    if (sources.nasa_temperature) sourceList.push('NASA Temperature');
+                    
+                    showNotification(
+                        'Demo Data Ready', 
+                        `${result.scenarios_created} scenarios created with real data from: ${sourceList.join(', ')}`,
+                        'success'
+                    );
+                    
+                    // Reload scenarios to show new data
+                    if (window.scenariosAPI) {
+                        window.scenariosAPI.loadScenarios();
+                    }
+                } else {
+                    throw new Error(result.error || 'Failed to seed data');
+                }
+            } catch (error) {
+                console.error('Seeding error:', error);
+                showNotification('Seeding Failed', 'Could not seed demo scenarios. Check console for details.', 'error');
+            } finally {
+                if (btn) {
+                    btn.classList.remove('loading');
+                    btn.disabled = false;
+                }
+            }
+        }
+
+        function showHelp() {
+            const helpModal = document.createElement('div');
+            helpModal.className = 'modal active';
+            helpModal.innerHTML = `
+                <div class="modal-content" style="max-width: 600px;">
+                    <div class="modal-header">
+                        <h2 class="modal-title">How to Use Before & After</h2>
+                        <button class="close-modal" onclick="this.closest('.modal').remove()">×</button>
+                    </div>
+                    <div style="padding: var(--spacing-lg) 0;">
+                        <h3 style="color: var(--highlight); margin-bottom: var(--spacing-md);">What You Can Do</h3>
+                        <ul style="color: var(--text-secondary); line-height: 1.8; margin-bottom: var(--spacing-lg);">
+                            <li><strong>BEFORE:</strong> See current alley conditions (hot, no shade, concrete)</li>
+                            <li><strong>AFTER:</strong> Preview how the alley looks after transformation (cooler, greener, healthier)</li>
+                            <li><strong>Compare:</strong> Select 2 ideas to see them side-by-side</li>
+                            <li><strong>Download Report:</strong> Save all your comparisons as a CSV file</li>
+                        </ul>
+                        
+                        <h3 style="color: var(--highlight); margin-bottom: var(--spacing-md);">Quick Tips</h3>
+                        <ul style="color: var(--text-secondary); line-height: 1.8;">
+                            <li>Start with "Load Sample Comparisons" to see real data</li>
+                            <li>Each card shows temperature, shade, and air quality changes</li>
+                            <li>Data comes from Google Air Quality + NASA temperature sensors</li>
+                        </ul>
+                    </div>
+                    <div style="text-align: right;">
+                        <button class="action-btn btn-primary" onclick="this.closest('.modal').remove()">Got it</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(helpModal);
+            
+            // Close on outside click
+            helpModal.addEventListener('click', (e) => {
+                if (e.target === helpModal) {
+                    helpModal.remove();
+                }
+            });
+        }
+
+        // Update scenario count
+        function updateScenarioCount() {
+            const cards = document.querySelectorAll('.scenario-card');
+            const count = cards.length;
+            document.getElementById('scenarioCount').textContent = `${count} Active Scenarios`;
+        }
+
+        // Update last updated time
+        function updateLastUpdated() {
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+            document.getElementById('lastUpdated').textContent = `Updated at ${timeStr}`;
+        }
+
+        // Initialize
+        setTimeout(() => {
+            updateScenarioCount();
+            updateLastUpdated();
+        }, 500);
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.key === 'n') {
+                e.preventDefault();
+                openCreateModal();
+            }
+            if (e.ctrlKey && e.key === 'e') {
+                e.preventDefault();
+                exportScenarios();
+            }
+            if (e.key === '?') {
+                showHelp();
+            }
+        });
+    </script>
+
+    <!-- Navigation active tab script -->
+    <script>
+        // Highlight active nav tab
+        const currentPath = window.location.pathname;
+        document.querySelectorAll('.nav-tab a').forEach(link => {
+            if (link.getAttribute('href') === currentPath) {
+                link.parentElement.classList.add('active');
+            }
+        });
+
+        // Initialize Alley Selector
+        function initializeAlleySelector() {
+            const grid = document.getElementById('alleySelectorGrid');
+            const alleys = getAllAlleys();
+            
+            alleys.forEach(alley => {
+                const option = document.createElement('div');
+                option.className = 'alley-option';
+                if (alley.id === getSelectedAlley()) {
+                    option.classList.add('active');
+                }
+                option.innerHTML = `
+                    <div class="alley-name">${alley.name}</div>
+                    <div class="alley-theme">${alley.theme}</div>
+                `;
+                option.onclick = () => selectAlley(alley.id);
+                grid.appendChild(option);
+            });
+        }
+
+        // Select Alley and Update Comparison Cards
+        function selectAlley(alleyId) {
+            setSelectedAlley(alleyId);
+            const alley = getAlleyById(alleyId);
+            
+            // Update active state in selector
+            document.querySelectorAll('.alley-option').forEach(option => {
+                option.classList.remove('active');
+            });
+            event.target.closest('.alley-option').classList.add('active');
+            
+            // Update Baseline Card
+            document.getElementById('baselineAddress').textContent = alley.address;
+            document.getElementById('baselineLocation').textContent = alley.location;
+            document.getElementById('baselineTemp').textContent = alley.baseline.temperature;
+            document.getElementById('baselineShade').textContent = alley.baseline.shadecoverage;
+            document.getElementById('baselineAir').textContent = alley.baseline.airQuality;
+            
+            // Update Vision Card
+            document.getElementById('visionAddress').textContent = alley.address;
+            document.getElementById('visionLocation').textContent = alley.location;
+            document.getElementById('visionTemp').textContent = alley.vision.temperature;
+            document.getElementById('visionShade').textContent = alley.vision.shadeCoverage;
+            document.getElementById('visionAir').textContent = alley.vision.airQuality;
+        }
+
+        // Initialize on page load
+        window.addEventListener('load', function() {
+            initializeAlleySelector();
+            selectAlley(getSelectedAlley());
+        });
+    </script>
+    
+    <!-- Load scenarios from API -->
+    <script src="{{ url_for('static', filename='js/scenarios.js') }}"></script>
+</body>
+</html>

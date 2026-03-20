@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Innovation Alley 3 - Water Alley | PUHC Innovation Alleys</title>
+    <meta name="description" content="Interactive 3D visualization exploring three design interventions for Water Alley in Pico-Union: shade structures, community murals, and urban farming.">
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='images/favicon.svg') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/global-theme.css') }}">
+    <script src="{{ url_for('static', filename='js/cache-buster.js') }}"></script>
+    <style>
+        /* Hero Section - Alley 3 Focus */
+        .hero-alley3 {
+            min-height: 80vh;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            text-align: left;
+            background: var(--primary);
+            padding: var(--spacing-xxl) var(--spacing-xl);
+            margin-top: 70px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-video {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            object-fit: cover;
+            z-index: 0;
+        }
+
+        .hero-video-overlay {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, rgba(10, 25, 35, 0.85) 0%, rgba(10, 25, 35, 0.5) 60%, rgba(10, 25, 35, 0.2) 100%);
+            z-index: 0;
+        }
+        
+        .hero-alley3::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: transparent;
+            pointer-events: none;
+        }
+
+        .hero-content {
+            max-width: 600px;
+            width: 100%;
+            position: relative;
+            z-index: 1;
+            padding-left: var(--spacing-lg);
+        }
+
+        .alley-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            background: rgba(15, 164, 175, 0.15);
+            border: 1px solid rgba(15, 164, 175, 0.4);
+            border-radius: 4px;
+            margin-bottom: var(--spacing-md);
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--highlight);
+            letter-spacing: 1px;
+        }
+
+        .hero-title {
+            font-size: 3.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-sm);
+            line-height: 1.1;
+            text-shadow: 0 2px 20px rgba(0,0,0,0.3);
+        }
+
+        .hero-subtitle {
+            font-size: 1.6rem;
+            color: var(--highlight);
+            margin-bottom: var(--spacing-md);
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .hero-description {
+            font-size: 1.05rem;
+            color: var(--text-secondary);
+            max-width: 550px;
+            margin: 0 0 var(--spacing-lg) 0;
+            line-height: 1.7;
+        }
+
+        .hero-cta-group {
+            display: flex;
+            justify-content: flex-start;
+            gap: var(--spacing-md);
+            flex-wrap: wrap;
+        }
+
+        .btn-digital-twin {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 16px 32px;
+            background: var(--highlight);
+            color: white;
+            font-size: 1.05rem;
+            font-weight: 600;
+            border-radius: var(--radius-sm);
+            text-decoration: none;
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 15px rgba(15, 164, 175, 0.4);
+        }
+
+        .btn-digital-twin:hover {
+            background: #0cb5c2;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(15, 164, 175, 0.5);
+        }
+
+        .btn-secondary-outline {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 16px 32px;
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
+            font-size: 1.05rem;
+            font-weight: 600;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: var(--radius-sm);
+            text-decoration: none;
+            transition: all 0.25s ease;
+        }
+
+        .btn-secondary-outline:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: var(--highlight);
+            color: var(--highlight);
+            transform: translateY(-2px);
+        }
+
+        /* Interventions Section */
+        .interventions-section {
+            padding: var(--spacing-xxl) var(--spacing-lg);
+            background: var(--primary);
+        }
+
+        .section-header {
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto var(--spacing-xl);
+        }
+
+        .section-title {
+            font-size: 2.25rem;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-sm);
+            font-weight: 700;
+        }
+
+        .section-subtitle {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Four Intervention Cards */
+        .intervention-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: var(--spacing-lg);
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+
+        .intervention-card {
+            background: var(--secondary);
+            border-radius: var(--radius-lg);
+            padding: 0;
+            text-decoration: none;
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(15, 164, 175, 0.15);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .intervention-card-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.4s ease;
+        }
+
+        .intervention-card:hover .intervention-card-image {
+            transform: scale(1.05);
+        }
+
+        .intervention-card-content {
+            padding: var(--spacing-md);
+        }
+
+        .intervention-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--accent);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .intervention-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--accent);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25), 0 0 40px rgba(15, 164, 175, 0.2);
+        }
+
+        .intervention-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .intervention-icon {
+            display: inline-block;
+            padding: 4px 10px;
+            background: rgba(15, 164, 175, 0.1);
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--highlight);
+            margin-bottom: var(--spacing-xs);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .intervention-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .intervention-description {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: var(--spacing-sm);
+            flex-grow: 1;
+        }
+
+        .intervention-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            color: var(--highlight);
+            font-weight: 500;
+            font-size: 0.85rem;
+            transition: gap 0.2s ease;
+        }
+
+        .intervention-card:hover .intervention-cta {
+            gap: 10px;
+        }
+
+        /* Digital Twin Preview Section */
+        .digital-twin-section {
+            padding: var(--spacing-xxl) var(--spacing-lg);
+            background: linear-gradient(180deg, var(--secondary) 0%, var(--primary) 100%);
+        }
+
+        .twin-preview-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-xl);
+            align-items: center;
+        }
+
+        .twin-preview-content h2 {
+            font-size: 2rem;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .twin-preview-content p {
+            font-size: 1.05rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .twin-preview-box {
+            background: rgba(0, 30, 35, 0.8);
+            border: 2px solid rgba(15, 164, 175, 0.3);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-xl);
+            text-align: center;
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .twin-preview-placeholder {
+            font-size: 4rem;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .twin-preview-text {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 var(--spacing-lg) 0;
+        }
+
+        .feature-list li {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 0;
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        .feature-list li::before {
+            content: '✓';
+            color: var(--accent);
+            font-weight: bold;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .intervention-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 900px) {
+            .twin-preview-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.25rem;
+            }
+
+            .intervention-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section-title {
+                font-size: 1.75rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .hero-cta-group {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+    {% include 'includes/edit_mode.html' ignore missing %}
+</head>
+<body data-edit-page="home" {% if edit_mode %}data-edit-active="true"{% endif %}>
+    <!-- Global Navigation -->
+    <nav class="global-nav">
+        <div class="nav-container">
+            <a href="/" class="nav-logo">
+                <span class="nav-logo-text">PUHC Innovation Alleys</span>
+            </a>
+            
+            <ul class="nav-tabs" id="navTabs">
+                <li class="nav-tab active"><a href="/">Alley 3</a></li>
+                <li class="nav-tab"><a href="/existing">Before</a></li>
+                <li class="nav-tab"><a href="/fence-map">Fence Map</a></li>
+                <li class="nav-tab"><a href="/unreal-viewer">Explore</a></li>
+                <li class="nav-tab"><a href="/compare">Compare</a></li>
+            </ul>
+            
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+                ☰
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section - Alley 3 Focus -->
+    <section class="hero-alley3">
+        <video class="hero-video" autoplay muted loop playsinline>
+            <source src="/static/videos/alley3-flythrough-compressed.mp4" type="video/mp4">
+        </video>
+        <div class="hero-video-overlay"></div>
+        <div class="hero-content">
+            <span class="alley-badge">{{ content.hero.badge if content and content.hero else 'PROTOTYPE PROJECT -- WATER ALLEY' }}</span>
+            <h1 class="hero-title">{{ content.hero.title if content and content.hero else 'Water Alley Transformation Prototype' }}</h1>
+            <p class="hero-subtitle">{{ content.hero.subtitle if content and content.hero else 'Spatial Planning & Digital Twin Visualization' }}</p>
+            <p class="hero-description">
+                {{ content.hero.description if content and content.hero else 'A four-zone alley infrastructure project in Pico-Union, Los Angeles. This platform demonstrates site-specific design interventions through real-world documentation and 3D spatial simulation.' }}
+            </p>
+            <div class="hero-cta-group">
+                <a href="/existing" class="btn-digital-twin">
+                    {{ content.hero.cta_text if content and content.hero else 'Explore Water Alley Prototype' }}
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Problem Statement Section -->
+    <section style="padding: var(--spacing-xl) var(--spacing-lg); background: var(--secondary); border-bottom: 1px solid rgba(15, 164, 175, 0.15);">
+        <div style="max-width: 900px; margin: 0 auto; text-align: center;">
+            <h2 style="font-size: 1.75rem; color: var(--text-primary); margin-bottom: var(--spacing-md); font-weight: 700;">{{ content.problem_statement.title if content and content.problem_statement else 'Urban Alley Infrastructure Challenge' }}</h2>
+            <p style="font-size: 1.05rem; color: var(--text-secondary); line-height: 1.7; margin-bottom: var(--spacing-md);">
+                {{ content.problem_statement.paragraph_1 if content and content.problem_statement else 'Los Angeles contains over 900 miles of underutilized alleys that are heat-exposed, lack community infrastructure, and remain disconnected from neighborhood activity. Water Alley serves as a prototype for systematic transformation.' }}
+            </p>
+            <p style="font-size: 1rem; color: var(--text-secondary); line-height: 1.7; margin-bottom: var(--spacing-md);">
+                {{ content.problem_statement.paragraph_2 if content and content.problem_statement else 'Located between W 11th and W 12th Street in Pico-Union, Water Alley is divided into four distinct infrastructure zones. This platform demonstrates zone-specific design interventions through site documentation and Unreal Engine-based spatial simulation.' }}
+            </p>
+            <div style="display: flex; justify-content: center; gap: var(--spacing-lg); flex-wrap: wrap; margin-top: var(--spacing-lg);">
+                <div style="text-align: center;">
+                    <div style="font-size: 1.5rem; color: var(--accent); font-weight: 700;">Four Zones</div>
+                    <div style="font-size: 0.85rem; color: var(--text-secondary);">Areas A, B, C, D</div>
+                </div>
+                <div style="text-align: center;">
+                    <div style="font-size: 1.5rem; color: var(--accent); font-weight: 700;">Three Systems</div>
+                    <div style="font-size: 0.85rem; color: var(--text-secondary);">Shade, Murals, Farming</div>
+                </div>
+                <div style="text-align: center;">
+                    <div style="font-size: 1.5rem; color: var(--accent); font-weight: 700;">Digital Twin</div>
+                    <div style="font-size: 0.85rem; color: var(--text-secondary);">Unreal Engine 5</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Alley Zones Section -->
+    <section style="padding: var(--spacing-xxl) var(--spacing-lg); background: var(--primary);">
+        <div style="max-width: 1200px; margin: 0 auto;">
+            <div style="text-align: center; margin-bottom: var(--spacing-xl);">
+                <h2 style="font-size: 2rem; color: var(--text-primary); margin-bottom: var(--spacing-md); font-weight: 700;">{{ content.zones_section.title if content and content.zones_section else 'Four Transformation Zones' }}</h2>
+                <p style="font-size: 1rem; color: var(--text-secondary); line-height: 1.7; max-width: 700px; margin: 0 auto;">
+                    {{ content.zones_section.subtitle if content and content.zones_section else 'Water Alley is divided into four physical zones, each with distinct characteristics and infrastructure needs. Explore existing conditions and proposed interventions by area.' }}
+                </p>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--spacing-lg); margin-bottom: var(--spacing-lg);">
+                <!-- Area A -->
+                <div style="background: var(--secondary); border: 1px solid rgba(15, 164, 175, 0.2); border-radius: var(--radius-lg); overflow: hidden; transition: all 0.3s ease;" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='rgba(15, 164, 175, 0.2)'">
+                    <div style="height: 200px; overflow: hidden; background: rgba(0,0,0,0.3);">
+                        <img src="/static/images/alley_zones/area_a/existing/White Wooden Fence (Graffiti Removal + Repaint + Ground Detailing) 1.png" alt="Area A - North Entrance" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
+                    </div>
+                    <div style="padding: var(--spacing-lg);">
+                        <div style="display: inline-block; padding: 4px 10px; background: rgba(15, 164, 175, 0.15); border-radius: 4px; margin-bottom: var(--spacing-sm); font-size: 0.7rem; font-weight: 600; color: var(--accent); letter-spacing: 0.5px;">AREA A</div>
+                        <h3 style="font-size: 1.25rem; color: var(--text-primary); margin-bottom: var(--spacing-sm); font-weight: 600;">North Entrance Zone</h3>
+                        <p style="font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: var(--spacing-md);">Residential gateway with white fencing and entrance features. Urban farming intervention zone.</p>
+                        <div style="font-size: 0.8rem; color: var(--text-muted);">Interventions: Urban Farming</div>
+                    </div>
+                </div>
+
+                <!-- Area B -->
+                <div style="background: var(--secondary); border: 1px solid rgba(15, 164, 175, 0.2); border-radius: var(--radius-lg); overflow: hidden; transition: all 0.3s ease;" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='rgba(15, 164, 175, 0.2)'">
+                    <div style="height: 200px; overflow: hidden; background: rgba(0,0,0,0.3);">
+                        <img src="/static/images/alley_zones/area_b/existing/Red Fence Gate 1.png" alt="Area B - Red Trellis Zone" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
+                    </div>
+                    <div style="padding: var(--spacing-lg);">
+                        <div style="display: inline-block; padding: 4px 10px; background: rgba(15, 164, 175, 0.15); border-radius: 4px; margin-bottom: var(--spacing-sm); font-size: 0.7rem; font-weight: 600; color: var(--accent); letter-spacing: 0.5px;">AREA B</div>
+                        <h3 style="font-size: 1.25rem; color: var(--text-primary); margin-bottom: var(--spacing-sm); font-weight: 600;">Mid-North / Red Trellis Zone</h3>
+                        <p style="font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: var(--spacing-md);">Widest corridor section with existing red trellis structure. Shade and farming intervention zone.</p>
+                        <div style="font-size: 0.8rem; color: var(--text-muted);">Interventions: Shade Structures, Urban Farming</div>
+                    </div>
+                </div>
+
+                <!-- Area C -->
+                <div style="background: var(--secondary); border: 1px solid rgba(15, 164, 175, 0.2); border-radius: var(--radius-lg); overflow: hidden; transition: all 0.3s ease;" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='rgba(15, 164, 175, 0.2)'">
+                    <div style="height: 200px; overflow: hidden; background: rgba(0,0,0,0.3);">
+                        <img src="/static/images/alley_zones/area_c/murals/Large Mural Wall with Pipe Detail 1.png" alt="Area C - Mural Zone" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
+                    </div>
+                    <div style="padding: var(--spacing-lg);">
+                        <div style="display: inline-block; padding: 4px 10px; background: rgba(15, 164, 175, 0.15); border-radius: 4px; margin-bottom: var(--spacing-sm); font-size: 0.7rem; font-weight: 600; color: var(--accent); letter-spacing: 0.5px;">AREA C</div>
+                        <h3 style="font-size: 1.25rem; color: var(--text-primary); margin-bottom: var(--spacing-sm); font-weight: 600;">Mid-South / Mural Zone</h3>
+                        <p style="font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: var(--spacing-md);">Concrete walls with existing murals and graffiti. Shade and mural intervention zone.</p>
+                        <div style="font-size: 0.8rem; color: var(--text-muted);">Interventions: Shade Structures, Community Murals</div>
+                    </div>
+                </div>
+
+                <!-- Area D -->
+                <div style="background: var(--secondary); border: 1px solid rgba(15, 164, 175, 0.2); border-radius: var(--radius-lg); overflow: hidden; transition: all 0.3s ease;" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='rgba(15, 164, 175, 0.2)'">
+                    <div style="height: 200px; overflow: hidden; background: rgba(0,0,0,0.3);">
+                        <img src="/static/images/alley_zones/area_d/existing/Garage Doors + Wall Sections (Excludes Roof) 1.png" alt="Area D - South Exit" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
+                    </div>
+                    <div style="padding: var(--spacing-lg);">
+                        <div style="display: inline-block; padding: 4px 10px; background: rgba(15, 164, 175, 0.15); border-radius: 4px; margin-bottom: var(--spacing-sm); font-size: 0.7rem; font-weight: 600; color: var(--accent); letter-spacing: 0.5px;">AREA D</div>
+                        <h3 style="font-size: 1.25rem; color: var(--text-primary); margin-bottom: var(--spacing-sm); font-weight: 600;">South Exit / Rear Zone</h3>
+                        <p style="font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: var(--spacing-md);">Rear access area with garage structures and large wall surfaces. Mural intervention zone.</p>
+                        <div style="font-size: 0.8rem; color: var(--text-muted);">Interventions: Community Murals</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: var(--spacing-xl);">
+                <a href="/existing" style="display: inline-block; padding: 14px 28px; background: linear-gradient(135deg, var(--accent), #0CB5C2); color: white; font-weight: 600; border-radius: var(--radius-md); text-decoration: none; transition: all 0.3s ease;">View All Zone Documentation</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Three Interventions Section -->
+    <section class="interventions-section" id="interventions">
+        <div class="section-header">
+            <h2 class="section-title">{{ content.interventions_section.title if content and content.interventions_section else 'Three Design Intervention Systems' }}</h2>
+            <p class="section-subtitle">{{ content.interventions_section.subtitle if content and content.interventions_section else 'Infrastructure improvements applied to specific alley zones based on existing conditions and spatial compatibility.' }}</p>
+        </div>
+
+        <div class="intervention-grid" style="grid-template-columns: repeat(3, 1fr);">
+            <!-- Shade Structures -->
+            <a href="/solar-shades" class="intervention-card">
+                <img src="/static/images/heroes/shade-structures-hero.png" alt="Shade Structures" class="intervention-card-image" loading="lazy">
+                <p style="text-align: center; color: var(--text-muted); font-size: 0.7rem; padding: 4px 8px; margin: 0; background: rgba(0,0,0,0.3);">Design intervention</p>
+                <div class="intervention-card-content">
+                    <div class="intervention-icon">INFRASTRUCTURE</div>
+                    <h3 class="intervention-title">Shade Structures</h3>
+                    <p class="intervention-description">
+                        Overhead canopy system integrated with restored fence and wall infrastructure. Applied to Areas B and C where documented repairs provide structural mounting points.
+                    </p>
+                    <span class="intervention-cta">View System Details →</span>
+                </div>
+            </a>
+
+            <!-- Murals -->
+            <a href="/murals" class="intervention-card">
+                <img src="/static/images/heroes/community-murals-hero.png" alt="Community Murals" class="intervention-card-image" loading="lazy">
+                <p style="text-align: center; color: var(--text-muted); font-size: 0.7rem; padding: 4px 8px; margin: 0; background: rgba(0,0,0,0.3);">Design intervention</p>
+                <div class="intervention-card-content">
+                    <div class="intervention-icon">CULTURAL</div>
+                    <h3 class="intervention-title">Community Murals</h3>
+                    <p class="intervention-description">
+                        Wall-based cultural infrastructure building on preserved existing murals. Applied to Areas C and D where wall restoration created prepared canvases.
+                    </p>
+                    <span class="intervention-cta">View System Details →</span>
+                </div>
+            </a>
+
+            <!-- Urban Farming -->
+            <a href="/urban-farming" class="intervention-card">
+                <img src="/static/images/heroes/urban-farming-hero.png" alt="Urban Farming" class="intervention-card-image" loading="lazy">
+                <p style="text-align: center; color: var(--text-muted); font-size: 0.7rem; padding: 4px 8px; margin: 0; background: rgba(0,0,0,0.3);">Design intervention</p>
+                <div class="intervention-card-content">
+                    <div class="intervention-icon">FOOD</div>
+                    <h3 class="intervention-title">Urban Farming</h3>
+                    <p class="intervention-description">
+                        Container-based food production utilizing repaired pavement edges. Applied to Areas A and B where documented surface work enables modular placement.
+                    </p>
+                    <span class="intervention-cta">View System Details →</span>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <!-- Digital Twin Preview Section -->
+    <section class="digital-twin-section">
+        <div class="twin-preview-container">
+            <div class="twin-preview-content">
+                <h2>3D Spatial Simulation Platform</h2>
+                <p>
+                    Unreal Engine-based digital twin enables zone-specific exploration of Water Alley's transformation. Toggle intervention layers to test design combinations and assess spatial impact.
+                </p>
+                <ul class="feature-list">
+                    <li>Zone-by-zone infrastructure visualization</li>
+                    <li>Intervention layer toggles (Shade, Murals, Farming)</li>
+                    <li>Site-accurate geometry and materials</li>
+                    <li>Design testing and impact assessment</li>
+                </ul>
+            </div>
+            <div class="twin-preview-box">
+                <div class="twin-preview-placeholder">3D</div>
+                <p class="twin-preview-text">Spatial Simulation Tool</p>
+                <a href="/unreal-viewer" class="btn-secondary-outline">Launch Digital Twin</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer style="background: linear-gradient(180deg, var(--primary) 0%, var(--secondary) 100%); border-top: 2px solid rgba(15, 164, 175, 0.3); padding: var(--spacing-xxl) var(--spacing-lg) var(--spacing-xl);">
+        <div style="max-width: 1000px; margin: 0 auto;">
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--spacing-xl); margin-bottom: var(--spacing-xl);">
+                <!-- About -->
+                <div>
+                    <h4 style="color: var(--highlight); margin-bottom: var(--spacing-md); font-weight: 700; font-size: 1rem; letter-spacing: 0.5px;">PUHC Innovation Alleys</h4>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem; line-height: 1.7; margin: 0 0 var(--spacing-md) 0;">Water Alley transformation prototype. Spatial planning and digital twin visualization for urban alley infrastructure.</p>
+                    <a href="https://puhc.org/puede-center-about/" target="_blank" style="color: var(--highlight); text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: all 0.2s ease; display: inline-flex; align-items: center; gap: 4px;">PUHC PUEDE Center <span style="font-size: 0.75rem;">→</span></a>
+                </div>
+                <!-- Three Interventions -->
+                <div>
+                    <h4 style="color: var(--highlight); margin-bottom: var(--spacing-md); font-weight: 700; font-size: 1rem; letter-spacing: 0.5px;">Three Interventions</h4>
+                    <ul style="list-style: none; padding: 0; margin: 0;">
+                        <li style="margin-bottom: 0.6rem;"><a href="/solar-shades" style="color: var(--text-secondary); text-decoration: none; font-size: 0.9rem; transition: all 0.2s ease; display: inline-block;">Shade Structures</a></li>
+                        <li style="margin-bottom: 0.6rem;"><a href="/murals" style="color: var(--text-secondary); text-decoration: none; font-size: 0.9rem; transition: all 0.2s ease; display: inline-block;">Community Murals</a></li>
+                        <li style="margin-bottom: 0.6rem;"><a href="/urban-farming" style="color: var(--text-secondary); text-decoration: none; font-size: 0.9rem; transition: all 0.2s ease; display: inline-block;">Urban Farming</a></li>
+                    </ul>
+                </div>
+                <!-- Explore -->
+                <div>
+                    <h4 style="color: var(--highlight); margin-bottom: var(--spacing-md); font-weight: 700; font-size: 1rem; letter-spacing: 0.5px;">Explore</h4>
+                    <ul style="list-style: none; padding: 0; margin: 0;">
+                        <li style="margin-bottom: 0.6rem;"><a href="/existing" style="color: var(--text-secondary); text-decoration: none; font-size: 0.9rem; transition: all 0.2s ease; display: inline-block;">Existing Conditions</a></li>
+                        <li style="margin-bottom: 0.6rem;"><a href="/unreal-viewer" style="color: var(--text-secondary); text-decoration: none; font-size: 0.9rem; transition: all 0.2s ease; display: inline-block;">Digital Twin</a></li>
+                        <li style="margin-bottom: 0.6rem;"><a href="/compare" style="color: var(--text-secondary); text-decoration: none; font-size: 0.9rem; transition: all 0.2s ease; display: inline-block;">Transformation Comparison</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div style="border-top: 1px solid rgba(15, 164, 175, 0.2); padding-top: var(--spacing-lg); text-align: center;">
+                <p style="color: var(--text-muted); font-size: 0.85rem; margin: 0; line-height: 1.6;">© 2026 PUHC PUEDE Center — Innovation Alley 3, Water Alley, Pico-Union, Los Angeles</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        // Mobile navigation toggle
+        const navToggle = document.getElementById('navToggle');
+        const navTabs = document.getElementById('navTabs');
+        
+        navToggle.addEventListener('click', () => {
+            navTabs.classList.toggle('active');
+        });
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!navToggle.contains(e.target) && !navTabs.contains(e.target)) {
+                navTabs.classList.remove('active');
+            }
+        });
+
+        // Highlight active nav tab
+        const currentPath = window.location.pathname;
+        document.querySelectorAll('.nav-tab a').forEach(link => {
+            if (link.getAttribute('href') === currentPath) {
+                link.parentElement.classList.add('active');
+            }
+        });
+
+        // Smooth entrance animations
+        document.addEventListener('DOMContentLoaded', () => {
+            const heroContent = document.querySelector('.hero-content');
+            const interventionCards = document.querySelectorAll('.intervention-card');
+            
+            if (heroContent) {
+                heroContent.style.opacity = '0';
+                heroContent.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    heroContent.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                    heroContent.style.opacity = '1';
+                    heroContent.style.transform = 'translateY(0)';
+                }, 100);
+            }
+            
+            interventionCards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
+                setTimeout(() => {
+                    card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, 300 + (index * 100));
+            });
+        });
+    </script>
+</body>
+</html>

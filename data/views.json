@@ -1,0 +1,20 @@
+[
+  {
+    "scenario_id": "baseline",
+    "alley_id": "alley1",
+    "viewpoint_id": "start",
+    "camera": {
+      "heading": 33.9685625789088,
+      "pitch": -14.168111454346857,
+      "zoom": 0.48898894917982205
+    },
+    "overlays": {
+      "murals": false,
+      "greenery": false,
+      "lighting": false,
+      "street_furniture": false,
+      "opacity": 0
+    },
+    "timestamp": "2025-12-17T20:26:58.626Z"
+  }
+]

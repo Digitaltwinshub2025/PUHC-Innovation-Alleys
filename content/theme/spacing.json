@@ -1,0 +1,15 @@
+{
+  "_meta": {
+    "description": "Theme-level spacing settings",
+    "last_edited": "2026-02-10T20:33:23.393536"
+  },
+  "card_padding": "var(--spacing-lg)",
+  "image_border_radius": "var(--radius-lg)",
+  "section_padding": "var(--spacing-xxl) var(--spacing-lg)",
+  "spacing_lg": "24px",
+  "spacing_md": "16px",
+  "spacing_sm": "8px",
+  "spacing_xl": "40px",
+  "spacing_xs": "4px",
+  "spacing_xxl": "64px"
+}

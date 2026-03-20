@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alley Map - PUHC Innovation Alleys</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/global-theme.css') }}">
+    <script src="{{ url_for('static', filename='js/cache-buster.js') }}"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: var(--font-family);
+            background: var(--primary);
+            color: var(--text-primary);
+        }
+
+        .map-container {
+            display: flex;
+            height: calc(100vh - 70px);
+            margin-top: 70px;
+        }
+
+        #map {
+            flex: 1;
+            height: 100%;
+        }
+
+        .map-sidebar {
+            width: 400px;
+            background: var(--secondary);
+            border-left: 1px solid rgba(15, 164, 175, 0.2);
+            overflow-y: auto;
+            padding: var(--spacing-lg);
+        }
+
+        .sidebar-header {
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .sidebar-title {
+            font-size: 2rem;
+            color: var(--highlight);
+            margin-bottom: var(--spacing-sm);
+            font-weight: 800;
+        }
+
+        .sidebar-subtitle {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .theme-card {
+            background: rgba(15, 164, 175, 0.1);
+            border: 1px solid rgba(15, 164, 175, 0.3);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-md);
+            margin-bottom: var(--spacing-md);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .theme-card:hover {
+            border-color: var(--highlight);
+            transform: translateX(-4px);
+            box-shadow: 0 4px 12px rgba(15, 164, 175, 0.2);
+        }
+
+        .theme-card.active {
+            border-color: var(--highlight);
+            background: rgba(15, 164, 175, 0.2);
+        }
+
+        .theme-header {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .theme-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .theme-name {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .theme-status {
+            margin-left: auto;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .status-prototype {
+            background: rgba(76, 175, 80, 0.2);
+            color: #4CAF50;
+        }
+
+        .status-planned {
+            background: rgba(255, 193, 7, 0.2);
+            color: #FFC107;
+        }
+
+        .status-future {
+            background: rgba(33, 150, 243, 0.2);
+            color: #2196F3;
+        }
+
+        .theme-description {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-top: var(--spacing-xs);
+        }
+
+        .legend {
+            background: rgba(15, 164, 175, 0.1);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-md);
+            margin-top: var(--spacing-xl);
+        }
+
+        .legend-title {
+            font-weight: 700;
+            color: var(--highlight);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            margin-bottom: var(--spacing-xs);
+            font-size: 0.875rem;
+        }
+
+        .legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .popup-title {
+            font-weight: 700;
+            color: var(--highlight);
+            margin-bottom: 4px;
+        }
+
+        .popup-theme {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .popup-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .popup-btn {
+            padding: 6px 12px;
+            background: var(--highlight);
+            color: var(--primary);
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .popup-btn:hover {
+            background: var(--accent);
+        }
+
+        @media (max-width: 768px) {
+            .map-container {
+                flex-direction: column;
+            }
+
+            .map-sidebar {
+                width: 100%;
+                height: 50vh;
+                border-left: none;
+                border-top: 1px solid rgba(15, 164, 175, 0.2);
+            }
+
+            #map {
+                height: 50vh;
+            }
+        }
+    </style>
+    {% include 'includes/edit_mode.html' ignore missing %}
+</head>
+<body data-edit-page="innovation_alleys_map">
+    <!-- Global Navigation -->
+    <nav class="global-nav">
+        <div class="nav-container">
+            <a href="/" class="nav-logo">
+                <span class="nav-logo-text">PUHC Innovation Alleys</span>
+            </a>
+            
+            <ul class="nav-tabs" id="navTabs">
+                <li class="nav-tab"><a href="/">Alley 3</a></li>
+                <li class="nav-tab"><a href="/unreal-viewer">Digital Twin</a></li>
+                <li class="nav-tab"><a href="/fence-map">Fence Map</a></li>
+                <li class="nav-tab"><a href="/before-after">Compare</a></li>
+                <li class="nav-tab"><a href="/design-workspace">Build</a></li>
+            </ul>
+            
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+                ☰
+            </button>
+        </div>
+    </nav>
+
+    <div class="map-container">
+        <!-- Map -->
+        <div id="map"></div>
+
+        <!-- Sidebar -->
+        <div class="map-sidebar">
+            <div class="sidebar-header">
+                <h1 class="sidebar-title">12 Innovation Alleys</h1>
+                <p class="sidebar-subtitle">Transforming the alleyways between W 11th St and W 12th St in Pico-Union. Each alley (numbered 1-12) is a themed learning space teaching essential lessons about sustainability and survival.</p>
+            </div>
+
+            <div id="themesList">
+                <!-- Theme cards will be populated here -->
+            </div>
+
+            <div class="legend">
+                <div class="legend-title">Project Status</div>
+                <div class="legend-item">
+                    <div class="legend-dot" style="background: #4CAF50;"></div>
+                    <span>Prototype (Alley 3)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot" style="background: #FFC107;"></div>
+                    <span>Planned (Next Phase)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot" style="background: #2196F3;"></div>
+                    <span>Future Development</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 12 Innovation Alleys with themes
+        let map;
+        let markers = [];
+        
+        const innovationAlleys = [
+            {
+                id: 1,
+                name: 'Zone 1 - Energy',
+                theme: 'Energy',
+                color: '#FFD700',
+                description: 'Solar power, motion energy, kinetic sculptures, and interactive charging stations',
+                location: 'Alley 1 corridor in Pico-Union',
+                address: 'Alley 1 - Energy, Pico-Union, Los Angeles, CA 90006',
+                coordinates: '34.05029712004266, -118.28298209970326',
+                lat: 34.05029712004266,
+                lng: -118.28298209970326,
+                status: 'planned',
+                features: ['Solar-powered LED gates', 'Kinetic sculptures', 'Pedal generators', 'Circuit pattern floors']
+            },
+            {
+                id: 2,
+                name: 'Zone 2 - Sun',
+                theme: 'Sun',
+                color: '#FFA500',
+                description: 'Solar lights, electricity generation, and understanding our relationship with the sun',
+                location: 'Alley 2 corridor in Pico-Union',
+                address: 'Alley 2 - Sun, Pico-Union, Los Angeles, CA 90006',
+                coordinates: '34.0483347119334, -118.28278909472274',
+                lat: 34.0483347119334,
+                lng: -118.28278909472274,
+                status: 'future',
+                features: ['Solar canopies', 'Sun-tracking installations', 'Daylight education', 'Solar irrigation']
+            },
+            {
+                id: 3,
+                name: 'Zone 3 - Water (PRIMARY PROTOTYPE)',
+                theme: 'Water',
+                color: '#1E90FF',
+                description: 'MAIN FOCUS: Water-themed section of the alley with rainwater collection, bioswales, community murals, and co-design opportunities',
+                location: 'Alley 3 corridor in Pico-Union',
+                address: 'Alley 3 - Water, Pico-Union, Los Angeles, CA 90006',
+                coordinates: '34.04982619528969, -118.2818586747943',
+                lat: 34.04982619528969,
+                lng: -118.2818586747943,
+                status: 'prototype',
+                features: ['Bioswales', 'Rain gardens', 'Permeable pavement', 'Community murals on all walls', 'Co-design workspace', 'Native plants', 'Water flow visualization']
+            },
+            {
+                id: 4,
+                name: 'Zone 4 - Universe',
+                theme: 'Universe',
+                color: '#4B0082',
+                description: 'Space, astronomy, cosmic perspective, and our place in the universe',
+                coordinates: '34.051573754452384, -118.28210289757493',
+                lat: 34.051573754452384,
+                lng: -118.28210289757493,
+                status: 'future',
+                features: ['Star murals', 'Planetary installations', 'Night sky education', 'Cosmic art']
+            },
+            {
+                id: 5,
+                name: 'Zone 5 - Air',
+                theme: 'Air',
+                color: '#87CEEB',
+                description: 'Air quality, wind power, atmosphere, and breathing clean air',
+                coordinates: '34.0512482767413, -118.2809130897754',
+                lat: 34.0512482767413,
+                lng: -118.2809130897754,
+                status: 'future',
+                features: ['Air quality sensors', 'Wind sculptures', 'Plant air filters', 'Breathing spaces']
+            },
+            {
+                id: 6,
+                name: 'Zone 6 - Earth',
+                theme: 'Earth',
+                color: '#8B4513',
+                description: 'Soil health, geology, earth materials, and ground beneath our feet',
+                coordinates: '34.05069899513361, -118.27979221364627',
+                lat: 34.05069899513361,
+                lng: -118.27979221364627,
+                status: 'future',
+                features: ['Soil gardens', 'Geology displays', 'Earth art', 'Composting stations']
+            },
+            {
+                id: 7,
+                name: 'Zone 7 - Humanity',
+                theme: 'Humanity',
+                color: '#FF6347',
+                description: 'Community, culture, social connection, and celebrating Pico-Union heritage',
+                coordinates: '34.05021760023289, -118.27868110207845',
+                lat: 34.05021760023289,
+                lng: -118.27868110207845,
+                status: 'planned',
+                features: ['Cultural murals', 'Community seating', 'Story walls', 'Gathering spaces']
+            },
+            {
+                id: 8,
+                name: 'Zone 8 - Animal',
+                theme: 'Animal',
+                color: '#FF69B4',
+                description: 'Wildlife, urban ecology, biodiversity, and coexisting with nature',
+                coordinates: '34.049753910675584, -118.27759968651065',
+                lat: 34.049753910675584,
+                lng: -118.27759968651065,
+                status: 'future',
+                features: ['Bird habitats', 'Wildlife art', 'Ecology education', 'Animal tracking']
+            },
+            {
+                id: 9,
+                name: 'Zone 9 - Plant',
+                theme: 'Plant',
+                color: '#228B22',
+                description: 'Native species, pollinator gardens, urban agriculture, and plant power',
+                coordinates: '34.049217918459284, -118.2764975596723',
+                lat: 34.049217918459284,
+                lng: -118.2764975596723,
+                status: 'future',
+                features: ['Native gardens', 'Edible plants', 'Pollinator habitats', 'Plant education']
+            },
+            {
+                id: 10,
+                name: 'Zone 10 - Minerals',
+                theme: 'Minerals',
+                color: '#708090',
+                description: 'Geology, earth materials, rocks, and the building blocks of our world',
+                coordinates: '34.04311380244757, -118.27473862298159',
+                lat: 34.04311380244757,
+                lng: -118.27473862298159,
+                status: 'future',
+                features: ['Rock gardens', 'Mineral displays', 'Geology art', 'Earth science']
+            },
+            {
+                id: 11,
+                name: 'Zone 11 - Insects',
+                theme: 'Insects',
+                color: '#9370DB',
+                description: 'Pollinators, beneficial insects, ecosystem services, and tiny heroes',
+                coordinates: '34.04390854936556, -118.27670128625326',
+                lat: 34.04390854936556,
+                lng: -118.27670128625326,
+                status: 'future',
+                features: ['Pollinator gardens', 'Insect hotels', 'Bug education', 'Ecosystem art']
+            },
+            {
+                id: 12,
+                name: 'Zone 12 - Prosperity',
+                theme: 'Prosperity',
+                color: '#FFD700',
+                description: 'Economic development, community wealth, opportunity, and thriving together',
+                coordinates: '34.04434271351046, -118.27771370076478',
+                lat: 34.04434271351046,
+                lng: -118.27771370076478,
+                status: 'future',
+                features: ['Community markets', 'Skill sharing', 'Economic art', 'Opportunity spaces']
+            }
+        ];
+
+        // Initialize Google Map with satellite view
+        function initMap() {
+            // Center on the middle of the 12 Innovation Alleys corridor between W 11th St & W 12th St
+            const center = { lat: 34.04750, lng: -118.27950 };
+            
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: center,
+                zoom: 19,
+                mapTypeId: 'satellite', // Satellite view by default
+                mapTypeControl: true,
+                mapTypeControlOptions: {
+                    style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
+                    position: google.maps.ControlPosition.TOP_RIGHT,
+                    mapTypeIds: ['roadmap', 'satellite', 'hybrid', 'terrain']
+                },
+                zoomControl: true,
+                streetViewControl: false,
+                fullscreenControl: true
+            });
+            
+            // Add markers after map is initialized
+            addMarkers();
+        }
+        
+        // Add markers to Google Map
+        function addMarkers() {
+            // Status colors
+            const statusColors = {
+                prototype: '#4CAF50',
+                planned: '#FFC107',
+                future: '#2196F3'
+            };
+
+            // Add markers for each alley to Google Map
+            innovationAlleys.forEach(alley => {
+                const marker = new google.maps.Marker({
+                    position: { lat: alley.lat, lng: alley.lng },
+                    map: map,
+                    title: alley.name,
+                    icon: {
+                        path: google.maps.SymbolPath.CIRCLE,
+                        scale: 10,
+                        fillColor: statusColors[alley.status],
+                        fillOpacity: 0.95,
+                        strokeColor: '#FFFFFF',
+                        strokeWeight: 2
+                    }
+                });
+
+                // Calculate distance from Alley 3 (prototype)
+                const alley3 = innovationAlleys.find(a => a.id === 3);
+                const distance = calculateDistance(alley.lat, alley.lng, alley3.lat, alley3.lng);
+                const walkTime = Math.ceil(distance / 80); // Average walking speed ~80m/min
+                
+                // Info window content with distance
+                const infoContent = `
+                    <div style="font-family: var(--font-family); min-width: 250px; max-width: 360px;">
+                        <h3 style="color: ${statusColors[alley.status]}; margin: 0 0 8px 0; font-size: 1.125rem;">${alley.name}</h3>
+                        <p style="margin: 4px 0; color: #666; font-size: 0.875rem;"><strong>Theme:</strong> ${alley.theme}</p>
+                        ${alley.location ? `<p style="margin: 4px 0; color: #0FA4AF; font-size: 0.875rem;"><strong>Location:</strong> ${alley.location}</p>` : ''}
+                        ${alley.address ? `<p style="margin: 4px 0; color: #888; font-size: 0.75rem;">${alley.address}</p>` : ''}
+                        ${alley.coordinates ? `<p style="margin: 4px 0; color: #888; font-size: 0.75rem;"><strong>Coordinates:</strong> ${alley.coordinates}</p>` : ''}
+                        <p style="margin: 4px 0; color: #666; font-size: 0.875rem;"><strong>Distance from Alley 3:</strong> ${distance}m (~${walkTime} min walk)</p>
+                        <p style="margin: 8px 0; color: #333; font-size: 0.875rem;">${alley.description}</p>
+                        <div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid #eee;">
+                            <p style="margin: 4px 0; color: #666; font-size: 0.75rem; text-transform: uppercase; font-weight: 600;">Features:</p>
+                            <ul style="margin: 4px 0; padding-left: 20px; color: #666; font-size: 0.8rem;">
+                                ${alley.features.map(f => `<li>${f}</li>`).join('')}
+                            </ul>
+                        </div>
+                        <div style="margin-top: 12px; padding-top: 8px; border-top: 1px solid #eee; display: flex; flex-direction: column; gap: 6px;">
+                            <button onclick="showDirections(${alley.lat}, ${alley.lng}, '${alley.name}')" 
+                                    style="width: 100%; padding: 8px; background: #0FA4AF; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 600; margin-bottom: 4px;">
+                                Get Walking Directions
+                            </button>
+                            <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+                                <a href="/street-view-designer" target="_blank" class="popup-btn" style="flex: 1 1 45%; text-align: center;">Street View</a>
+                                <a href="/design-workspace" target="_blank" class="popup-btn" style="flex: 1 1 45%; text-align: center;">Co-Design Studio</a>
+                                <a href="/unreal-viewer" target="_blank" class="popup-btn" style="flex: 1 1 100%; text-align: center;">3D Alley Viewer</a>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                const infoWindow = new google.maps.InfoWindow({
+                    content: infoContent
+                });
+
+                marker.addListener('click', () => {
+                    infoWindow.open(map, marker);
+                    highlightAlley(alley.id);
+                });
+
+                markers.push(marker);
+            });
+        }
+
+        // Populate sidebar with theme cards
+        const themesList = document.getElementById('themesList');
+        innovationAlleys.forEach(alley => {
+            const card = document.createElement('div');
+            card.className = 'theme-card';
+            card.id = `theme-${alley.id}`;
+            
+            const statusClass = `status-${alley.status}`;
+            const statusText = alley.status === 'prototype' ? 'Prototype' : 
+                              alley.status === 'planned' ? 'Planned' : 'Future';
+            
+            card.innerHTML = `
+                <div class="theme-header">
+                    <div class="theme-icon" style="background: ${alley.color};">${alley.id}</div>
+                    <div class="theme-name">${alley.theme}</div>
+                    <div class="theme-status ${statusClass}">${statusText}</div>
+                </div>
+                <div class="theme-description">${alley.description}</div>
+            `;
+            
+            card.addEventListener('click', () => {
+                highlightAlley(alley.id);
+                map.setCenter({ lat: alley.lat, lng: alley.lng });
+                map.setZoom(19);
+            });
+            
+            themesList.appendChild(card);
+        });
+
+        function highlightAlley(id) {
+            // Remove active class from all cards
+            document.querySelectorAll('.theme-card').forEach(card => {
+                card.classList.remove('active');
+            });
+            
+            // Add active class to selected card
+            document.getElementById(`theme-${id}`).classList.add('active');
+        }
+
+        // Calculate distance between two points (Haversine formula)
+        function calculateDistance(lat1, lng1, lat2, lng2) {
+            const R = 6371e3; // Earth's radius in meters
+            const φ1 = lat1 * Math.PI / 180;
+            const φ2 = lat2 * Math.PI / 180;
+            const Δφ = (lat2 - lat1) * Math.PI / 180;
+            const Δλ = (lng2 - lng1) * Math.PI / 180;
+
+            const a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
+                      Math.cos(φ1) * Math.cos(φ2) *
+                      Math.sin(Δλ/2) * Math.sin(Δλ/2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+
+            const distance = R * c; // Distance in meters
+            return Math.round(distance);
+        }
+
+        // Show walking directions using Google Directions API
+        let directionsService;
+        let directionsRenderer;
+        
+        function showDirections(toLat, toLng, toName) {
+            if (!directionsService) {
+                directionsService = new google.maps.DirectionsService();
+                directionsRenderer = new google.maps.DirectionsRenderer({
+                    map: map,
+                    suppressMarkers: false,
+                    polylineOptions: {
+                        strokeColor: '#0FA4AF',
+                        strokeWeight: 4
+                    }
+                });
+            }
+
+            // Start from Alley 3 (prototype)
+            const alley3 = innovationAlleys.find(a => a.id === 3);
+            const origin = new google.maps.LatLng(alley3.lat, alley3.lng);
+            const destination = new google.maps.LatLng(toLat, toLng);
+
+            const request = {
+                origin: origin,
+                destination: destination,
+                travelMode: google.maps.TravelMode.WALKING
+            };
+
+            directionsService.route(request, (result, status) => {
+                if (status === 'OK') {
+                    directionsRenderer.setDirections(result);
+                    
+                    // Show route info
+                    const route = result.routes[0].legs[0];
+                    alert(`Walking route from Alley 3 to ${toName}:\n\nDistance: ${route.distance.text}\nTime: ${route.duration.text}`);
+                } else {
+                    console.error('Directions request failed:', status);
+                    alert('Could not calculate directions. The alleys are very close together!');
+                }
+            });
+        }
+
+        // Clear directions
+        function clearDirections() {
+            if (directionsRenderer) {
+                directionsRenderer.setMap(null);
+            }
+        }
+
+        // Mobile navigation toggle
+        const navToggle = document.getElementById('navToggle');
+        const navTabs = document.getElementById('navTabs');
+        
+        navToggle.addEventListener('click', () => {
+            navTabs.classList.toggle('active');
+        });
+
+        // Highlight active nav tab
+        const currentPath = window.location.pathname;
+        document.querySelectorAll('.nav-tab a').forEach(link => {
+            if (link.getAttribute('href') === currentPath) {
+                link.parentElement.classList.add('active');
+            }
+        });
+    </script>
+    
+    <!-- Load Google Maps API after initMap is defined -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBm6t0tMbUKtUbaerKgqe0j8FMBOKyncFU&callback=initMap" async defer></script>
+</body>
+</html>

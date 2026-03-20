@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compare Before & After - Alley 3 | PUHC Innovation Alleys</title>
+    <meta name="description" content="Visual comparison of Water Alley's existing conditions and design interventions - see how shade, murals, and urban farming transform the space.">
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='images/favicon.svg') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/global-theme.css') }}">
+    <script src="{{ url_for('static', filename='js/cache-buster.js') }}"></script>
+    <style>
+        .page-container {
+            margin-top: 70px;
+            min-height: calc(100vh - 70px);
+            padding: var(--spacing-xl) var(--spacing-lg);
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .prototype-badge {
+            display: inline-block;
+            padding: 6px 14px;
+            background: rgba(15, 164, 175, 0.15);
+            border: 1px solid rgba(15, 164, 175, 0.4);
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--highlight);
+            letter-spacing: 1px;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .page-subtitle {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* Main Layout */
+        .compare-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-xl);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        /* Baseline Section */
+        .baseline-section, .projected-section {
+            background: var(--secondary);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            border: 1px solid rgba(15, 164, 175, 0.2);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            margin-bottom: var(--spacing-lg);
+            padding-bottom: var(--spacing-md);
+            border-bottom: 1px solid rgba(15, 164, 175, 0.2);
+        }
+
+        .section-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 4px 12px;
+            border-radius: 4px;
+        }
+
+        .label-before {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-secondary);
+        }
+
+        .label-after {
+            background: rgba(15, 164, 175, 0.2);
+            color: var(--highlight);
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        /* Data Display */
+        .data-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--spacing-md) 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .data-row:last-child {
+            border-bottom: none;
+        }
+
+        .data-label {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .data-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .data-value.highlight {
+            color: var(--highlight);
+        }
+
+        .data-value.loading {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        .data-source {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        /* Interventions Section */
+        .interventions-section {
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .interventions-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-md);
+            text-align: center;
+        }
+
+        .interventions-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: var(--spacing-md);
+        }
+
+        .intervention-toggle {
+            background: var(--secondary);
+            border: 2px solid rgba(15, 164, 175, 0.2);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-md);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .intervention-toggle:hover {
+            border-color: var(--highlight);
+        }
+
+        .intervention-toggle.active {
+            background: rgba(15, 164, 175, 0.15);
+            border-color: var(--highlight);
+        }
+
+        .intervention-toggle input {
+            display: none;
+        }
+
+        .intervention-icon {
+            font-size: 0.65rem;
+            font-weight: 600;
+            color: var(--highlight);
+            background: rgba(15, 164, 175, 0.15);
+            padding: 4px 10px;
+            border-radius: 4px;
+            margin-bottom: var(--spacing-sm);
+            letter-spacing: 1px;
+            display: inline-block;
+        }
+
+        .intervention-name {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .intervention-impact {
+            font-size: 0.8rem;
+            color: var(--highlight);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .intervention-toggle.active .intervention-impact {
+            opacity: 1;
+        }
+
+        /* Calculation Display */
+        .calculation-section {
+            background: rgba(15, 164, 175, 0.05);
+            border: 1px solid rgba(15, 164, 175, 0.2);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .calculation-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--highlight);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .calculation-formula {
+            font-family: monospace;
+            font-size: 1rem;
+            color: var(--text-primary);
+            background: var(--primary);
+            padding: var(--spacing-md);
+            border-radius: var(--radius-sm);
+            text-align: center;
+        }
+
+        .calculation-note {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-top: var(--spacing-md);
+            text-align: center;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            display: flex;
+            justify-content: center;
+            gap: var(--spacing-md);
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: var(--highlight);
+            color: white;
+            font-weight: 600;
+            border-radius: var(--radius-sm);
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary:hover {
+            background: #0cb5c2;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: transparent;
+            color: var(--text-primary);
+            font-weight: 600;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: var(--radius-sm);
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        @media (max-width: 900px) {
+            .compare-layout {
+                grid-template-columns: 1fr;
+            }
+            
+            .interventions-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .interventions-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .page-title {
+                font-size: 2rem;
+            }
+        }
+    </style>
+    {% include 'includes/edit_mode.html' ignore missing %}
+</head>
+<body data-edit-page="compare" {% if edit_mode %}data-edit-active="true"{% endif %}>
+    <!-- Global Navigation -->
+    <nav class="global-nav">
+        <div class="nav-container">
+            <a href="/" class="nav-logo">
+                <span class="nav-logo-text">PUHC Innovation Alleys</span>
+            </a>
+            <ul class="nav-tabs" id="navTabs">
+                <li class="nav-tab"><a href="/">Alley 3</a></li>
+                <li class="nav-tab"><a href="/existing">Before</a></li>
+                <li class="nav-tab"><a href="/fence-map">Fence Map</a></li>
+                <li class="nav-tab"><a href="/unreal-viewer">Explore</a></li>
+                <li class="nav-tab active"><a href="/compare">Compare</a></li>
+            </ul>
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">☰</button>
+        </div>
+    </nav>
+
+    <div class="page-container">
+        <!-- Header -->
+        <div class="page-header">
+            <span class="prototype-badge">{{ content.header.badge if content and content.header else 'BEFORE & AFTER' }}</span>
+            <h1 class="page-title">{{ content.header.title if content and content.header else 'Compare' }}</h1>
+            <p class="page-subtitle">{{ content.header.subtitle if content and content.header else 'Visual comparison showing existing conditions and design interventions side by side.' }}</p>
+        </div>
+
+        <!-- Contextual Framing -->
+        <div style="text-align: center; margin-bottom: var(--spacing-xl); max-width: 720px; margin-left: auto; margin-right: auto;">
+            <p style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.7; margin-bottom: var(--spacing-sm);">
+                This comparison illustrates how three design interventions—shade structures, murals, and urban farming—can be integrated within the same alley space.
+            </p>
+        </div>
+
+        <!-- Before/After Image Comparison -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-xl); margin-bottom: var(--spacing-xl); max-width: 1100px; margin-left: auto; margin-right: auto;">
+            <!-- Before Image -->
+            <div style="text-align: center;">
+                <div style="width: 100%; max-width: 520px; margin: 0 auto;">
+                    <img src="{{ url_for('static', filename='images/existing-alley.jpg') }}" alt="Existing alley conditions" style="width: 100%; height: auto; max-height: 400px; object-fit: cover; border-radius: var(--radius-md); box-shadow: var(--shadow-lg);" loading="lazy">
+                    <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: var(--spacing-sm); font-style: italic;">Existing alley conditions used as baseline reference</p>
+                </div>
+            </div>
+            <!-- After Image -->
+            <div style="text-align: center;">
+                <div style="width: 100%; max-width: 520px; margin: 0 auto;">
+                    <img src="{{ url_for('static', filename='images/unreal/photo-4.jpg') }}" alt="Alley 3 with all interventions - Unreal Engine render" style="width: 100%; height: auto; max-height: 400px; object-fit: cover; border-radius: var(--radius-md); box-shadow: var(--shadow-lg);" loading="lazy">
+                    <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: var(--spacing-sm); font-style: italic;">Integrated design interventions / Unreal Engine render</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Comparison Layout -->
+        <div class="compare-layout">
+            <!-- Baseline (Before) -->
+            <div class="baseline-section">
+                <div class="section-header">
+                    <span class="section-label label-before">BEFORE</span>
+                    <span class="section-title">Existing Conditions</span>
+                </div>
+                
+                <!-- Environmental Comfort -->
+                <div style="font-size: 0.75rem; font-weight: 600; color: var(--accent); text-transform: uppercase; letter-spacing: 1px; margin-top: var(--spacing-md); margin-bottom: var(--spacing-sm); padding-bottom: var(--spacing-xs); border-bottom: 1px solid rgba(15, 164, 175, 0.2);">Environmental Comfort</div>
+                <div class="data-row">
+                    <div class="data-label">
+                        <div>
+                            <div>Surface Temperature</div>
+                            <div class="data-source">Typical summer conditions</div>
+                        </div>
+                    </div>
+                    <div class="data-value">94°F</div>
+                </div>
+                <div class="data-row">
+                    <div class="data-label">
+                        <div>
+                            <div>Shade Coverage</div>
+                            <div class="data-source">Observed</div>
+                        </div>
+                    </div>
+                    <div class="data-value">0%</div>
+                </div>
+                
+                <!-- Ecological & Cultural Layers -->
+                <div style="font-size: 0.75rem; font-weight: 600; color: var(--accent); text-transform: uppercase; letter-spacing: 1px; margin-top: var(--spacing-md); margin-bottom: var(--spacing-sm); padding-bottom: var(--spacing-xs); border-bottom: 1px solid rgba(15, 164, 175, 0.2);">Ecological & Cultural Layers</div>
+                <div class="data-row">
+                    <div class="data-label">
+                        <div>
+                            <div>Plant Species</div>
+                            <div class="data-source">Documented</div>
+                        </div>
+                    </div>
+                    <div class="data-value">3</div>
+                </div>
+                <div class="data-row">
+                    <div class="data-label">
+                        <div>
+                            <div>Mural Coverage</div>
+                            <div class="data-source">Observed</div>
+                        </div>
+                    </div>
+                    <div class="data-value">0 sq ft</div>
+                </div>
+                
+                <!-- Productive Infrastructure -->
+                <div style="font-size: 0.75rem; font-weight: 600; color: var(--accent); text-transform: uppercase; letter-spacing: 1px; margin-top: var(--spacing-md); margin-bottom: var(--spacing-sm); padding-bottom: var(--spacing-xs); border-bottom: 1px solid rgba(15, 164, 175, 0.2);">Productive Infrastructure</div>
+                <div class="data-row">
+                    <div class="data-label">
+                        <div>
+                            <div>Food Production</div>
+                            <div class="data-source">Existing</div>
+                        </div>
+                    </div>
+                    <div class="data-value">0 lbs/year</div>
+                </div>
+                <div class="data-row">
+                    <div class="data-label">
+                        <div>
+                            <div>Solar Capacity</div>
+                            <div class="data-source">Existing</div>
+                        </div>
+                    </div>
+                    <div class="data-value">0 kW</div>
+                </div>
+            </div>
+
+            <!-- Projected (After) -->
+            <div class="projected-section">
+                <div class="section-header">
+                    <span class="section-label label-after">AFTER</span>
+                    <span class="section-title">With Design Interventions</span>
+                </div>
+                
+                <!-- Environmental Comfort -->
+                <div style="font-size: 0.75rem; font-weight: 600; color: var(--accent); text-transform: uppercase; letter-spacing: 1px; margin-top: var(--spacing-md); margin-bottom: var(--spacing-sm); padding-bottom: var(--spacing-xs); border-bottom: 1px solid rgba(15, 164, 175, 0.2);">Environmental Comfort</div>
+                <div class="data-row">
+                    <div class="data-label">
+                        <div>
+                            <div>Surface Temperature</div>
+                            <div class="data-source">Design scenario</div>
+                        </div>
+                    </div>
+                    <div class="data-value highlight">79°F <span style="font-size: 0.85rem; color: var(--highlight);">(-15°F)</span></div>
+                </div>
+                <div class="data-row">
+                    <div class="data-label">
+                        <div>
+                            <div>Shade Coverage</div>
+                            <div class="data-source">Design scenario</div>
+                        </div>
+                    </div>
+                    <div class="data-value highlight">85%</div>
+                </div>
+                
+                <!-- Ecological & Cultural Layers -->
+                <div style="font-size: 0.75rem; font-weight: 600; color: var(--accent); text-transform: uppercase; letter-spacing: 1px; margin-top: var(--spacing-md); margin-bottom: var(--spacing-sm); padding-bottom: var(--spacing-xs); border-bottom: 1px solid rgba(15, 164, 175, 0.2);">Ecological & Cultural Layers</div>
+                <div class="data-row">
+                    <div class="data-label">
+                        <div>
+                            <div>Plant Species</div>
+                            <div class="data-source">Design scenario</div>
+                        </div>
+                    </div>
+                    <div class="data-value highlight">12+</div>
+                </div>
+                <div class="data-row">
+                    <div class="data-label">
+                        <div>
+                            <div>Mural Coverage</div>
+                            <div class="data-source">Design scenario</div>
+                        </div>
+                    </div>
+                    <div class="data-value highlight">1,200 sq ft</div>
+                </div>
+                
+                <!-- Productive Infrastructure -->
+                <div style="font-size: 0.75rem; font-weight: 600; color: var(--accent); text-transform: uppercase; letter-spacing: 1px; margin-top: var(--spacing-md); margin-bottom: var(--spacing-sm); padding-bottom: var(--spacing-xs); border-bottom: 1px solid rgba(15, 164, 175, 0.2);">Productive Infrastructure</div>
+                <div class="data-row">
+                    <div class="data-label">
+                        <div>
+                            <div>Food Production</div>
+                            <div class="data-source">Design scenario</div>
+                        </div>
+                    </div>
+                    <div class="data-value highlight">200 lbs/year</div>
+                </div>
+                <div class="data-row">
+                    <div class="data-label">
+                        <div>
+                            <div>Solar Capacity</div>
+                            <div class="data-source">Design scenario</div>
+                        </div>
+                    </div>
+                    <div class="data-value highlight">5 kW</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Visual Continuity Note -->
+        <div style="text-align: center; margin-bottom: var(--spacing-xl); max-width: 650px; margin-left: auto; margin-right: auto; padding: var(--spacing-md); background: rgba(0, 30, 35, 0.4); border-radius: var(--radius-md); border: 1px solid rgba(255, 255, 255, 0.1);">
+            <p style="color: var(--text-secondary); font-size: 0.9rem; line-height: 1.6; margin: 0;">
+                These values correspond to what you see in the 3D Digital Twin and Street View imagery. Explore the spatial design to visualize how these changes appear in the modeled environment.
+            </p>
+        </div>
+
+        <!-- CTA Section -->
+        <div class="cta-section">
+            <a href="/unreal-viewer" class="btn-primary">Explore in 3D →</a>
+            <a href="/existing" class="btn-secondary">← View Existing Conditions</a>
+        </div>
+    </div>
+
+    <script>
+        // Simple static page - no dynamic calculations needed
+
+        // Mobile nav toggle
+        document.getElementById('navToggle').addEventListener('click', function() {
+            document.getElementById('navTabs').classList.toggle('active');
+        });
+    </script>
+</body>
+</html>

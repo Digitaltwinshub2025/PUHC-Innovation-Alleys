@@ -1,0 +1,60 @@
+{
+  "scenarios": [
+    {
+      "id": "alley-1768505908686",
+      "name": "BEFORE: Current Alley",
+      "type": "baseline",
+      "location": {
+        "name": "Alley corridor between W 11th & W 12th St, Pico-Union",
+        "address": "Pico-Union, Los Angeles",
+        "coordinates": {
+          "lat": 34.04927,
+          "lng": -118.28129
+        }
+      },
+      "dimensions": {
+        "length": 150,
+        "width": 12,
+        "unit": "ft"
+      },
+      "phase": "Planning",
+      "last_updated": "2026-01-15",
+      "layers": [],
+      "environmental_data": {
+        "temperature": 96,
+        "shade_coverage": 0,
+        "air_quality": 92,
+        "green_space": 0
+      },
+      "notes": "Hot concrete (96\u00b0F), no shade, no plants, poor air quality. This is what we have now."
+    },
+    {
+      "id": "alley-1768505922632",
+      "name": "AFTER: Art & Culture",
+      "type": "vision",
+      "location": {
+        "name": "Alley corridor between W 11th & W 12th St, Pico-Union",
+        "address": "Pico-Union, Los Angeles",
+        "coordinates": {
+          "lat": 34.04927,
+          "lng": -118.28129
+        }
+      },
+      "dimensions": {
+        "length": 150,
+        "width": 12,
+        "unit": "ft"
+      },
+      "phase": "Planning",
+      "last_updated": "2026-01-15",
+      "layers": [],
+      "environmental_data": {
+        "temperature": 92,
+        "shade_coverage": 45,
+        "air_quality": 78,
+        "green_space": 35
+      },
+      "notes": "Vibrant murals celebrating our community, plus native plants and shade trees. 4\u00b0F cooler with beautiful art."
+    }
+  ]
+}

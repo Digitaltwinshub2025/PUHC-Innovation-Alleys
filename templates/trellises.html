@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vertical Trellises & Medallions - Innovation Alley 3 | PUHC Innovation Alleys</title>
+    <meta name="description" content="Living green walls with native plants and decorative medallions for Water Alley's eco-cultural transformation.">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/global-theme.css') }}">
+    <script src="{{ url_for('static', filename='js/cache-buster.js') }}"></script>
+    <style>
+        .page-container {
+            margin-top: 70px;
+            min-height: calc(100vh - 70px);
+        }
+
+        .intervention-hero {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            padding: 80px var(--spacing-lg) 60px;
+            text-align: center;
+            position: relative;
+        }
+
+        .intervention-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 50% 70%, rgba(100, 200, 100, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .hero-icon { font-size: 4rem; margin-bottom: var(--spacing-md); }
+        .hero-title { font-size: 3rem; color: var(--text-primary); margin-bottom: var(--spacing-sm); font-weight: 700; }
+        .hero-subtitle { font-size: 1.25rem; color: var(--text-secondary); max-width: 650px; margin: 0 auto var(--spacing-lg); line-height: 1.6; }
+
+        .hero-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 28px;
+            background: linear-gradient(135deg, var(--accent), #0CB5C2);
+            color: white;
+            font-weight: 600;
+            border-radius: var(--radius-md);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .hero-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(15, 164, 175, 0.4);
+        }
+
+        .content-section {
+            padding: var(--spacing-xxl) var(--spacing-lg);
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-lg);
+            text-align: center;
+        }
+
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-xl);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .feature-box {
+            background: var(--secondary);
+            border: 1px solid rgba(15, 164, 175, 0.15);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-xl);
+        }
+
+        .feature-box h3 {
+            font-size: 1.5rem;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-md);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .feature-box p {
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .feature-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 8px 0;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .feature-list li::before {
+            content: '✓';
+            color: var(--accent);
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .plants-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .plant-card {
+            background: var(--secondary);
+            border: 1px solid rgba(15, 164, 175, 0.15);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-lg);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .plant-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-4px);
+        }
+
+        .plant-icon { font-size: 2rem; margin-bottom: var(--spacing-sm); }
+        .plant-name { font-size: 1rem; color: var(--text-primary); font-weight: 600; margin-bottom: 4px; }
+        .plant-scientific { font-size: 0.8rem; color: var(--text-secondary); font-style: italic; }
+
+        .metrics-row {
+            display: flex;
+            justify-content: center;
+            gap: var(--spacing-xl);
+            flex-wrap: wrap;
+            padding: var(--spacing-xl) 0;
+            border-top: 1px solid rgba(15, 164, 175, 0.1);
+            border-bottom: 1px solid rgba(15, 164, 175, 0.1);
+            margin: var(--spacing-xl) 0;
+        }
+
+        .metric-item { text-align: center; }
+        .metric-value { font-size: 2.5rem; font-weight: 700; color: var(--accent); margin-bottom: 4px; }
+        .metric-label { font-size: 0.9rem; color: var(--text-secondary); }
+
+        .medallions-section {
+            background: var(--secondary);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-xl);
+            margin-bottom: var(--spacing-xl);
+            text-align: center;
+        }
+
+        .medallions-section h3 {
+            font-size: 1.5rem;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .medallions-section p {
+            color: var(--text-secondary);
+            line-height: 1.7;
+            max-width: 600px;
+            margin: 0 auto var(--spacing-lg);
+        }
+
+        .medallion-samples {
+            display: flex;
+            justify-content: center;
+            gap: var(--spacing-lg);
+            flex-wrap: wrap;
+        }
+
+        .medallion-item {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: rgba(15, 164, 175, 0.1);
+            border: 2px solid rgba(15, 164, 175, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+        }
+
+        .cta-section {
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
+            padding: var(--spacing-xxl) var(--spacing-lg);
+            text-align: center;
+        }
+
+        .cta-title { font-size: 1.75rem; color: var(--text-primary); margin-bottom: var(--spacing-md); }
+        .cta-description { font-size: 1.05rem; color: var(--text-secondary); max-width: 500px; margin: 0 auto var(--spacing-lg); }
+        .cta-buttons { display: flex; justify-content: center; gap: var(--spacing-md); flex-wrap: wrap; }
+
+        .btn-primary {
+            display: inline-flex; align-items: center; gap: 8px; padding: 14px 28px;
+            background: linear-gradient(135deg, var(--accent), #0CB5C2); color: white;
+            font-weight: 600; border-radius: var(--radius-md); text-decoration: none; transition: all 0.3s ease;
+        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(15, 164, 175, 0.4); }
+
+        .btn-outline {
+            display: inline-flex; align-items: center; gap: 8px; padding: 14px 28px;
+            background: transparent; border: 2px solid rgba(175, 221, 229, 0.5); color: var(--text-primary);
+            font-weight: 600; border-radius: var(--radius-md); text-decoration: none; transition: all 0.3s ease;
+        }
+        .btn-outline:hover { background: rgba(15, 164, 175, 0.1); border-color: var(--accent); }
+
+        @media (max-width: 900px) {
+            .two-column { grid-template-columns: 1fr; }
+            .plants-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 768px) {
+            .hero-title { font-size: 2.25rem; }
+            .metric-value { font-size: 2rem; }
+        }
+    </style>
+    {% include 'includes/edit_mode.html' ignore missing %}
+</head>
+<body data-edit-page="trellises">
+    <nav class="global-nav">
+        <div class="nav-container">
+            <a href="/" class="nav-logo"><span class="nav-logo-text">PUHC Innovation Alleys</span></a>
+            <ul class="nav-tabs" id="navTabs">
+                <li class="nav-tab"><a href="/">Alley 3</a></li>
+                <li class="nav-tab"><a href="/existing">Before</a></li>
+                <li class="nav-tab"><a href="/fence-map">Fence Map</a></li>
+                <li class="nav-tab"><a href="/unreal-viewer">Explore</a></li>
+                <li class="nav-tab"><a href="/compare">Compare</a></li>
+            </ul>
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">☰</button>
+        </div>
+    </nav>
+
+    <div class="page-container">
+        <section class="intervention-hero">
+            <div class="hero-icon">GREEN</div>
+            <h1 class="hero-title">Vertical Trellises & Medallions</h1>
+            <p class="hero-subtitle">
+                Living green walls with California native plants and decorative cultural medallions — bringing nature and art together on the alley walls.
+            </p>
+            <p style="font-size: 0.9rem; color: var(--accent); max-width: 600px; margin: 0 auto var(--spacing-md); padding: 12px 20px; background: rgba(15, 164, 175, 0.1); border-radius: 8px; border: 1px solid rgba(15, 164, 175, 0.3);">
+                This intervention is functionally modeled within the live digital twin and evaluated using real environmental and spatial data relevant to Water Alley.
+            </p>
+            <a href="/unreal-viewer" class="hero-cta">View in Digital Twin</a>
+        </section>
+
+        <!-- Role in Innovation Alley -->
+        <section class="content-section" style="padding-bottom: 0;">
+            <h2 class="section-title">Role in Innovation Alley</h2>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-lg); margin-bottom: var(--spacing-xl);">
+                <div style="background: var(--secondary); border: 1px solid rgba(15, 164, 175, 0.15); border-radius: var(--radius-lg); padding: var(--spacing-xl);">
+                    <h3 style="color: var(--accent); font-size: 1.1rem; margin-bottom: var(--spacing-sm); font-weight: 600;">Urban Greening</h3>
+                    <p style="color: var(--text-secondary); line-height: 1.7; font-size: 0.95rem;">
+                        Vertical trellises maximize green space in a narrow alley by growing plants upward on wall-mounted structures. This living infrastructure improves air quality, reduces heat absorption, and creates a more inviting pedestrian environment without sacrificing ground-level circulation.
+                    </p>
+                </div>
+                <div style="background: var(--secondary); border: 1px solid rgba(15, 164, 175, 0.15); border-radius: var(--radius-lg); padding: var(--spacing-xl);">
+                    <h3 style="color: var(--accent); font-size: 1.1rem; margin-bottom: var(--spacing-sm); font-weight: 600;">Cultural Expression</h3>
+                    <p style="color: var(--text-secondary); line-height: 1.7; font-size: 0.95rem;">
+                        Decorative medallions interspersed among the greenery add artistic and cultural elements that celebrate Pico-Union's identity. These handcrafted pieces transform functional infrastructure into meaningful community landmarks.
+                    </p>
+                </div>
+            </div>
+
+            <h2 class="section-title">In the Digital Twin</h2>
+            <div style="background: var(--secondary); border: 1px solid rgba(15, 164, 175, 0.15); border-radius: var(--radius-lg); padding: var(--spacing-xl); margin-bottom: var(--spacing-xl);">
+                <p style="color: var(--text-secondary); line-height: 1.7; font-size: 0.95rem; text-align: center; max-width: 800px; margin: 0 auto;">
+                    Trellis structures and plant coverage are modeled in the digital twin with accurate placement along alley walls. The visualization shows how greenery softens the corridor, demonstrates irrigation zones, and illustrates how medallions create visual rhythm. Plant growth stages can be simulated to project future appearance.
+                </p>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="content-section" style="padding-top: 0;">
+            <h2 class="section-title">Design Components</h2>
+            <div class="two-column">
+                <div class="feature-box">
+                    <h3>Vertical Trellises</h3>
+                    <p>
+                        Wall-mounted trellis systems support climbing plants and create living green walls that improve air quality, reduce heat, and add natural beauty to the corridor.
+                    </p>
+                    <ul class="feature-list">
+                        <li>Modular steel trellis panels</li>
+                        <li>Drip irrigation system</li>
+                        <li>Native California climbing plants</li>
+                        <li>Low maintenance design</li>
+                        <li>Integrated planters at base</li>
+                    </ul>
+                </div>
+
+                <div class="feature-box">
+                    <h3>Decorative Medallions</h3>
+                    <p>
+                        Interspersed among the greenery, ceramic medallions add cultural and artistic elements that celebrate Pico-Union's heritage and community identity.
+                    </p>
+                    <ul class="feature-list">
+                        <li>Hand-crafted ceramic pieces</li>
+                        <li>Cultural symbols and motifs</li>
+                        <li>Weather-resistant glazing</li>
+                        <li>Community-designed patterns</li>
+                        <li>Integrated LED backlighting</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="metrics-row">
+                <div class="metric-item">
+                    <div class="metric-value">800</div>
+                    <div class="metric-label">Sq Ft Green Wall</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-value">12</div>
+                    <div class="metric-label">Plant Species</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-value">24</div>
+                    <div class="metric-label">Medallions</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-value">30%</div>
+                    <div class="metric-label">Air Quality Improvement</div>
+                </div>
+            </div>
+
+            <h2 class="section-title">Featured Plants</h2>
+            <div class="plants-grid">
+                <div class="plant-card">
+                    <div class="plant-icon">F1</div>
+                    <div class="plant-name">California Fuchsia</div>
+                    <div class="plant-scientific">Epilobium canum</div>
+                </div>
+                <div class="plant-card">
+                    <div class="plant-icon">F2</div>
+                    <div class="plant-name">Island Snapdragon</div>
+                    <div class="plant-scientific">Gambelia speciosa</div>
+                </div>
+                <div class="plant-card">
+                    <div class="plant-icon">F3</div>
+                    <div class="plant-name">California Grape</div>
+                    <div class="plant-scientific">Vitis californica</div>
+                </div>
+                <div class="plant-card">
+                    <div class="plant-icon">F4</div>
+                    <div class="plant-name">Coral Bells</div>
+                    <div class="plant-scientific">Heuchera maxima</div>
+                </div>
+                <div class="plant-card">
+                    <div class="plant-icon">F5</div>
+                    <div class="plant-name">Bush Sunflower</div>
+                    <div class="plant-scientific">Encelia californica</div>
+                </div>
+                <div class="plant-card">
+                    <div class="plant-icon">F6</div>
+                    <div class="plant-name">Blue-Eyed Grass</div>
+                    <div class="plant-scientific">Sisyrinchium bellum</div>
+                </div>
+                <div class="plant-card">
+                    <div class="plant-icon">F7</div>
+                    <div class="plant-name">Deer Grass</div>
+                    <div class="plant-scientific">Muhlenbergia rigens</div>
+                </div>
+                <div class="plant-card">
+                    <div class="plant-icon">F8</div>
+                    <div class="plant-name">Creeping Sage</div>
+                    <div class="plant-scientific">Salvia sonomensis</div>
+                </div>
+            </div>
+
+            <div class="medallions-section">
+                <h3>Cultural Medallions</h3>
+                <p>
+                    Decorative ceramic medallions featuring symbols meaningful to the Pico-Union community — water motifs, cultural icons, and nature-inspired designs.
+                </p>
+                <div class="medallion-samples">
+                    <div class="medallion-item">W</div>
+                    <div class="medallion-item">O</div>
+                    <div class="medallion-item">S</div>
+                    <div class="medallion-item">B</div>
+                    <div class="medallion-item">R</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="cta-section">
+            <h2 class="cta-title">See Trellises in Context</h2>
+            <p class="cta-description">
+                Explore how the vertical trellises and medallions transform the Water Alley walls in the immersive 3D Digital Twin.
+            </p>
+            <div class="cta-buttons">
+                <a href="/unreal-viewer" class="btn-primary">Launch Digital Twin</a>
+                <a href="/" class="btn-outline">← Back to Alley 3</a>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        const navToggle = document.getElementById('navToggle');
+        const navTabs = document.getElementById('navTabs');
+        navToggle.addEventListener('click', () => { navTabs.classList.toggle('active'); });
+        document.addEventListener('click', (e) => {
+            if (!navToggle.contains(e.target) && !navTabs.contains(e.target)) { navTabs.classList.remove('active'); }
+        });
+    </script>
+</body>
+</html>

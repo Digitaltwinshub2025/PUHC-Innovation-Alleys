@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Design Proposals - PUHC Innovation Alleys</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/global-theme.css') }}">
+    <script src="{{ url_for('static', filename='js/cache-buster.js') }}"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: var(--font-primary);
+            background: var(--primary);
+            color: var(--text-primary);
+        }
+
+        .brief-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: var(--spacing-xl) var(--spacing-xl);
+            margin-top: 70px;
+        }
+
+        .brief-header {
+            text-align: center;
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .brief-title {
+            font-size: 2.75rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .brief-subtitle {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+
+        .brief-section {
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-lg);
+            padding: var(--spacing-md);
+            background: rgba(15, 164, 175, 0.05);
+            border-radius: var(--radius-md);
+            border-left: 3px solid var(--highlight);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Current State Section */
+        .current-state-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-lg);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .state-card {
+            background: linear-gradient(135deg, rgba(15, 164, 175, 0.08) 0%, rgba(15, 164, 175, 0.03) 100%);
+            border: 1px solid rgba(15, 164, 175, 0.2);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+        }
+
+        .state-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--highlight);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .state-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .metrics-display {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-md);
+        }
+
+        .metric-box {
+            background: rgba(15, 164, 175, 0.05);
+            border: 1px solid rgba(15, 164, 175, 0.15);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-md);
+            text-align: center;
+        }
+
+        .metric-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--highlight);
+        }
+
+        /* Recommendations Section */
+        .recommendations-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: var(--spacing-lg);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .recommendation-card {
+            background: rgba(15, 164, 175, 0.08);
+            border: 1px solid rgba(15, 164, 175, 0.2);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            transition: all 0.3s ease;
+        }
+
+        .recommendation-card:hover {
+            border-color: var(--highlight);
+            box-shadow: 0 8px 24px rgba(15, 164, 175, 0.15);
+            transform: translateY(-4px);
+        }
+
+        .rec-icon {
+            font-size: 2rem;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .rec-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .rec-description {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .rec-impact {
+            background: rgba(15, 164, 175, 0.1);
+            border-left: 3px solid var(--highlight);
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-radius: var(--radius-sm);
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        /* Design Variations Section */
+        .designs-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: var(--spacing-lg);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .design-card {
+            background: linear-gradient(135deg, rgba(15, 164, 175, 0.08) 0%, rgba(15, 164, 175, 0.03) 100%);
+            border: 1px solid rgba(15, 164, 175, 0.2);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .design-card:hover {
+            border-color: var(--highlight);
+            box-shadow: 0 8px 24px rgba(15, 164, 175, 0.15);
+        }
+
+        .design-card.selected {
+            border-color: var(--highlight);
+            background: linear-gradient(135deg, rgba(15, 164, 175, 0.15) 0%, rgba(15, 164, 175, 0.08) 100%);
+            box-shadow: 0 8px 24px rgba(15, 164, 175, 0.15);
+        }
+
+        .design-header {
+            padding: var(--spacing-lg);
+            border-bottom: 1px solid rgba(15, 164, 175, 0.15);
+        }
+
+        .design-type {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--highlight);
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .design-name {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .design-description {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .design-preview {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, rgba(15, 164, 175, 0.1) 0%, rgba(15, 164, 175, 0.05) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            text-align: center;
+            padding: var(--spacing-lg);
+        }
+
+        .design-impacts {
+            padding: var(--spacing-lg);
+            border-top: 1px solid rgba(15, 164, 175, 0.15);
+        }
+
+        .impact-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--spacing-sm) 0;
+            font-size: 0.85rem;
+            border-bottom: 1px solid rgba(15, 164, 175, 0.1);
+        }
+
+        .impact-item:last-child {
+            border-bottom: none;
+        }
+
+        .impact-label {
+            color: var(--text-secondary);
+        }
+
+        .impact-value {
+            font-weight: 700;
+            color: var(--highlight);
+        }
+
+        .design-action {
+            padding: var(--spacing-lg);
+            text-align: center;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--highlight);
+            color: var(--primary);
+        }
+
+        .btn-primary:hover {
+            background: #0CB5C2;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-secondary {
+            background: var(--secondary);
+            color: var(--text-primary);
+            border: 1px solid rgba(15, 164, 175, 0.3);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(15, 164, 175, 0.1);
+            border-color: var(--highlight);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: var(--spacing-md);
+            justify-content: center;
+            margin-top: var(--spacing-xl);
+            flex-wrap: wrap;
+        }
+
+        .next-steps {
+            background: rgba(15, 164, 175, 0.05);
+            border: 1px solid rgba(15, 164, 175, 0.15);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            text-align: center;
+        }
+
+        .next-steps-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .next-steps-text {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .selected-design-info {
+            background: rgba(15, 164, 175, 0.1);
+            border-left: 4px solid var(--highlight);
+            padding: var(--spacing-md) var(--spacing-lg);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--spacing-lg);
+            display: none;
+        }
+
+        .selected-design-info.active {
+            display: block;
+        }
+
+        .selected-design-info h3 {
+            margin: 0 0 var(--spacing-sm) 0;
+            color: var(--highlight);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .selected-design-info p {
+            margin: 0;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+    </style>
+    {% include 'includes/edit_mode.html' ignore missing %}
+</head>
+<body data-edit-page="design_brief">
+    <!-- Global Navigation -->
+    <nav class="global-nav">
+        <div class="nav-container">
+            <a href="/" class="nav-logo">
+                <span class="nav-logo-text">PUHC Innovation Alleys</span>
+            </a>
+            <ul class="nav-tabs" id="navTabs">
+                <li class="nav-tab"><a href="/">Alley 3</a></li>
+                <li class="nav-tab"><a href="/unreal-viewer">Digital Twin</a></li>
+                <li class="nav-tab"><a href="/fence-map">Fence Map</a></li>
+                <li class="nav-tab"><a href="/before-after">Compare</a></li>
+                <li class="nav-tab"><a href="/design-workspace">Build</a></li>
+            </ul>
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">☰</button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="brief-container">
+        <!-- Breadcrumb Navigation -->
+        <div style="margin-bottom: var(--spacing-lg); font-size: 0.9rem; display: flex; align-items: center; gap: 0.5rem;">
+            <a href="/" style="color: var(--highlight); text-decoration: none; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.7';" onmouseout="this.style.opacity='1';">Home</a>
+            <span style="color: var(--text-secondary);">/</span>
+            <a href="/visualization-studio" style="color: var(--highlight); text-decoration: none; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.7';" onmouseout="this.style.opacity='1';">Explore Alleys</a>
+            <span style="color: var(--text-secondary);">/</span>
+            <span style="color: var(--text-primary); font-weight: 600;">Design Proposals</span>
+        </div>
+
+        <!-- Header -->
+        <div class="brief-header">
+            <h1 class="brief-title">Design Proposals</h1>
+            <p class="brief-subtitle">Transforming Alley 3 into an Eco-Cultural Corridor</p>
+        </div>
+
+        <!-- Current State Section -->
+        <div class="brief-section">
+            <h2 class="section-title">Current State: Alley 3 - Water</h2>
+            <div class="current-state-grid">
+                <div class="state-card">
+                    <div class="state-label">Location</div>
+                    <div class="state-title">Alley 3 - Water</div>
+                    <p style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.6;">
+                        Between 11th St & 12th St, Pico-Union<br>
+                        Coordinates: 34.0498, -118.2819
+                    </p>
+                </div>
+                <div class="state-card">
+                    <div class="state-label">Current Metrics</div>
+                    <div class="metrics-display">
+                        <div class="metric-box">
+                            <div class="metric-label">Temperature</div>
+                            <div class="metric-value">72°F</div>
+                        </div>
+                        <div class="metric-box">
+                            <div class="metric-label">Air Quality</div>
+                            <div class="metric-value">45 AQI</div>
+                        </div>
+                        <div class="metric-box">
+                            <div class="metric-label">Shade Coverage</div>
+                            <div class="metric-value">15%</div>
+                        </div>
+                        <div class="metric-box">
+                            <div class="metric-label">Biodiversity</div>
+                            <div class="metric-value">Low</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recommendations Section -->
+        <div class="brief-section">
+            <h2 class="section-title">Why Transform This Alley?</h2>
+            <div class="recommendations-grid">
+                <div class="recommendation-card">
+                    <div class="rec-icon">TREE</div>
+                    <div class="rec-title">Green Infrastructure</div>
+                    <div class="rec-description">
+                        Insufficient shade coverage and vegetation. Native trees and green walls will reduce temperature, improve air quality, and support local biodiversity.
+                    </div>
+                    <div class="rec-impact">
+                        Impact: -4 to -6°F temperature reduction
+                    </div>
+                    <a href="/plant-library" style="display: inline-block; margin-top: 0.75rem; font-size: 0.85rem; color: var(--highlight); text-decoration: none; font-weight: 600; border-bottom: 1px solid var(--highlight); padding-bottom: 0.25rem;">
+                        Browse recommended plants →
+                    </a>
+                </div>
+                <div class="recommendation-card">
+                    <div class="rec-icon">ART</div>
+                    <div class="rec-title">Cultural Expression</div>
+                    <div class="rec-description">
+                        Community murals and gathering spaces transform the alley into a place of cultural pride and neighborhood identity.
+                    </div>
+                    <div class="rec-impact">
+                        Impact: +30% community engagement
+                    </div>
+                </div>
+                <div class="recommendation-card">
+                    <div class="rec-icon">WATER</div>
+                    <div class="rec-title">Water Management</div>
+                    <div class="rec-description">
+                        Permeable surfaces and bioswales manage stormwater, reduce flooding, and support urban resilience.
+                    </div>
+                    <div class="rec-impact">
+                        Impact: 50% stormwater retention
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Design Variations Section -->
+        <div class="brief-section">
+            <h2 class="section-title">Design Variations</h2>
+            <p style="color: var(--text-secondary); margin-bottom: var(--spacing-lg); font-size: 0.95rem;">
+                Select a design variation to explore how different approaches transform Alley 3 into an eco-cultural corridor.
+            </p>
+
+            <div id="selectedDesignInfo" class="selected-design-info" style="background: rgba(15, 164, 175, 0.05); border: 1px dashed rgba(15, 164, 175, 0.3); border-radius: 8px; padding: var(--spacing-lg); text-align: center;">
+                <h3 style="color: var(--text-primary); margin-bottom: var(--spacing-sm);">Selected Design</h3>
+                <p id="selectedDesignText" style="color: var(--text-secondary); margin: 0;">Choose a design variation below to explore</p>
+            </div>
+
+            <div class="designs-grid">
+                <!-- Design A: Green-First -->
+                <div class="design-card" onclick="selectDesign('design-a', event)">
+                    <div class="design-header">
+                        <div class="design-type">Variation A</div>
+                        <div class="design-name">Green-First</div>
+                        <div class="design-description">
+                            Prioritizes environmental restoration and climate resilience
+                        </div>
+                    </div>
+                    <div class="design-preview">
+                        8 Native Oak Trees<br>
+                        Green Wall (East Side)<br>
+                        Bioswale System
+                    </div>
+                    <div class="design-impacts">
+                        <div class="impact-item">
+                            <span class="impact-label">Temperature</span>
+                            <span class="impact-value">-6°F</span>
+                        </div>
+                        <div class="impact-item">
+                            <span class="impact-label">Biodiversity</span>
+                            <span class="impact-value">High</span>
+                        </div>
+                        <div class="impact-item">
+                            <span class="impact-label">Water Mgmt</span>
+                            <span class="impact-value">50%</span>
+                        </div>
+                        <div class="impact-item">
+                            <span class="impact-label">Community</span>
+                            <span class="impact-value">Medium</span>
+                        </div>
+                    </div>
+                    <div class="design-action">
+                        <button class="btn btn-secondary" onclick="viewInUnreal('design-a', event)" style="transition: all 0.3s ease;" onmouseover="this.style.background='var(--highlight)'; this.style.color='var(--primary)';" onmouseout="this.style.background=''; this.style.color='';">View in 3D</button>
+                    </div>
+                </div>
+
+                <!-- Design B: Community-First -->
+                <div class="design-card" onclick="selectDesign('design-b', event)">
+                    <div class="design-header">
+                        <div class="design-type">Variation B</div>
+                        <div class="design-name">Community-First</div>
+                        <div class="design-description">
+                            Emphasizes gathering spaces and cultural expression
+                        </div>
+                    </div>
+                    <div class="design-preview">
+                        Community Murals<br>
+                        Seating Areas<br>
+                        Event Space
+                    </div>
+                    <div class="design-impacts">
+                        <div class="impact-item">
+                            <span class="impact-label">Temperature</span>
+                            <span class="impact-value">-2°F</span>
+                        </div>
+                        <div class="impact-item">
+                            <span class="impact-label">Biodiversity</span>
+                            <span class="impact-value">Low</span>
+                        </div>
+                        <div class="impact-item">
+                            <span class="impact-label">Water Mgmt</span>
+                            <span class="impact-value">20%</span>
+                        </div>
+                        <div class="impact-item">
+                            <span class="impact-label">Community</span>
+                            <span class="impact-value">High</span>
+                        </div>
+                    </div>
+                    <div class="design-action">
+                        <button class="btn btn-secondary" onclick="viewInUnreal('design-b', event)" style="transition: all 0.3s ease;" onmouseover="this.style.background='var(--highlight)'; this.style.color='var(--primary)';" onmouseout="this.style.background=''; this.style.color='';">View in 3D</button>
+                    </div>
+                </div>
+
+                <!-- Design C: Balanced -->
+                <div class="design-card" onclick="selectDesign('design-c', event)">
+                    <div class="design-header">
+                        <div class="design-type">Variation C</div>
+                        <div class="design-name">Balanced</div>
+                        <div class="design-description">
+                            Integrates environmental and community benefits equally
+                        </div>
+                    </div>
+                    <div class="design-preview">
+                        5 Native Trees<br>
+                        Green Wall + Murals<br>
+                        Seating + Bioswale
+                    </div>
+                    <div class="design-impacts">
+                        <div class="impact-item">
+                            <span class="impact-label">Temperature</span>
+                            <span class="impact-value">-4°F</span>
+                        </div>
+                        <div class="impact-item">
+                            <span class="impact-label">Biodiversity</span>
+                            <span class="impact-value">Moderate</span>
+                        </div>
+                        <div class="impact-item">
+                            <span class="impact-label">Water Mgmt</span>
+                            <span class="impact-value">35%</span>
+                        </div>
+                        <div class="impact-item">
+                            <span class="impact-label">Community</span>
+                            <span class="impact-value">High</span>
+                        </div>
+                    </div>
+                    <div class="design-action">
+                        <button class="btn btn-secondary" onclick="viewInUnreal('design-c', event)" style="transition: all 0.3s ease;" onmouseover="this.style.background='var(--highlight)'; this.style.color='var(--primary)';" onmouseout="this.style.background=''; this.style.color='';">View in 3D</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Next Steps Section -->
+        <div class="brief-section">
+            <div class="next-steps">
+                <div class="next-steps-title">Next Steps</div>
+                <div class="next-steps-text">
+                    Select a design variation above to experience it in our immersive 3D digital twin. Walk through the transformed alley and see how it becomes an eco-cultural corridor that manages water, hosts pollinators, and celebrates community.
+                </div>
+                <div class="action-buttons">
+                    <button class="btn btn-primary" onclick="downloadBrief()" style="transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);" onmouseover="this.style.boxShadow='0 12px 32px rgba(15, 164, 175, 0.4)'; this.style.transform='translateY(-2px)';" onmouseout="this.style.boxShadow='0 8px 24px rgba(15, 164, 175, 0.3)'; this.style.transform='translateY(0)';">Download Brief</button>
+                    <button class="btn btn-secondary" onclick="shareBrief()" style="transition: all 0.3s ease; cursor: pointer;" onmouseover="this.style.background='rgba(2, 73, 80, 0.8)'; this.style.borderColor='rgba(15, 164, 175, 1)';" onmouseout="this.style.background='rgba(2, 73, 80, 0.6)'; this.style.borderColor='rgba(175, 221, 229, 0.8)';">Share Design</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedDesign = null;
+
+        function selectDesign(designId, event) {
+            event.stopPropagation();
+            
+            // Remove previous selection
+            document.querySelectorAll('.design-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            // Add selected class to clicked card
+            event.currentTarget.classList.add('selected');
+            selectedDesign = designId;
+            
+            // Update selected design info
+            const designNames = {
+                'design-a': '✓ Green-First: Environmental Focus',
+                'design-b': '✓ Community-First: Cultural Focus',
+                'design-c': '✓ Balanced: Integrated Approach'
+            };
+            
+            const selectedInfo = document.getElementById('selectedDesignText');
+            selectedInfo.textContent = designNames[designId];
+            selectedInfo.style.color = 'var(--highlight)';
+            selectedInfo.style.fontWeight = '600';
+            
+            // Show success message
+            showFeedback('Design selected! Ready to view in 3D.', 'success');
+            console.log('Selected design:', designId);
+        }
+        
+        function showFeedback(message, type) {
+            // Create feedback element
+            const feedback = document.createElement('div');
+            feedback.style.cssText = `
+                position: fixed;
+                top: 100px;
+                right: 20px;
+                padding: 12px 20px;
+                background: ${type === 'success' ? 'var(--highlight)' : '#f44336'};
+                color: white;
+                border-radius: 6px;
+                font-weight: 600;
+                z-index: 1000;
+                animation: slideIn 0.3s ease;
+            `;
+            feedback.textContent = message;
+            document.body.appendChild(feedback);
+            
+            // Remove after 3 seconds
+            setTimeout(() => {
+                feedback.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => feedback.remove(), 300);
+            }, 3000);
+        }
+        
+        // Add CSS animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(400px); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(400px); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        function viewInUnreal(designId, event) {
+            event.stopPropagation();
+            
+            if (!selectedDesign) {
+                selectedDesign = designId;
+            }
+            
+            // Redirect to Unreal Viewer with design selection
+            const alleyId = 'alley3';
+            window.location.href = `/unreal-viewer?alley=${alleyId}&design=${selectedDesign}`;
+        }
+
+        function downloadBrief() {
+            if (!selectedDesign) {
+                showFeedback('Please select a design first', 'error');
+                return;
+            }
+            
+            // Placeholder for PDF export functionality
+            showFeedback('Downloading design brief for: ' + selectedDesign, 'success');
+            console.log('Download brief for design:', selectedDesign);
+        }
+
+        function shareBrief() {
+            if (!selectedDesign) {
+                showFeedback('Please select a design first', 'error');
+                return;
+            }
+            
+            // Create shareable link
+            const shareUrl = window.location.href + '?design=' + selectedDesign;
+            
+            // Copy to clipboard
+            navigator.clipboard.writeText(shareUrl).then(() => {
+                showFeedback('✓ Design link copied to clipboard!', 'success');
+            }).catch(err => {
+                showFeedback('Share URL: ' + shareUrl, 'success');
+            });
+        }
+
+        // Highlight active nav tab
+        const currentPath = window.location.pathname;
+        if (currentPath === '/design-brief') {
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.nav-tab a[href="/design-brief"]').forEach(link => {
+                link.parentElement.classList.add('active');
+            });
+        }
+
+        // Check if design was selected from URL
+        window.addEventListener('load', function() {
+            const params = new URLSearchParams(window.location.search);
+            const designParam = params.get('design');
+            if (designParam) {
+                const designCard = document.querySelector(`[onclick*="${designParam}"]`);
+                if (designCard) {
+                    designCard.click();
+                }
+            }
+        });
+    </script>
+</body>
+</html>

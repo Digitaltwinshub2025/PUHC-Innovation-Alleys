@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explore Alleys - PUHC Innovation Alleys</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/global-theme.css') }}">
+    <script src="{{ url_for('static', filename='js/cache-buster.js') }}"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: var(--font-primary);
+            background: var(--primary);
+            color: var(--text-primary);
+            overflow: hidden;
+        }
+
+        .studio-container {
+            display: flex;
+            height: calc(100vh - 70px);
+            flex-direction: column;
+            margin-top: 70px;
+        }
+
+        .studio-content {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .left-panel {
+            width: 420px;
+            background: var(--secondary);
+            border-right: 1px solid rgba(15, 164, 175, 0.2);
+            overflow-y: auto;
+            padding: var(--spacing-xl);
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-xl);
+        }
+
+        .panel-section {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-md);
+        }
+
+        .panel-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: var(--font-primary);
+        }
+
+        .toggle-group {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .toggle-btn {
+            flex: 1;
+            padding: 0.6rem;
+            border: 1px solid rgba(15, 164, 175, 0.3);
+            background: rgba(15, 164, 175, 0.05);
+            color: var(--text-secondary);
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .toggle-btn.active {
+            background: var(--highlight);
+            color: var(--primary);
+            border-color: var(--highlight);
+        }
+
+        .toggle-btn:hover {
+            border-color: var(--highlight);
+        }
+
+        .scenario-select {
+            width: 100%;
+            padding: 0.6rem;
+            background: var(--primary);
+            color: var(--text-primary);
+            border: 1px solid rgba(15, 164, 175, 0.3);
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+        }
+
+        .scenario-select:hover,
+        .scenario-select:focus {
+            border-color: var(--highlight);
+            outline: none;
+        }
+
+        .overlay-controls {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-md);
+        }
+
+        .overlay-item {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+            padding: 0.5rem;
+            background: rgba(15, 164, 175, 0.05);
+            border-radius: var(--radius-md);
+        }
+
+        .overlay-checkbox {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: var(--highlight);
+        }
+
+        .overlay-label {
+            flex: 1;
+            font-size: 0.9rem;
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .slider-container {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .slider-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .slider {
+            width: 100%;
+            height: 4px;
+            border-radius: 2px;
+            background: rgba(15, 164, 175, 0.2);
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--highlight);
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        input[type="range"] {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+        }
+
+        .slider::-moz-range-thumb {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--highlight);
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .slider-value {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            text-align: right;
+        }
+
+        .viewpoints-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .viewpoint-item {
+            padding: 0.6rem;
+            background: rgba(15, 164, 175, 0.05);
+            border: 1px solid rgba(15, 164, 175, 0.2);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .viewpoint-item:hover {
+            border-color: var(--highlight);
+            color: var(--text-primary);
+        }
+
+        .viewpoint-item.active {
+            background: var(--highlight);
+            color: var(--primary);
+            border-color: var(--highlight);
+        }
+
+        .center-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            background: var(--primary);
+            min-width: 0;
+            height: 100%;
+            min-height: calc(100vh - 80px);
+        }
+
+        #streetview {
+            flex: 1;
+            width: 100%;
+            height: 100%;
+            min-height: 500px;
+        }
+
+        .streetview-overlay {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(2, 73, 80, 0.9);
+            border: 1px solid rgba(15, 164, 175, 0.3);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-md);
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            max-width: 500px;
+            text-align: center;
+            z-index: 10;
+        }
+
+        .streetview-controls {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            display: flex;
+            gap: 0.5rem;
+            z-index: 10;
+        }
+
+        .control-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(2, 73, 80, 0.9);
+            border: 1px solid rgba(15, 164, 175, 0.3);
+            color: var(--highlight);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            transition: all 0.2s;
+        }
+
+        .control-btn:hover {
+            background: var(--highlight);
+            color: var(--primary);
+        }
+
+        /* Floating Metrics Card */
+        .metrics-card {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 320px;
+            background: linear-gradient(135deg, rgba(2, 73, 80, 0.95), rgba(0, 49, 53, 0.95));
+            border: 1px solid rgba(15, 164, 175, 0.3);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 20px rgba(15, 164, 175, 0.1);
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            animation: slideInRight 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .metrics-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-md);
+            padding-bottom: var(--spacing-md);
+            border-bottom: 1px solid rgba(15, 164, 175, 0.2);
+        }
+
+        .metrics-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: 0.5px;
+        }
+
+        .metrics-close {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .metrics-close:hover {
+            color: var(--highlight);
+            transform: scale(1.2);
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .metric-item {
+            background: rgba(15, 164, 175, 0.08);
+            border: 1px solid rgba(15, 164, 175, 0.2);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-md);
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .metric-item:hover {
+            background: rgba(15, 164, 175, 0.15);
+            border-color: rgba(15, 164, 175, 0.4);
+        }
+
+        .metric-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-value {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--highlight);
+            line-height: 1.2;
+        }
+
+        .metrics-link {
+            display: block;
+            text-align: center;
+            padding: var(--spacing-sm) var(--spacing-md);
+            background: rgba(15, 164, 175, 0.15);
+            border: 1px solid rgba(15, 164, 175, 0.3);
+            border-radius: var(--radius-md);
+            color: var(--highlight);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .metrics-link:hover {
+            background: var(--highlight);
+            color: var(--primary);
+            border-color: var(--highlight);
+            box-shadow: 0 4px 12px rgba(15, 164, 175, 0.3);
+        }
+
+        .alleys-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            max-height: 350px;
+            overflow-y: auto;
+        }
+
+        .alley-item {
+            padding: 0.75rem;
+            background: rgba(15, 164, 175, 0.05);
+            border: 1px solid rgba(15, 164, 175, 0.2);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .alley-item:hover {
+            border-color: var(--highlight);
+        }
+
+        .alley-item.active {
+            background: rgba(15, 164, 175, 0.15);
+            border-color: var(--highlight);
+        }
+
+        .alley-name {
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+            font-family: var(--font-primary);
+        }
+
+        .alley-status {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-family: var(--font-primary);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            background: rgba(15, 164, 175, 0.2);
+            border-radius: 3px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--highlight);
+            margin-left: 0.5rem;
+        }
+
+        .selected-alley {
+            background: rgba(15, 164, 175, 0.1);
+            border: 1px solid rgba(15, 164, 175, 0.3);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-xl);
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-lg);
+        }
+
+        .selected-alley-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            font-family: var(--font-primary);
+        }
+
+        .selected-alley-location {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            font-family: var(--font-primary);
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-lg);
+            width: 100%;
+        }
+
+        .metric-item {
+            background: rgba(15, 164, 175, 0.05);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-lg);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            min-width: 0;
+        }
+
+        .metric-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+            font-family: var(--font-primary);
+            word-break: break-word;
+        }
+
+        .metric-value {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--highlight);
+            font-family: var(--font-primary);
+            word-break: break-word;
+        }
+
+        .metric-unit {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-left: 0.25rem;
+        }
+
+        .dashboard-link {
+            display: block;
+            text-align: center;
+            padding: 0.6rem;
+            background: var(--highlight);
+            color: var(--primary);
+            border-radius: var(--radius-md);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+
+        .dashboard-link:hover {
+            background: #0CB5C2;
+        }
+
+        .disclaimer {
+            background: rgba(15, 164, 175, 0.05);
+            border-left: 2px solid var(--highlight);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-md);
+            font-size: 0.8rem;
+            line-height: 1.5;
+            color: var(--text-secondary);
+            margin-top: auto;
+        }
+
+        @media (max-width: 1200px) {
+            .left-panel {
+                width: 240px;
+            }
+
+            .right-panel {
+                width: 280px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .studio-content {
+                flex-direction: column;
+            }
+
+            .left-panel,
+            .right-panel {
+                width: 100%;
+                max-height: 30vh;
+                border-right: none;
+                border-bottom: 1px solid rgba(15, 164, 175, 0.2);
+            }
+
+            .center-panel {
+                flex: 1;
+            }
+        }
+    </style>
+    {% include 'includes/edit_mode.html' ignore missing %}
+</head>
+<body data-edit-page="visualization_studio">
+    <!-- Global Navigation (matching home page) -->
+    <nav class="global-nav">
+        <div class="nav-container">
+            <a href="/" class="nav-logo">
+                <span class="nav-logo-text">PUHC Innovation Alleys</span>
+            </a>
+            <ul class="nav-tabs" id="navTabs">
+                <li class="nav-tab"><a href="/">Alley 3</a></li>
+                <li class="nav-tab"><a href="/unreal-viewer">Digital Twin</a></li>
+                <li class="nav-tab"><a href="/fence-map">Fence Map</a></li>
+                <li class="nav-tab"><a href="/before-after">Compare</a></li>
+                <li class="nav-tab"><a href="/design-workspace">Build</a></li>
+            </ul>
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">☰</button>
+        </div>
+    </nav>
+
+    <div class="studio-container">
+        <!-- Breadcrumb Navigation -->
+        <div style="padding: var(--spacing-md) var(--spacing-lg); border-bottom: 1px solid rgba(15, 164, 175, 0.1); font-size: 0.9rem; display: flex; align-items: center; gap: 0.5rem; background: var(--secondary);">
+            <a href="/" style="color: var(--highlight); text-decoration: none; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.7';" onmouseout="this.style.opacity='1';">Home</a>
+            <span style="color: var(--text-secondary);">/</span>
+            <span style="color: var(--text-primary); font-weight: 600;">Explore Alleys</span>
+        </div>
+
+        <div class="studio-content">
+            <!-- Left Panel: View Controls & Information -->
+            <div class="left-panel">
+                <div class="panel-section">
+                    <div class="panel-title">View & Scenario Controls</div>
+                </div>
+
+                <div class="panel-section">
+                    <div style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: var(--spacing-md);">
+                        <strong style="color: var(--text-primary);">Current View:</strong><br>
+                        <span id="currentAlleyName">Alley 3 - Water</span>
+                    </div>
+                </div>
+
+                <div class="panel-section">
+                    <div class="panel-title">All Alleys</div>
+                    <div class="alleys-list">
+                        <div class="alley-item active" onclick="selectAlley('alley1'); return false;">
+                            <div class="alley-name">Alley 1 - Energy <span class="status-badge">Planned</span></div>
+                            <div class="alley-status">Future</div>
+                        </div>
+                        <div class="alley-item" onclick="selectAlley('alley2'); return false;">
+                            <div class="alley-name">Alley 2 - Sun <span class="status-badge">Future</span></div>
+                            <div class="alley-status">Future</div>
+                        </div>
+                        <div class="alley-item" onclick="selectAlley('alley3'); return false;">
+                            <div class="alley-name">Alley 3 - Water <span class="status-badge">Prototype</span></div>
+                            <div class="alley-status">Prototype</div>
+                        </div>
+                        <div class="alley-item" onclick="selectAlley('alley4'); return false;">
+                            <div class="alley-name">Alley 4 - Universe <span class="status-badge">Future</span></div>
+                            <div class="alley-status">Future</div>
+                        </div>
+                        <div class="alley-item" onclick="selectAlley('alley5'); return false;">
+                            <div class="alley-name">Alley 5 - Air <span class="status-badge">Future</span></div>
+                            <div class="alley-status">Future</div>
+                        </div>
+                        <div class="alley-item" onclick="selectAlley('alley6'); return false;">
+                            <div class="alley-name">Alley 6 - Earth <span class="status-badge">Future</span></div>
+                            <div class="alley-status">Future</div>
+                        </div>
+                        <div class="alley-item" onclick="selectAlley('alley7'); return false;">
+                            <div class="alley-name">Alley 7 - Humanity <span class="status-badge">Planned</span></div>
+                            <div class="alley-status">Future</div>
+                        </div>
+                        <div class="alley-item" onclick="selectAlley('alley8'); return false;">
+                            <div class="alley-name">Alley 8 - Animals <span class="status-badge">Future</span></div>
+                            <div class="alley-status">Future</div>
+                        </div>
+                        <div class="alley-item" onclick="selectAlley('alley9'); return false;">
+                            <div class="alley-name">Alley 9 - Plants <span class="status-badge">Future</span></div>
+                            <div class="alley-status">Future</div>
+                        </div>
+                        <div class="alley-item" onclick="selectAlley('alley10'); return false;">
+                            <div class="alley-name">Alley 10 - Minerals <span class="status-badge">Future</span></div>
+                            <div class="alley-status">Future</div>
+                        </div>
+                        <div class="alley-item" onclick="selectAlley('alley11'); return false;">
+                            <div class="alley-name">Alley 11 - Insects <span class="status-badge">Future</span></div>
+                            <div class="alley-status">Future</div>
+                        </div>
+                        <div class="alley-item" onclick="selectAlley('alley12'); return false;">
+                            <div class="alley-name">Alley 12 - Prosperity <span class="status-badge">Future</span></div>
+                            <div class="alley-status">Future</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel-section">
+                    <div class="panel-title">Selected Alley</div>
+                    <div class="selected-alley">
+                        <div class="selected-alley-title">Alley 3 - Water</div>
+                        <div class="selected-alley-location">
+                            Between 11th St & 12th St, Pico-Union<br>
+                            Coordinates: 34.0498, -118.2819
+                        </div>
+                        <div id="actionButtons" style="display: flex; flex-direction: column; gap: 0.5rem; margin-top: 0.75rem;">
+                            <a id="primaryButton" href="/design-brief?alley=alley3" class="dashboard-link" style="background: var(--highlight); color: var(--primary); text-align: center; padding: 0.6rem; border-radius: var(--radius-md); text-decoration: none; font-weight: 600; transition: all 0.2s;">See Design Proposals</a>
+                            <a id="secondaryButton" href="/live-dashboard?alley=alley3" class="dashboard-link" style="background: rgba(15, 164, 175, 0.1); color: var(--text-primary); text-align: center; padding: 0.6rem; border-radius: var(--radius-md); text-decoration: none; font-weight: 600; border: 1px solid rgba(15, 164, 175, 0.3); transition: all 0.2s;">View Full Data</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Center Panel: Google Street View (Full Width) -->
+            <div class="center-panel">
+                <div id="streetview"></div>
+                
+                <!-- Floating Metrics Card -->
+                <div class="metrics-card" id="metricsCard">
+                    <div class="metrics-header">
+                        <div class="metrics-title">Environmental Data</div>
+                        <button class="metrics-close" onclick="toggleMetrics()">×</button>
+                    </div>
+                    <div class="metrics-grid">
+                        <div class="metric-item">
+                            <div class="metric-label">Temperature</div>
+                            <div class="metric-value" id="metricTemp">72°F</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-label">Air Quality</div>
+                            <div class="metric-value" id="metricAQI">45</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-label">Solar Energy</div>
+                            <div class="metric-value" id="metricSolar">Moderate</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-label">Biodiversity</div>
+                            <div class="metric-value" id="metricBio">Moderate</div>
+                        </div>
+                    </div>
+                    <a href="/live-dashboard" class="metrics-link">View Full Dashboard →</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBm6t0tMbUKtUbaerKgqe0j8FMBOKyncFU"></script>
+    <script>
+        // Single source of truth: Alley data structure with all metadata and metrics
+        const alleyData = {
+            'alley1': {
+                name: 'Alley 1 - Energy',
+                lat: 34.05029712004266,
+                lng: -118.28298209970326,
+                location: 'Pico-Union, Los Angeles',
+                coordinates: '34.0503, -118.2830',
+                metrics: { aqi: 52, temperature: 75, solarEnergy: 'High', biodiversity: 'Low' }
+            },
+            'alley2': {
+                name: 'Alley 2 - Sun',
+                lat: 34.0483347119334,
+                lng: -118.28278909472274,
+                location: 'Pico-Union, Los Angeles',
+                coordinates: '34.0483, -118.2828',
+                metrics: { aqi: 48, temperature: 73, solarEnergy: 'High', biodiversity: 'Moderate' }
+            },
+            'alley3': {
+                name: 'Alley 3 - Water',
+                lat: 34.04982619528969,
+                lng: -118.2818586747943,
+                location: 'Pico-Union, Los Angeles',
+                coordinates: '34.0498, -118.2819',
+                metrics: { aqi: 45, temperature: 72, solarEnergy: 'Moderate', biodiversity: 'Moderate' }
+            },
+            'alley4': {
+                name: 'Alley 4 - Universe',
+                lat: 34.051573754452384,
+                lng: -118.28210289757493,
+                location: 'Pico-Union, Los Angeles',
+                coordinates: '34.0516, -118.2821',
+                metrics: { aqi: 50, temperature: 74, solarEnergy: 'Moderate', biodiversity: 'Low' }
+            },
+            'alley5': {
+                name: 'Alley 5 - Air',
+                lat: 34.0512482767413,
+                lng: -118.2809130897754,
+                location: 'Pico-Union, Los Angeles',
+                coordinates: '34.0512, -118.2809',
+                metrics: { aqi: 46, temperature: 71, solarEnergy: 'Low', biodiversity: 'Moderate' }
+            },
+            'alley6': {
+                name: 'Alley 6 - Earth',
+                lat: 34.05069899513361,
+                lng: -118.27979221364627,
+                location: 'Pico-Union, Los Angeles',
+                coordinates: '34.0507, -118.2798',
+                metrics: { aqi: 49, temperature: 73, solarEnergy: 'Moderate', biodiversity: 'High' }
+            },
+            'alley7': {
+                name: 'Alley 7 - Humanity',
+                lat: 34.05021760023289,
+                lng: -118.27868110207845,
+                location: 'Pico-Union, Los Angeles',
+                coordinates: '34.0502, -118.2787',
+                metrics: { aqi: 47, temperature: 72, solarEnergy: 'Low', biodiversity: 'Moderate' }
+            },
+            'alley8': {
+                name: 'Alley 8 - Animals',
+                lat: 34.049753910675584,
+                lng: -118.27759968651065,
+                location: 'Pico-Union, Los Angeles',
+                coordinates: '34.0498, -118.2776',
+                metrics: { aqi: 51, temperature: 74, solarEnergy: 'High', biodiversity: 'High' }
+            },
+            'alley9': {
+                name: 'Alley 9 - Plants',
+                lat: 34.049217918459284,
+                lng: -118.2764975596723,
+                location: 'Pico-Union, Los Angeles',
+                coordinates: '34.0492, -118.2765',
+                metrics: { aqi: 44, temperature: 70, solarEnergy: 'Moderate', biodiversity: 'High' }
+            },
+            'alley10': {
+                name: 'Alley 10 - Minerals',
+                lat: 34.04311380244757,
+                lng: -118.27473862298159,
+                location: 'Pico-Union, Los Angeles',
+                coordinates: '34.0431, -118.2747',
+                metrics: { aqi: 53, temperature: 75, solarEnergy: 'Low', biodiversity: 'Low' }
+            },
+            'alley11': {
+                name: 'Alley 11 - Insects',
+                lat: 34.04390854936556,
+                lng: -118.27670128625326,
+                location: 'Pico-Union, Los Angeles',
+                coordinates: '34.0439, -118.2767',
+                metrics: { aqi: 48, temperature: 72, solarEnergy: 'Moderate', biodiversity: 'High' }
+            },
+            'alley12': {
+                name: 'Alley 12 - Prosperity',
+                lat: 34.04434271351046,
+                lng: -118.27771370076478,
+                location: 'Pico-Union, Los Angeles',
+                coordinates: '34.0443, -118.2777',
+                metrics: { aqi: 50, temperature: 73, solarEnergy: 'High', biodiversity: 'Moderate' }
+            }
+        };
+
+        let panorama;
+        let currentAlley = 'alley3';
+        let currentViewMode = 'before';
+        let currentViewpoint = 'start';
+        let activeOverlays = {
+            murals: true,
+            greenery: true,
+            lighting: true,
+            furniture: true
+        };
+        let overlayOpacity = 1;
+
+        // Viewpoint definitions
+        const viewpoints = {
+            start: { heading: 0, pitch: 0, zoom: 1 },
+            mid: { heading: 90, pitch: -10, zoom: 1 },
+            end: { heading: 180, pitch: 5, zoom: 1 }
+        };
+
+        function initStreetView() {
+            const alley = alleyData[currentAlley];
+            const location = { lat: alley.lat, lng: alley.lng };
+            const pov = viewpoints[currentViewpoint];
+
+            try {
+                panorama = new google.maps.StreetViewPanorama(
+                    document.getElementById('streetview'),
+                    {
+                        position: location,
+                        pov: pov,
+                        zoom: pov.zoom,
+                        disableDefaultUI: true,
+                        addressControl: false,
+                        showRoadLabels: false,
+                        motionTracking: false,
+                        motionTrackingControl: false
+                    }
+                );
+                
+                // Add listener for when panorama is ready
+                panorama.addListener('position_changed', function() {
+                    console.log('Panorama position changed');
+                });
+                
+                console.log('Street view initialized for:', alley.name, location);
+            } catch (error) {
+                console.error('Error initializing street view:', error);
+            }
+        }
+
+        function updateViewpointDisplay() {
+            const viewpointNames = {
+                'start': 'Start',
+                'mid': 'Mid',
+                'end': 'End'
+            };
+            document.getElementById('currentViewpoint').textContent = 'Viewpoint: ' + viewpointNames[currentViewpoint];
+        }
+
+        function setViewpoint(viewpoint) {
+            currentViewpoint = viewpoint;
+            document.querySelectorAll('.viewpoint-item').forEach(item => item.classList.remove('active'));
+            event.target.classList.add('active');
+            updateViewpointDisplay();
+
+            if (panorama) {
+                const pov = viewpoints[viewpoint];
+                panorama.setPov(pov);
+            }
+        }
+
+        function previousViewpoint() {
+            const viewpointOrder = ['start', 'mid', 'end'];
+            const currentIndex = viewpointOrder.indexOf(currentViewpoint);
+            const nextIndex = (currentIndex - 1 + viewpointOrder.length) % viewpointOrder.length;
+            setViewpoint(viewpointOrder[nextIndex]);
+        }
+
+        function nextViewpoint() {
+            const viewpointOrder = ['start', 'mid', 'end'];
+            const currentIndex = viewpointOrder.indexOf(currentViewpoint);
+            const nextIndex = (currentIndex + 1) % viewpointOrder.length;
+            setViewpoint(viewpointOrder[nextIndex]);
+        }
+
+        function saveView() {
+            if (!panorama) return;
+
+            const pov = panorama.getPov();
+            const viewData = {
+                scenario_id: document.getElementById('scenarioSelect').value || 'baseline',
+                alley_id: currentAlley,
+                viewpoint_id: currentViewpoint,
+                camera: {
+                    heading: pov.heading,
+                    pitch: pov.pitch,
+                    zoom: pov.zoom
+                },
+                overlays: {
+                    murals: activeOverlays.murals,
+                    greenery: activeOverlays.greenery,
+                    lighting: activeOverlays.lighting,
+                    street_furniture: activeOverlays.furniture,
+                    opacity: overlayOpacity
+                },
+                timestamp: new Date().toISOString()
+            };
+
+            fetch('/api/save-view', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(viewData)
+            })
+            .then(r => r.json())
+            .then(data => {
+                alert('View saved successfully');
+                console.log('View saved:', data);
+            })
+            .catch(err => {
+                console.error('Error saving view:', err);
+                alert('Error saving view');
+            });
+        }
+
+        function selectAlley(alleyId) {
+            console.log('=== selectAlley CALLED ===', alleyId);
+            currentAlley = alleyId;
+            
+            // Update active state in alley list
+            document.querySelectorAll('.alley-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Find and mark the alley item as active
+            const alleyItems = document.querySelectorAll('.alley-item');
+            for (let item of alleyItems) {
+                if (item.textContent.includes(alleyData[alleyId]?.name)) {
+                    item.classList.add('active');
+                    break;
+                }
+            }
+
+            // Get alley data
+            const alley = alleyData[alleyId];
+            
+            if (!alley) {
+                console.error('ERROR: Alley not found:', alleyId);
+                return;
+            }
+            
+            console.log('Alley data:', alley.name, 'Lat:', alley.lat, 'Lng:', alley.lng);
+            
+            // Update UI
+            document.getElementById('currentAlleyName').textContent = alley.name;
+            updateViewpointDisplay();
+            updateSelectedAlleyPanel(alley);
+            updateMetricsCard(alley);
+
+            // Update street view
+            const location = { lat: alley.lat, lng: alley.lng };
+            const pov = viewpoints[currentViewpoint];
+            
+            console.log('Street view location:', location);
+            console.log('Panorama object exists:', !!panorama);
+            console.log('Google Maps API available:', typeof google !== 'undefined' && !!google.maps);
+            
+            try {
+                const streetviewDiv = document.getElementById('streetview');
+                console.log('Street view div found:', !!streetviewDiv);
+                
+                if (streetviewDiv && typeof google !== 'undefined' && google.maps) {
+                    console.log('Creating new StreetViewPanorama...');
+                    panorama = new google.maps.StreetViewPanorama(
+                        streetviewDiv,
+                        {
+                            position: location,
+                            pov: pov,
+                            zoom: pov.zoom,
+                            disableDefaultUI: true,
+                            addressControl: false,
+                            showRoadLabels: false,
+                            motionTracking: false,
+                            motionTrackingControl: false
+                        }
+                    );
+                    console.log('✓ Street view created successfully');
+                } else {
+                    console.error('ERROR: Missing streetview div or Google Maps API');
+                }
+            } catch (error) {
+                console.error('ERROR creating street view:', error.message);
+                console.error('Full error:', error);
+            }
+        }
+
+        function updateSelectedAlleyPanel(alley) {
+            // Update alley title
+            document.querySelector('.selected-alley-title').textContent = alley.name;
+            
+            // Update location details
+            document.querySelector('.selected-alley-location').innerHTML = 
+                `${alley.location}<br>Coordinates: ${alley.coordinates}`;
+            
+            // Update action buttons based on alley
+            updateActionButtons(alley.id);
+        }
+
+        function updateActionButtons(alleyId) {
+            const primaryBtn = document.getElementById('primaryButton');
+            const secondaryBtn = document.getElementById('secondaryButton');
+            
+            if (alleyId === 'alley3') {
+                // Alley 3 has design proposals
+                primaryBtn.textContent = 'See Design Proposals';
+                primaryBtn.href = '/design-brief?alley=alley3';
+                primaryBtn.style.background = 'var(--highlight)';
+                primaryBtn.style.color = 'var(--primary)';
+                
+                secondaryBtn.textContent = 'View Full Data';
+                secondaryBtn.href = '/live-dashboard?alley=alley3';
+            } else {
+                // Other alleys only have live dashboard
+                primaryBtn.textContent = 'View Full Data';
+                primaryBtn.href = '/live-dashboard?alley=' + alleyId;
+                primaryBtn.style.background = 'var(--highlight)';
+                primaryBtn.style.color = 'var(--primary)';
+                
+                secondaryBtn.textContent = 'Explore in Map';
+                secondaryBtn.href = '/innovation-alleys-map';
+            }
+        }
+
+        function updateMetricsCard(alley) {
+            // Update metrics card with alley data
+            document.getElementById('metricTemp').textContent = alley.metrics.temperature + '°F';
+            document.getElementById('metricAQI').textContent = alley.metrics.aqi;
+            document.getElementById('metricSolar').textContent = alley.metrics.solarEnergy;
+            document.getElementById('metricBio').textContent = alley.metrics.biodiversity;
+        }
+
+        function toggleMetrics() {
+            // Toggle metrics card visibility
+            const card = document.getElementById('metricsCard');
+            card.style.display = card.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function toggleRightPanel() {
+            const rightPanel = document.getElementById('rightPanel');
+            rightPanel.classList.toggle('collapsed');
+        }
+
+        // Initialize on page load
+        window.addEventListener('load', function() {
+            // Check if alley is specified in URL parameters
+            const params = new URLSearchParams(window.location.search);
+            const urlAlley = params.get('alley');
+            
+            if (urlAlley && alleyData[urlAlley]) {
+                currentAlley = urlAlley;
+            }
+            
+            // Wait for Google Maps API to be ready
+            if (typeof google !== 'undefined' && google.maps) {
+                initStreetView();
+                console.log('Google Maps API loaded, street view initialized');
+            } else {
+                console.error('Google Maps API not loaded');
+                // Retry after a short delay
+                setTimeout(function() {
+                    if (typeof google !== 'undefined' && google.maps) {
+                        initStreetView();
+                    }
+                }, 500);
+            }
+            
+            // Initialize Selected Alley panel with current alley data
+            const initialAlley = alleyData[currentAlley];
+            updateSelectedAlleyPanel(initialAlley);
+            updateMetricsCard(initialAlley);
+            
+            // Pre-select the alley in the list
+            document.querySelectorAll('.alley-item').forEach(item => {
+                item.classList.remove('active');
+                if (item.textContent.includes(initialAlley.name)) {
+                    item.classList.add('active');
+                }
+            });
+        });
+
+        // Highlight active nav tab
+        const currentPath = window.location.pathname;
+        document.querySelectorAll('.nav-tab a').forEach(link => {
+            if (link.getAttribute('href') === currentPath) {
+                link.parentElement.classList.add('active');
+            }
+        });
+    </script>
+</body>
+</html>

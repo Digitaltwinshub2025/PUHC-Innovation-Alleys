@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Community Murals - Innovation Alley 3 | PUHC Innovation Alleys</title>
+    <meta name="description" content="Cultural murals celebrating Pico-Union's heritage, transforming blank walls into storytelling canvases.">
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='images/favicon.svg') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/global-theme.css') }}">
+    <script src="{{ url_for('static', filename='js/cache-buster.js') }}"></script>
+    <style>
+        .page-container {
+            margin-top: 70px;
+            min-height: calc(100vh - 70px);
+        }
+
+        .intervention-hero {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            padding: 80px var(--spacing-lg) 60px;
+            text-align: center;
+            position: relative;
+        }
+
+        .intervention-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 70% 30%, rgba(200, 100, 150, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .hero-icon { font-size: 4rem; margin-bottom: var(--spacing-md); }
+        .hero-title { font-size: 3rem; color: var(--text-primary); margin-bottom: var(--spacing-sm); font-weight: 700; }
+        .hero-subtitle { font-size: 1.25rem; color: var(--text-secondary); max-width: 600px; margin: 0 auto var(--spacing-lg); line-height: 1.6; }
+
+        .hero-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 28px;
+            background: linear-gradient(135deg, var(--accent), #0CB5C2);
+            color: white;
+            font-weight: 600;
+            border-radius: var(--radius-md);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .hero-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(15, 164, 175, 0.4);
+        }
+
+        .content-section {
+            padding: var(--spacing-xxl) var(--spacing-lg);
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-lg);
+            margin-top: var(--spacing-xl);
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .themes-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--spacing-lg);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .theme-card {
+            background: var(--secondary);
+            border: 1px solid rgba(15, 164, 175, 0.15);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-xl);
+            transition: all 0.3s ease;
+        }
+
+        .theme-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-4px);
+        }
+
+        .theme-icon { font-size: 2.5rem; margin-bottom: var(--spacing-md); }
+        .theme-title { font-size: 1.25rem; color: var(--text-primary); margin-bottom: var(--spacing-sm); font-weight: 600; }
+        .theme-description { font-size: 0.95rem; color: var(--text-secondary); line-height: 1.6; }
+
+        .artists-section {
+            background: var(--secondary);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-xl);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .artists-intro {
+            text-align: center;
+            margin-bottom: var(--spacing-lg);
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+            line-height: 1.6;
+        }
+
+        .artist-placeholder {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--spacing-md);
+        }
+
+        .artist-slot {
+            background: rgba(0, 0, 0, 0.2);
+            border: 2px dashed rgba(15, 164, 175, 0.3);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-lg);
+            text-align: center;
+            color: var(--text-secondary);
+        }
+
+        .artist-slot-icon { font-size: 2rem; margin-bottom: var(--spacing-sm); opacity: 0.5; }
+        .artist-slot-text { font-size: 0.9rem; }
+
+        .metrics-row {
+            display: flex;
+            justify-content: center;
+            gap: var(--spacing-xl);
+            flex-wrap: wrap;
+            padding: var(--spacing-xl) 0;
+            border-top: 1px solid rgba(15, 164, 175, 0.1);
+            border-bottom: 1px solid rgba(15, 164, 175, 0.1);
+            margin: var(--spacing-xl) 0;
+        }
+
+        .metric-item { text-align: center; }
+        .metric-value { font-size: 2.5rem; font-weight: 700; color: var(--accent); margin-bottom: 4px; }
+        .metric-label { font-size: 0.9rem; color: var(--text-secondary); }
+
+        .cta-section {
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
+            padding: var(--spacing-xxl) var(--spacing-lg);
+            text-align: center;
+        }
+
+        .cta-title { font-size: 1.75rem; color: var(--text-primary); margin-bottom: var(--spacing-md); }
+        .cta-description { font-size: 1.05rem; color: var(--text-secondary); max-width: 500px; margin: 0 auto var(--spacing-lg); }
+
+        .cta-buttons { display: flex; justify-content: center; gap: var(--spacing-md); flex-wrap: wrap; }
+
+        .btn-primary {
+            display: inline-flex; align-items: center; gap: 8px; padding: 14px 28px;
+            background: linear-gradient(135deg, var(--accent), #0CB5C2); color: white;
+            font-weight: 600; border-radius: var(--radius-md); text-decoration: none; transition: all 0.3s ease;
+        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(15, 164, 175, 0.4); }
+
+        .btn-outline {
+            display: inline-flex; align-items: center; gap: 8px; padding: 14px 28px;
+            background: transparent; border: 2px solid rgba(175, 221, 229, 0.5); color: var(--text-primary);
+            font-weight: 600; border-radius: var(--radius-md); text-decoration: none; transition: all 0.3s ease;
+        }
+        .btn-outline:hover { background: rgba(15, 164, 175, 0.1); border-color: var(--accent); }
+
+        @media (max-width: 900px) {
+            .themes-grid { grid-template-columns: 1fr; }
+            .artist-placeholder { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 768px) {
+            .hero-title { font-size: 2.25rem; }
+            .metric-value { font-size: 2rem; }
+        }
+    </style>
+    {% include 'includes/edit_mode.html' ignore missing %}
+</head>
+<body data-edit-page="murals">
+    <nav class="global-nav">
+        <div class="nav-container">
+
+            <a href="/" class="nav-logo"><span class="nav-logo-text">PUHC Innovation Alleys</span></a>
+            <ul class="nav-tabs" id="navTabs">
+                <li class="nav-tab"><a href="/">Alley 3</a></li>
+                <li class="nav-tab"><a href="/existing">Before</a></li>
+                <li class="nav-tab"><a href="/fence-map">Fence Map</a></li>
+                <li class="nav-tab"><a href="/unreal-viewer">Explore</a></li>
+                <li class="nav-tab"><a href="/compare">Compare</a></li>
+            </ul>
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">☰</button>
+        </div>
+    </nav>
+
+    <div class="page-container">
+        <section class="intervention-hero">
+            <div style="display: inline-block; padding: 6px 14px; background: rgba(15, 164, 175, 0.15); border: 1px solid rgba(15, 164, 175, 0.4); border-radius: 4px; margin-bottom: var(--spacing-md); font-size: 0.7rem; font-weight: 600; color: var(--highlight); letter-spacing: 1px; text-transform: uppercase;">CULTURAL INFRASTRUCTURE</div>
+            <h1 class="hero-title">Community Mural System</h1>
+            <p class="hero-subtitle">Wall-based cultural infrastructure for community identity and artistic expression</p>
+            <a href="/unreal-viewer" class="hero-cta">Choose a Wall for a Mural</a>
+        </section>
+
+        <!-- A. Existing Conditions -->
+        <section class="content-section" style="padding-bottom: 0;">
+            <h2 class="section-title"><span style="color: var(--accent); font-weight: 700; margin-right: 8px;">A.</span>Existing Conditions</h2>
+            
+            <div style="margin: 0 auto var(--spacing-lg); max-width: 80%;">
+                <div style="background: rgba(0,0,0,0.3); border-radius: var(--radius-lg); overflow: hidden; border: 1px solid rgba(15, 164, 175, 0.2);">
+                    <img src="/static/images/alley-street-5.jpg" alt="Water Alley existing wall conditions - blank concrete with graffiti" style="width: 100%; height: 350px; object-fit: cover; display: block;" loading="lazy">
+                </div>
+                <p style="text-align: center; color: var(--text-muted); font-size: 0.8rem; margin-top: var(--spacing-sm);">Blank wall with graffiti / no cultural identity</p>
+            </div>
+
+            <p style="color: var(--text-secondary); line-height: 1.8; font-size: 0.95rem; max-width: 800px; margin: 0 auto; text-align: center;">
+                Water Alley's walls are blank concrete surfaces with accumulated graffiti. The corridor offers no visual identity or cultural expression for the Pico-Union community.
+            </p>
+        </section>
+
+        <!-- B. Intervention Description -->
+        <section class="content-section" style="padding-top: 0; padding-bottom: 0;">
+            <h2 class="section-title"><span style="color: var(--accent); font-weight: 700; margin-right: 8px;">B.</span>Intervention Description</h2>
+            
+            <!-- Primary Applied Mural -->
+            <div style="margin: 0 auto var(--spacing-lg); max-width: 80%;">
+                <div style="background: rgba(0,0,0,0.3); border-radius: var(--radius-lg); overflow: hidden; border: 1px solid rgba(15, 164, 175, 0.2);">
+                    <img src="/static/images/unreal/photo-5.jpg" alt="Water-themed murals on alley walls - Unreal Engine render" style="width: 100%; height: 380px; object-fit: cover; display: block;" loading="lazy">
+                </div>
+                <p style="text-align: center; color: var(--text-muted); font-size: 0.8rem; margin-top: var(--spacing-sm);">Water-themed mural on Alley 3 wall / marine life imagery</p>
+            </div>
+
+            <!-- Concept Reference -->
+            <div style="margin: 0 auto var(--spacing-lg); max-width: 55%; text-align: center;">
+                <p style="text-align: center; color: var(--text-secondary); font-size: 0.85rem; margin-bottom: var(--spacing-xs); font-weight: 600;">Concept reference (imagery + color palette)</p>
+                <div style="background: rgba(0, 0, 0, 0.3); border-radius: var(--radius-lg); overflow: hidden; border: 1px solid rgba(15, 164, 175, 0.2); box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+                    <img src="/static/images/murals/water-mural.png" alt="Ocean-themed mural concept visualization" style="width: 100%; height: auto; display: block;" loading="lazy">
+                </div>
+            </div>
+
+            <p style="color: var(--text-secondary); line-height: 1.8; font-size: 0.95rem; max-width: 800px; margin: 0 auto; text-align: center;">
+                Wall-based cultural infrastructure transforms blank concrete surfaces into community identity markers. Water-themed imagery reinforces alley character and provides visual landmarks.
+            </p>
+
+            <!-- Mural Concept Gallery -->
+            <div style="margin-top: var(--spacing-xl);">
+                <h3 style="text-align: center; color: var(--text-primary); font-size: 1.1rem; margin-bottom: var(--spacing-md); font-weight: 600;">Mural Concept Gallery</h3>
+                <p style="text-align: center; color: var(--text-muted); font-size: 0.85rem; margin-bottom: var(--spacing-lg);">Current mural concepts (PNG imports) / baseline intervention imagery</p>
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--spacing-md); max-width: 900px; margin: 0 auto;">
+                    <div style="border-radius: var(--radius-md); overflow: hidden; border: 1px solid rgba(15, 164, 175, 0.2); transition: all 0.3s ease; cursor: pointer;" onmouseover="this.style.borderColor='var(--accent)'; this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='rgba(15, 164, 175, 0.2)'; this.style.transform='translateY(0)'">
+                        <img src="/static/images/murals/Flowing river of symbols and nature.png" alt="Mural concept - flowing river" style="width: 100%; height: 200px; object-fit: cover;" loading="lazy">
+                        <p style="text-align: center; color: var(--text-muted); font-size: 0.75rem; padding: 8px;">River of symbols / nature theme</p>
+                    </div>
+                    <div style="border-radius: var(--radius-md); overflow: hidden; border: 1px solid rgba(15, 164, 175, 0.2); transition: all 0.3s ease; cursor: pointer;" onmouseover="this.style.borderColor='var(--accent)'; this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='rgba(15, 164, 175, 0.2)'; this.style.transform='translateY(0)'">
+                        <img src="/static/images/murals/The water cycle in harmony.png" alt="Mural concept - water cycle" style="width: 100%; height: 200px; object-fit: cover;" loading="lazy">
+                        <p style="text-align: center; color: var(--text-muted); font-size: 0.75rem; padding: 8px;">Water cycle / environmental harmony</p>
+                    </div>
+                    <div style="border-radius: var(--radius-md); overflow: hidden; border: 1px solid rgba(15, 164, 175, 0.2); transition: all 0.3s ease; cursor: pointer;" onmouseover="this.style.borderColor='var(--accent)'; this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='rgba(15, 164, 175, 0.2)'; this.style.transform='translateY(0)'">
+                        <img src="/static/images/murals/Reflections of community and nature.png" alt="Mural concept - community reflections" style="width: 100%; height: 200px; object-fit: cover;" loading="lazy">
+                        <p style="text-align: center; color: var(--text-muted); font-size: 0.75rem; padding: 8px;">Community reflections / nature</p>
+                    </div>
+                    <div style="border-radius: var(--radius-md); overflow: hidden; border: 1px solid rgba(15, 164, 175, 0.2); transition: all 0.3s ease; cursor: pointer;" onmouseover="this.style.borderColor='var(--accent)'; this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='rgba(15, 164, 175, 0.2)'; this.style.transform='translateY(0)'">
+                        <img src="/static/images/murals/Underground roots and flowing water.png" alt="Mural concept - underground roots" style="width: 100%; height: 200px; object-fit: cover;" loading="lazy">
+                        <p style="text-align: center; color: var(--text-muted); font-size: 0.75rem; padding: 8px;">Underground roots / water flow</p>
+                    </div>
+                    <div style="border-radius: var(--radius-md); overflow: hidden; border: 1px solid rgba(15, 164, 175, 0.2); transition: all 0.3s ease; cursor: pointer;" onmouseover="this.style.borderColor='var(--accent)'; this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='rgba(15, 164, 175, 0.2)'; this.style.transform='translateY(0)'">
+                        <img src="/static/images/murals/From drought to vibrant renewal.png" alt="Mural concept - drought to renewal" style="width: 100%; height: 200px; object-fit: cover;" loading="lazy">
+                        <p style="text-align: center; color: var(--text-muted); font-size: 0.75rem; padding: 8px;">Drought to renewal / transformation</p>
+                    </div>
+                    <div style="border-radius: var(--radius-md); overflow: hidden; border: 1px solid rgba(15, 164, 175, 0.2); transition: all 0.3s ease; cursor: pointer;" onmouseover="this.style.borderColor='var(--accent)'; this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='rgba(15, 164, 175, 0.2)'; this.style.transform='translateY(0)'">
+                        <img src="/static/images/murals/Underwater mural in an urban alley.png" alt="Mural concept - underwater scene" style="width: 100%; height: 200px; object-fit: cover;" loading="lazy">
+                        <p style="text-align: center; color: var(--text-muted); font-size: 0.75rem; padding: 8px;">Underwater scene / marine life</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Zone Application Section -->
+        <section class="content-section" style="padding-top: 0; padding-bottom: 0;">
+            <h2 class="section-title" style="margin-top: var(--spacing-lg);">Zone-Specific Implementation</h2>
+            <div style="background: var(--secondary); border: 1px solid rgba(15, 164, 175, 0.2); border-radius: var(--radius-lg); padding: var(--spacing-xl); max-width: 800px; margin: 0 auto;">
+                <p style="color: var(--text-secondary); line-height: 1.8; font-size: 0.95rem; text-align: center; margin-bottom: var(--spacing-md);">
+                    Community murals are applied to <strong style="color: var(--accent);">Areas C and D</strong>, where large concrete wall surfaces provide suitable canvases for artistic expression.
+                </p>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-lg); margin-top: var(--spacing-lg);">
+                    <div style="text-align: center;">
+                        <div style="font-size: 1.5rem; color: var(--accent); font-weight: 700; margin-bottom: var(--spacing-xs);">Area C</div>
+                        <div style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6;">Mid-South Section<br>Concrete block walls<br>Graffiti coverage area</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 1.5rem; color: var(--accent); font-weight: 700; margin-bottom: var(--spacing-xs);">Area D</div>
+                        <div style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6;">South Entrance<br>Blank concrete walls<br>Exit gateway location</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- C. Cultural Foundation -->
+        <section class="content-section" style="padding-top: 0; padding-bottom: 0;">
+            <h2 class="section-title"><span style="color: var(--accent); font-weight: 700; margin-right: 8px;">C.</span>Cultural Foundation</h2>
+            
+            <p style="text-align: center; color: var(--text-secondary); max-width: 700px; margin: 0 auto var(--spacing-lg); font-size: 0.95rem; line-height: 1.7;">
+                Community murals build on documented preservation work completed in Area C, Project 7. Two existing murals were restored with UV protection, graffiti removal, and surface sealing, establishing the cultural foundation for expanded mural programming.
+            </p>
+            
+            <div style="background: var(--secondary); border: 1px solid rgba(15, 164, 175, 0.15); border-radius: var(--radius-lg); padding: var(--spacing-xl); max-width: 900px; margin: 0 auto;">
+                <h3 style="color: var(--highlight); font-size: 1.1rem; margin-bottom: var(--spacing-md); font-weight: 600; text-align: center;">Documented Preservation Work</h3>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-lg);">
+                    <div>
+                        <h4 style="color: var(--accent); font-size: 0.95rem; margin-bottom: var(--spacing-sm); font-weight: 600;">Project 7, Section 3</h4>
+                        <ul style="color: var(--text-secondary); line-height: 1.7; font-size: 0.85rem; padding-left: 1.2rem; margin: 0;">
+                            <li>Concrete wall with painted mural (~165-180 sq ft)</li>
+                            <li>Graffiti removal and wall washing</li>
+                            <li>UV-protective clear coat application</li>
+                            <li>Acrylic paint touch-ups for faded areas</li>
+                            <li>Anti-weathering sealant for longevity</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 style="color: var(--accent); font-size: 0.95rem; margin-bottom: var(--spacing-sm); font-weight: 600;">Project 7, Section 5</h4>
+                        <ul style="color: var(--text-secondary); line-height: 1.7; font-size: 0.85rem; padding-left: 1.2rem; margin: 0;">
+                            <li>"Respect" mural restoration (~85-100 sq ft)</li>
+                            <li>Surface cleaning and tag removal</li>
+                            <li>Full mural repainting and touch-ups</li>
+                            <li>UV-protective sealant application</li>
+                            <li>Anti-graffiti coating for protection</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div style="margin-top: var(--spacing-lg); padding-top: var(--spacing-lg); border-top: 1px solid rgba(15, 164, 175, 0.2);">
+                    <h4 style="color: var(--accent); font-size: 0.95rem; margin-bottom: var(--spacing-sm); font-weight: 600; text-align: center;">Additional Wall Preparation</h4>
+                    <p style="color: var(--text-secondary); font-size: 0.85rem; line-height: 1.6; text-align: center; margin: 0;">
+                        12 additional sections across Projects 6, 7, and 8 received graffiti removal, wall cleaning, and anti-graffiti sealant application, creating prepared canvases for new community artwork.
+                    </p>
+                </div>
+                
+                <div style="margin-top: var(--spacing-lg); padding-top: var(--spacing-lg); border-top: 1px solid rgba(15, 164, 175, 0.2); text-align: center;">
+                    <p style="color: var(--text-muted); font-size: 0.85rem; line-height: 1.6; margin: 0;">
+                        <strong style="color: var(--accent);">Total Foundation:</strong> 2 murals preserved | ~265-280 sq ft of restored artwork | 12 walls prepared for new designs
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- D. Role in Alley 3 -->
+        <section class="content-section" style="padding-top: 0; padding-bottom: 0;">
+            <h2 class="section-title"><span style="color: var(--accent); font-weight: 700; margin-right: 8px;">D.</span>Role in Alley 3</h2>
+            <div style="background: var(--secondary); border: 1px solid rgba(15, 164, 175, 0.15); border-radius: var(--radius-lg); padding: var(--spacing-lg);">
+                <ul style="color: var(--text-secondary); line-height: 1.7; font-size: 0.9rem; padding-left: 1.5rem; margin: 0;">
+                    <li><strong>Improves visual identity:</strong> Transforms blank walls into recognizable cultural landmarks</li>
+                    <li><strong>Encourages community ownership:</strong> Residents see their heritage reflected in public space</li>
+                    <li><strong>Creates landmarks for navigation:</strong> Murals serve as wayfinding elements along the corridor</li>
+                    <li><strong>Reduces perception of neglect:</strong> Valued artwork deters tagging and signals community care</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- E. Area-by-Area Transformations -->
+        <section class="content-section" style="padding-top: 0; padding-bottom: 0;">
+            <h2 class="section-title"><span style="color: var(--accent); font-weight: 700; margin-right: 8px;">E.</span>Area-by-Area Transformations</h2>
+            
+            <p style="text-align: center; color: var(--text-secondary); max-width: 700px; margin: 0 auto var(--spacing-xl); font-size: 0.95rem; line-height: 1.7;">
+                Community murals build on documented preservation work in Areas C and D. Below: existing murals (preserved) → new mural designs (proposed).
+            </p>
+            
+            <!-- Area C Transformation -->
+            <div style="margin-bottom: var(--spacing-xxl);">
+                <div style="text-align: center; margin-bottom: var(--spacing-md);">
+                    <div style="display: inline-block; padding: 6px 14px; background: rgba(15, 164, 175, 0.15); border: 1px solid rgba(15, 164, 175, 0.4); border-radius: 4px; margin-bottom: var(--spacing-sm); font-size: 0.75rem; font-weight: 600; color: var(--accent); letter-spacing: 0.5px;">AREA C — MID-SOUTH / MURAL ZONE</div>
+                    <h3 style="font-size: 1.5rem; color: var(--text-primary); font-weight: 600; margin: 0;">Existing Murals & Concrete Walls</h3>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-md);">
+                    <div>
+                        <div style="background: rgba(0,0,0,0.3); border-radius: var(--radius-lg); overflow: hidden; border: 1px solid rgba(15, 164, 175, 0.2);">
+                            <img src="/static/images/alley_zones/area_c/murals/Concrete Wall with Painted Mural 1.png" alt="Area C Existing - Painted mural" style="width: 100%; height: 280px; object-fit: cover; display: block;" loading="lazy">
+                        </div>
+                        <p style="text-align: center; color: var(--text-muted); font-size: 0.8rem; margin-top: var(--spacing-xs);">Documented: Painted mural preserved (Project 7, Section 3) / UV protected</p>
+                    </div>
+                    <div>
+                        <div style="background: rgba(0,0,0,0.3); border-radius: var(--radius-lg); overflow: hidden; border: 1px solid rgba(15, 164, 175, 0.2);">
+                            <img src="/static/images/alley_zones/area_c/murals/Concrete Wall with Respect Mural 1.png" alt="Area C Existing - Respect mural" style="width: 100%; height: 280px; object-fit: cover; display: block;" loading="lazy">
+                        </div>
+                        <p style="text-align: center; color: var(--text-muted); font-size: 0.8rem; margin-top: var(--spacing-xs);">Documented: "Respect" mural restored (Project 7, Section 5) / UV protected</p>
+                    </div>
+                </div>
+                <div style="text-align: center; margin-top: var(--spacing-md);">
+                    <p style="color: var(--text-secondary); font-size: 0.85rem; font-style: italic;">Area C demonstrates existing community artistic expression. New mural designs will build on this cultural foundation.</p>
+                </div>
+            </div>
+
+            <!-- Area D Transformation -->
+            <div style="margin-bottom: var(--spacing-xl);">
+                <div style="text-align: center; margin-bottom: var(--spacing-md);">
+                    <div style="display: inline-block; padding: 6px 14px; background: rgba(15, 164, 175, 0.15); border: 1px solid rgba(15, 164, 175, 0.4); border-radius: 4px; margin-bottom: var(--spacing-sm); font-size: 0.75rem; font-weight: 600; color: var(--accent); letter-spacing: 0.5px;">AREA D — SOUTH EXIT / REAR ZONE</div>
+                    <h3 style="font-size: 1.5rem; color: var(--text-primary); font-weight: 600; margin: 0;">Blank Walls & Garage Structures</h3>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-md);">
+                    <div>
+                        <div style="background: rgba(0,0,0,0.3); border-radius: var(--radius-lg); overflow: hidden; border: 1px solid rgba(15, 164, 175, 0.2);">
+                            <img src="/static/images/alley_zones/area_d/existing/Garage Doors + Wall Sections (Excludes Roof) 1.png" alt="Area D Existing - Garage walls" style="width: 100%; height: 280px; object-fit: cover; display: block;" loading="lazy">
+                        </div>
+                        <p style="text-align: center; color: var(--text-muted); font-size: 0.8rem; margin-top: var(--spacing-xs);">Documented: Walls cleaned and prepared (Project 8) / ready for artwork</p>
+                    </div>
+                    <div>
+                        <div style="background: rgba(0,0,0,0.3); border-radius: var(--radius-lg); overflow: hidden; border: 1px solid rgba(15, 164, 175, 0.2);">
+                            <img src="/static/images/unreal/photo-6.jpg" alt="Large water mural on alley wall - Unreal Engine render" style="width: 100%; height: 280px; object-fit: cover; display: block;" loading="lazy">
+                        </div>
+                        <p style="text-align: center; color: var(--text-muted); font-size: 0.8rem; margin-top: var(--spacing-xs);">Proposed: Water mural on alley wall / Unreal Engine render</p>
+                    </div>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: var(--spacing-xl);">
+                <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: var(--spacing-md);">View existing murals and wall conditions across all zones</p>
+                <div style="display: flex; gap: var(--spacing-md); justify-content: center; flex-wrap: wrap;">
+                    <a href="/existing" style="display: inline-block; padding: 12px 24px; background: transparent; color: var(--accent); text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 0.9rem; border: 1px solid var(--accent);">View All Zone Photos</a>
+                    <a href="/unreal-viewer" style="display: inline-block; padding: 12px 24px; background: var(--accent); color: var(--primary); text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 0.9rem;">Launch Digital Twin</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- F. Prototype Impact -->
+        <section class="content-section" style="padding-top: 0;">
+            <h2 class="section-title"><span style="color: var(--accent); font-weight: 700; margin-right: 8px;">F.</span>Prototype Impact</h2>
+            <div class="metrics-row">
+                <div class="metric-item">
+                    <div class="metric-value" style="font-size: 1.5rem; color: var(--text-primary);">Identity</div>
+                    <div class="metric-label">Visual landmarks establish alley character</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-value" style="font-size: 1.5rem; color: var(--text-primary);">Engagement</div>
+                    <div class="metric-label">Community input shapes final designs</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-value" style="font-size: 1.5rem; color: var(--text-primary);">Safety</div>
+                    <div class="metric-label">Valued art reduces tagging and neglect</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-value" style="font-size: 1.5rem; color: var(--text-primary);">Wayfinding</div>
+                    <div class="metric-label">Murals serve as navigation cues</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="cta-section">
+            <h2 class="cta-title">See Murals in Context</h2>
+            <p class="cta-description">
+                Experience how the murals transform the Water Alley walls in the immersive 3D Digital Twin.
+            </p>
+            <div class="cta-buttons">
+                <a href="/unreal-viewer" class="btn-primary">Launch Digital Twin</a>
+                <a href="/" class="btn-outline">← Back to Alley 3</a>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        const navToggle = document.getElementById('navToggle');
+        const navTabs = document.getElementById('navTabs');
+        navToggle.addEventListener('click', () => { navTabs.classList.toggle('active'); });
+        document.addEventListener('click', (e) => {
+            if (!navToggle.contains(e.target) && !navTabs.contains(e.target)) { navTabs.classList.remove('active'); }
+        });
+    </script>
+</body>
+</html>

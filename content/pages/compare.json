@@ -1,0 +1,24 @@
+{
+  "_meta": {
+    "page": "compare",
+    "template": "compare.html",
+    "last_edited": null
+  },
+  "header": {
+    "badge": "BEFORE & AFTER",
+    "title": "Compare",
+    "subtitle": "Visual comparison showing existing conditions and design interventions side by side."
+  },
+  "framing": {
+    "description": "This comparison illustrates how three design interventions -- shade structures, murals, and urban farming -- can be integrated within the same alley space."
+  },
+  "before_image": {
+    "path": "/static/images/existing-alley.jpg",
+    "caption": "Existing alley conditions used as baseline reference"
+  },
+  "after_image": {
+    "path": "/static/images/intervention-overview.png",
+    "caption": "Integrated design interventions visualized in Alley 3"
+  },
+  "continuity_note": "These values correspond to what you see in the 3D Digital Twin and Street View imagery. Explore the spatial design to visualize how these changes appear in the modeled environment."
+}

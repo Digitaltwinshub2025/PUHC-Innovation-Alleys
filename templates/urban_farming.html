@@ -1,0 +1,1387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Urban Farming - Innovation Alley 3 | PUHC Innovation Alleys</title>
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='images/favicon.svg') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/global-theme.css') }}">
+    <script src="{{ url_for('static', filename='js/cache-buster.js') }}"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: var(--font-primary);
+            background: var(--primary);
+            color: var(--text-primary);
+        }
+
+        .page-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: calc(60px + var(--spacing-xl)) var(--spacing-xl) var(--spacing-xl);
+        }
+
+        /* ============================================
+           HERO SECTION
+           ============================================ */
+        .hero-section {
+            text-align: center;
+            padding: var(--spacing-xl) 0;
+            margin-bottom: var(--spacing-xl);
+            background: linear-gradient(135deg, rgba(15, 164, 175, 0.1), rgba(2, 73, 80, 0.2));
+            border-radius: var(--radius-lg);
+            border: 1px solid rgba(15, 164, 175, 0.3);
+        }
+
+        .hero-tagline {
+            color: var(--highlight);
+            font-size: 0.875rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            margin-bottom: var(--spacing-sm);
+            text-transform: uppercase;
+        }
+
+        .hero-title {
+            font-size: 2.75rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: var(--spacing-md);
+            line-height: 1.2;
+        }
+
+        .hero-subtitle {
+            color: var(--text-secondary);
+            font-size: 1.15rem;
+            max-width: 700px;
+            margin: 0 auto var(--spacing-md);
+            line-height: 1.6;
+        }
+        
+        .hero-note {
+            font-size: 0.9rem;
+            color: var(--accent);
+            max-width: 600px;
+            margin: 0 auto var(--spacing-lg);
+            padding: 12px 20px;
+            background: rgba(15, 164, 175, 0.1);
+            border-radius: 8px;
+            border: 1px solid rgba(15, 164, 175, 0.3);
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: var(--spacing-md);
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            padding: var(--spacing-md) var(--spacing-xl);
+            background: var(--highlight);
+            color: var(--primary);
+            border: none;
+            border-radius: var(--radius-md);
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-secondary {
+            padding: var(--spacing-md) var(--spacing-xl);
+            background: transparent;
+            color: var(--highlight);
+            border: 2px solid var(--highlight);
+            border-radius: var(--radius-md);
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(15, 164, 175, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* ============================================
+           SECTION STYLES
+           ============================================ */
+        .section {
+            padding: var(--spacing-xxl) 0;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .section-title {
+            font-size: 2rem;
+            color: var(--text-primary);
+            text-align: center;
+            margin-bottom: var(--spacing-lg);
+            margin-top: var(--spacing-xl);
+            font-weight: 600;
+        }
+
+        .section-subtitle {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* ============================================
+           EDUCATIONAL SECTION
+           ============================================ */
+        .edu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--spacing-lg);
+        }
+
+        .edu-card {
+            background: var(--secondary);
+            border: 1px solid rgba(15, 164, 175, 0.3);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            transition: all 0.3s ease;
+        }
+
+        .edu-card:hover {
+            border-color: var(--highlight);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .edu-icon {
+            width: 60px;
+            height: 60px;
+            background: rgba(15, 164, 175, 0.2);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.75rem;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .edu-card h3 {
+            color: var(--highlight);
+            font-size: 1.25rem;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .edu-card p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        .edu-list {
+            list-style: none;
+            padding: 0;
+            margin-top: var(--spacing-md);
+        }
+
+        .edu-list li {
+            padding: var(--spacing-xs) 0;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .edu-list li::before {
+            content: '✓';
+            color: var(--highlight);
+            font-weight: bold;
+        }
+
+        /* ============================================
+           FARMING TYPES CARDS (Interactive)
+           ============================================ */
+        .farming-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: var(--spacing-lg);
+        }
+
+        .farming-card {
+            background: var(--secondary);
+            border: 2px solid rgba(15, 164, 175, 0.3);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .farming-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-xl);
+            border-color: var(--highlight);
+        }
+
+        .farming-card.selected {
+            border-color: var(--accent);
+            box-shadow: 0 0 20px rgba(15, 164, 175, 0.4);
+        }
+
+        .farming-card.selected::after {
+            content: '✓ Selected';
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: var(--accent);
+            color: white;
+            padding: 4px 12px;
+            border-radius: var(--radius-sm);
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .farming-image {
+            width: 100%;
+            height: 180px;
+            background: linear-gradient(135deg, rgba(15, 164, 175, 0.3), rgba(2, 73, 80, 0.5));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .farming-image-icon {
+            font-size: 4rem;
+            opacity: 0.8;
+        }
+
+        .farming-content {
+            padding: var(--spacing-lg);
+        }
+
+        .farming-name {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--highlight);
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .farming-description {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: var(--spacing-md);
+            font-size: 0.9rem;
+        }
+
+        .farming-specs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-md) 0;
+            border-top: 1px solid rgba(15, 164, 175, 0.2);
+            border-bottom: 1px solid rgba(15, 164, 175, 0.2);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .spec-item {
+            font-size: 0.8rem;
+        }
+
+        .spec-label {
+            color: var(--text-tertiary);
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        .spec-value {
+            color: var(--highlight);
+            font-weight: 600;
+        }
+
+        .add-to-twin-btn {
+            width: 100%;
+            padding: var(--spacing-md);
+            background: var(--highlight);
+            color: var(--primary);
+            border: none;
+            border-radius: var(--radius-md);
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .add-to-twin-btn:hover {
+            background: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        /* ============================================
+           DIGITAL TWIN INTEGRATION PANEL
+           ============================================ */
+        .twin-panel {
+            background: var(--secondary);
+            border: 1px solid rgba(15, 164, 175, 0.3);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-xl);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .twin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-lg);
+            flex-wrap: wrap;
+            gap: var(--spacing-md);
+        }
+
+        .twin-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        .twin-controls {
+            display: flex;
+            gap: var(--spacing-md);
+            align-items: center;
+        }
+
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        .toggle-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 50px;
+            height: 26px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--primary);
+            border: 1px solid rgba(15, 164, 175, 0.3);
+            transition: 0.3s;
+            border-radius: 26px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: var(--text-secondary);
+            transition: 0.3s;
+            border-radius: 50%;
+        }
+
+        .toggle-switch input:checked + .toggle-slider {
+            background-color: var(--highlight);
+        }
+
+        .toggle-switch input:checked + .toggle-slider:before {
+            transform: translateX(24px);
+            background-color: white;
+        }
+
+        .twin-preview {
+            background: var(--primary);
+            border-radius: var(--radius-md);
+            height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(15, 164, 175, 0.2);
+        }
+
+        .twin-preview-placeholder {
+            text-align: center;
+            color: var(--text-secondary);
+        }
+
+        .twin-preview-placeholder h3 {
+            color: var(--highlight);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        /* Alley scene visualization */
+        .alley-scene {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            background: linear-gradient(180deg, #1a3a3d 0%, #0d1f21 100%);
+        }
+
+        .alley-ground {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 40%;
+            background: linear-gradient(180deg, #2a4a4d 0%, #1a3a3d 100%);
+        }
+
+        .farming-element {
+            position: absolute;
+            transition: all 0.5s ease;
+            opacity: 0;
+            transform: scale(0.8);
+        }
+
+        .farming-element.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .selected-items {
+            display: flex;
+            gap: var(--spacing-sm);
+            flex-wrap: wrap;
+            margin-top: var(--spacing-md);
+        }
+
+        .selected-tag {
+            background: rgba(15, 164, 175, 0.2);
+            border: 1px solid var(--highlight);
+            padding: 6px 12px;
+            border-radius: var(--radius-sm);
+            font-size: 0.85rem;
+            color: var(--highlight);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .selected-tag .remove {
+            cursor: pointer;
+            opacity: 0.7;
+        }
+
+        .selected-tag .remove:hover {
+            opacity: 1;
+        }
+
+        /* ============================================
+           DESIGN WORKFLOW SECTION
+           ============================================ */
+        .workflow-steps {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--spacing-lg);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .workflow-step {
+            text-align: center;
+            padding: var(--spacing-lg);
+            background: var(--secondary);
+            border-radius: var(--radius-lg);
+            border: 1px solid rgba(15, 164, 175, 0.3);
+            position: relative;
+        }
+
+        .workflow-step::after {
+            content: '→';
+            position: absolute;
+            right: -25px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.5rem;
+            color: var(--highlight);
+        }
+
+        .workflow-step:last-child::after {
+            display: none;
+        }
+
+        .step-number {
+            width: 50px;
+            height: 50px;
+            background: var(--highlight);
+            color: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0 auto var(--spacing-md);
+        }
+
+        .workflow-step h3 {
+            color: white;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .workflow-step p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Impact Metrics */
+        .impact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-md);
+        }
+
+        .impact-card {
+            background: var(--secondary);
+            border: 1px solid rgba(15, 164, 175, 0.3);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-lg);
+            text-align: center;
+        }
+
+        .impact-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--highlight);
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .impact-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Before/After Toggle */
+        .comparison-toggle {
+            display: flex;
+            justify-content: center;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .comparison-btn {
+            padding: var(--spacing-sm) var(--spacing-lg);
+            background: var(--primary);
+            color: var(--text-secondary);
+            border: 1px solid rgba(15, 164, 175, 0.3);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .comparison-btn.active {
+            background: var(--highlight);
+            color: var(--primary);
+            border-color: var(--highlight);
+        }
+
+        /* ============================================
+           RESPONSIVE DESIGN
+           ============================================ */
+        @media (max-width: 1024px) {
+            .workflow-steps {
+                grid-template-columns: 1fr;
+            }
+
+            .workflow-step::after {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .farming-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .twin-preview {
+                height: 300px;
+            }
+        }
+
+        /* Notification styles */
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 16px 24px;
+            background: var(--secondary);
+            border: 1px solid var(--highlight);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-xl);
+            z-index: 1000;
+            animation: slideIn 0.3s ease;
+        }
+
+        .notification.success {
+            border-color: #4CAF50;
+        }
+
+        .notification-title {
+            color: var(--highlight);
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .notification-message {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+    </style>
+    {% include 'includes/edit_mode.html' ignore missing %}
+</head>
+<body data-edit-page="urban_farming">
+    <!-- Global Navigation -->
+    <nav class="global-nav">
+        <div class="nav-container">
+            <a href="/" class="nav-logo">
+                <span class="nav-logo-text">PUHC Innovation Alleys</span>
+            </a>
+            
+            <ul class="nav-tabs" id="navTabs">
+                <li class="nav-tab"><a href="/">Alley 3</a></li>
+                <li class="nav-tab"><a href="/existing">Before</a></li>
+                <li class="nav-tab"><a href="/fence-map">Fence Map</a></li>
+                <li class="nav-tab"><a href="/unreal-viewer">Explore</a></li>
+                <li class="nav-tab"><a href="/compare">Compare</a></li>
+            </ul>
+            
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+                ☰
+            </button>
+        </div>
+    </nav>
+
+    <div class="page-container">
+        <!-- ============================================
+             HERO SECTION
+             ============================================ -->
+        <section class="hero-section">
+            <div class="hero-tagline">FOOD SECURITY - COMMUNITY BUILDING - URBAN GREENING</div>
+            <h1 class="hero-title">Urban Farming</h1>
+            <p class="hero-subtitle">
+                Community gardens bringing fresh, locally-grown produce to Pico-Union families. 
+                Reduce heat, grow food, and strengthen community bonds—all within steps of your home.
+            </p>
+            <p class="hero-note">
+                This intervention is built and tested in the digital twin using real weather and spatial data from Water Alley.
+            </p>
+            <div class="hero-buttons">
+                <a href="/unreal-viewer" class="btn-primary">
+                    View in Digital Twin
+                </a>
+                <a href="/" class="btn-secondary">
+                    Back to Alley 3
+                </a>
+            </div>
+        </section>
+
+        <!-- A. Existing Conditions -->
+        <section class="section" style="padding-bottom: 0;">
+            <h2 class="section-title"><span style="color: var(--accent); font-weight: 700; margin-right: 8px;">A.</span>Existing Conditions</h2>
+            
+            <div style="margin: 0 auto var(--spacing-lg); max-width: 80%;">
+                <div style="background: rgba(0,0,0,0.3); border-radius: var(--radius-lg); overflow: hidden; border: 1px solid rgba(15, 164, 175, 0.2);">
+                    <img src="/static/images/alley-street-2.png" alt="Water Alley existing conditions - paved corridor with no productive use" style="width: 100%; height: 350px; object-fit: cover; display: block;" loading="lazy">
+                </div>
+                <p style="text-align: center; color: var(--text-muted); font-size: 0.8rem; margin-top: var(--spacing-sm);">Paved corridor / no productive ground use</p>
+            </div>
+
+            <p style="color: var(--text-secondary); line-height: 1.8; font-size: 0.95rem; max-width: 800px; margin: 0 auto; text-align: center;">
+                Water Alley is a paved service corridor with no productive use of ground space. Pico-Union is classified as a food desert, where residents have limited access to affordable fresh produce.
+            </p>
+        </section>
+
+        <!-- B. Intervention Description -->
+        <section class="section" style="padding-top: 0; padding-bottom: 0;">
+            <h2 class="section-title"><span style="color: var(--accent); font-weight: 700; margin-right: 8px;">B.</span>Intervention Description</h2>
+            
+            <!-- Primary Garden Transformation Image -->
+            <div style="margin: 0 auto var(--spacing-lg); max-width: 80%;">
+                <div style="background: rgba(0,0,0,0.3); border-radius: var(--radius-lg); overflow: hidden; border: 1px solid rgba(15, 164, 175, 0.2);">
+                    <img src="/static/images/unreal/photo-2.jpg" alt="Alley 3 with galvanized steel planter boxes - Unreal Engine render" style="width: 100%; height: 380px; object-fit: cover; display: block;" loading="lazy">
+                </div>
+                <p style="text-align: center; color: var(--text-muted); font-size: 0.8rem; margin-top: var(--spacing-sm);">Container gardens along alley edges / raised planters with clear circulation path</p>
+            </div>
+
+            <p style="color: var(--text-secondary); line-height: 1.8; font-size: 0.95rem; max-width: 800px; margin: 0 auto; text-align: center;">
+                This intervention installs raised bed containers along Water Alley's edges, creating a community garden that produces fresh vegetables for neighborhood families. Containers are positioned to maintain pedestrian circulation while maximizing growing space.
+            </p>
+        </section>
+
+        <!-- C. Pavement Foundation -->
+        <section class="section" style="padding-top: 0; padding-bottom: 0;">
+            <h2 class="section-title"><span style="color: var(--accent); font-weight: 700; margin-right: 8px;">C.</span>Pavement Foundation</h2>
+            
+            <p style="text-align: center; color: var(--text-secondary); max-width: 700px; margin: 0 auto var(--spacing-lg); font-size: 0.95rem; line-height: 1.7;">
+                Urban farming installations utilize documented pavement repairs completed across 20 sections in Areas A and B. This foundation work provides stable, clean surfaces for modular container placement and improved drainage for irrigation systems.
+            </p>
+            
+            <div style="background: var(--secondary); border: 1px solid rgba(15, 164, 175, 0.15); border-radius: var(--radius-lg); padding: var(--spacing-xl); max-width: 900px; margin: 0 auto;">
+                <h3 style="color: var(--highlight); font-size: 1.1rem; margin-bottom: var(--spacing-md); font-weight: 600; text-align: center;">Documented Repair Work</h3>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-lg);">
+                    <div>
+                        <h4 style="color: var(--accent); font-size: 0.95rem; margin-bottom: var(--spacing-sm); font-weight: 600;">Area A - Projects 2 & 3</h4>
+                        <ul style="color: var(--text-secondary); line-height: 1.7; font-size: 0.85rem; padding-left: 1.2rem; margin: 0;">
+                            <li>13 sections of pavement and edge repairs</li>
+                            <li>Crack filling and surface patching</li>
+                            <li>Weed removal and vegetation clearing</li>
+                            <li>Curb repainting and edge detailing</li>
+                            <li>Surface cleaning and smoothing</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 style="color: var(--accent); font-size: 0.95rem; margin-bottom: var(--spacing-sm); font-weight: 600;">Area B - Projects 4 & 5</h4>
+                        <ul style="color: var(--text-secondary); line-height: 1.7; font-size: 0.85rem; padding-left: 1.2rem; margin: 0;">
+                            <li>6 sections of pavement improvements</li>
+                            <li>Concrete crack patching and sealing</li>
+                            <li>Debris removal and power washing</li>
+                            <li>Edge definition and curb touch-ups</li>
+                            <li>Drainage clearing and improvements</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div style="margin-top: var(--spacing-lg); padding-top: var(--spacing-lg); border-top: 1px solid rgba(15, 164, 175, 0.2); text-align: center;">
+                    <p style="color: var(--text-muted); font-size: 0.85rem; line-height: 1.6; margin: 0;">
+                        <strong style="color: var(--accent);">Total Foundation:</strong> 19 documented sections | Stable surfaces prepared | Drainage systems improved for container garden irrigation
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- D. Role in Alley 3 -->
+        <section class="section" style="padding-top: 0; padding-bottom: 0;">
+            <h2 class="section-title"><span style="color: var(--accent); font-weight: 700; margin-right: 8px;">D.</span>Role in Alley 3</h2>
+            <div style="background: var(--secondary); border: 1px solid rgba(15, 164, 175, 0.15); border-radius: var(--radius-lg); padding: var(--spacing-lg);">
+                <ul style="color: var(--text-secondary); line-height: 1.7; font-size: 0.9rem; padding-left: 1.5rem; margin: 0;">
+                    <li><strong>Addresses food access:</strong> Provides fresh produce in a neighborhood classified as a food desert</li>
+                    <li><strong>Creates community gathering:</strong> Transforms pass-through corridor into a destination for neighbors</li>
+                    <li><strong>Reduces microclimate heat:</strong> Container gardens positioned under shade structures benefit from cooler conditions</li>
+                    <li><strong>Reinforces water theme:</strong> Drip irrigation and rainwater capture connect to Water Alley identity</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- E. Area-by-Area Transformations -->
+        <section class="section" style="padding-top: 0; padding-bottom: 0;">
+            <h2 class="section-title"><span style="color: var(--accent); font-weight: 700; margin-right: 8px;">E.</span>Area-by-Area Transformations</h2>
+            
+            <p style="text-align: center; color: var(--text-secondary); max-width: 700px; margin: 0 auto var(--spacing-xl); font-size: 0.95rem; line-height: 1.7;">
+                Urban farming builds on documented pavement repairs in Areas A and B. Below: existing conditions (completed repairs) → proposed container gardens (in development).
+            </p>
+            
+            <!-- Area A Transformation -->
+            <div style="margin-bottom: var(--spacing-xxl);">
+                <div style="text-align: center; margin-bottom: var(--spacing-md);">
+                    <div style="display: inline-block; padding: 6px 14px; background: rgba(15, 164, 175, 0.15); border: 1px solid rgba(15, 164, 175, 0.4); border-radius: 4px; margin-bottom: var(--spacing-sm); font-size: 0.75rem; font-weight: 600; color: var(--accent); letter-spacing: 0.5px;">AREA A — NORTH ENTRANCE ZONE</div>
+                    <h3 style="font-size: 1.5rem; color: var(--text-primary); font-weight: 600; margin: 0;">Residential Gateway</h3>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-md);">
+                    <div>
+                        <div style="background: rgba(0,0,0,0.3); border-radius: var(--radius-lg); overflow: hidden; border: 1px solid rgba(15, 164, 175, 0.2);">
+                            <img src="/static/images/alley_zones/area_a/existing/Overgrown Fence with Vegetation and Cracked Pavement 1.png" alt="Area A Existing - Overgrown vegetation" style="width: 100%; height: 280px; object-fit: cover; display: block;" loading="lazy">
+                        </div>
+                        <p style="text-align: center; color: var(--text-muted); font-size: 0.8rem; margin-top: var(--spacing-xs);">Documented: Pavement repaired (Projects 2 & 3) / vegetation cleared</p>
+                    </div>
+                    <div>
+                        <div style="background: rgba(0,0,0,0.3); border-radius: var(--radius-lg); overflow: hidden; border: 1px solid rgba(15, 164, 175, 0.2);">
+                            <img src="/static/images/unreal/photo-3.jpg" alt="Alley 3 planter boxes along corridor - Unreal Engine render" style="width: 100%; height: 280px; object-fit: cover; display: block;" loading="lazy">
+                        </div>
+                        <p style="text-align: center; color: var(--text-muted); font-size: 0.8rem; margin-top: var(--spacing-xs);">Proposed: Planter boxes along corridor / Unreal Engine render</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Area B Transformation -->
+            <div style="margin-bottom: var(--spacing-xl);">
+                <div style="text-align: center; margin-bottom: var(--spacing-md);">
+                    <div style="display: inline-block; padding: 6px 14px; background: rgba(15, 164, 175, 0.15); border: 1px solid rgba(15, 164, 175, 0.4); border-radius: 4px; margin-bottom: var(--spacing-sm); font-size: 0.75rem; font-weight: 600; color: var(--accent); letter-spacing: 0.5px;">AREA B — MID-NORTH / RED TRELLIS ZONE</div>
+                    <h3 style="font-size: 1.5rem; color: var(--text-primary); font-weight: 600; margin: 0;">Widest Corridor Section</h3>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-md);">
+                    <div>
+                        <div style="background: rgba(0,0,0,0.3); border-radius: var(--radius-lg); overflow: hidden; border: 1px solid rgba(15, 164, 175, 0.2);">
+                            <img src="/static/images/alley_zones/area_b/existing/Iron & Wood Fence with Concrete Columns and Pavement Issues 1.png" alt="Area B Existing - Wide corridor" style="width: 100%; height: 280px; object-fit: cover; display: block;" loading="lazy">
+                        </div>
+                        <p style="text-align: center; color: var(--text-muted); font-size: 0.8rem; margin-top: var(--spacing-xs);">Documented: Pavement improved (Projects 4 & 5) / 18-20 ft width</p>
+                    </div>
+                    <div>
+                        <div style="background: rgba(0,0,0,0.3); border-radius: var(--radius-lg); overflow: hidden; border: 1px solid rgba(15, 164, 175, 0.2);">
+                            <img src="/static/images/unreal/photo-4.jpg" alt="Alley 3 with iron fencing and planter infrastructure - Unreal Engine render" style="width: 100%; height: 280px; object-fit: cover; display: block;" loading="lazy">
+                        </div>
+                        <p style="text-align: center; color: var(--text-muted); font-size: 0.8rem; margin-top: var(--spacing-xs);">Proposed: Iron fencing with planter infrastructure / Unreal Engine render</p>
+                    </div>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: var(--spacing-xl);">
+                <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: var(--spacing-md);">View existing conditions and proposed transformations in the digital twin</p>
+                <div style="display: flex; gap: var(--spacing-md); justify-content: center; flex-wrap: wrap;">
+                    <a href="/existing" style="display: inline-block; padding: 12px 24px; background: transparent; color: var(--accent); text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 0.9rem; border: 1px solid var(--accent);">View All Zone Photos</a>
+                    <a href="/unreal-viewer" style="display: inline-block; padding: 12px 24px; background: var(--accent); color: var(--primary); text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 0.9rem;">Launch Digital Twin</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- F. Prototype Impact -->
+        <section class="section" style="padding-top: 0;">
+            <h2 class="section-title"><span style="color: var(--accent); font-weight: 700; margin-right: 8px;">F.</span>Prototype Impact</h2>
+            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--spacing-lg);">
+                <div style="text-align: center; padding: var(--spacing-lg); background: var(--secondary); border-radius: var(--radius-lg); border: 1px solid rgba(15, 164, 175, 0.2);">
+                    <div style="font-size: 2rem; font-weight: 700; color: var(--highlight);">200 lbs</div>
+                    <div style="color: var(--text-secondary); margin-top: var(--spacing-xs);">Annual Yield</div>
+                </div>
+                <div style="text-align: center; padding: var(--spacing-lg); background: var(--secondary); border-radius: var(--radius-lg); border: 1px solid rgba(15, 164, 175, 0.2);">
+                    <div style="font-size: 2rem; font-weight: 700; color: var(--highlight);">20</div>
+                    <div style="color: var(--text-secondary); margin-top: var(--spacing-xs);">Families Served</div>
+                </div>
+                <div style="text-align: center; padding: var(--spacing-lg); background: var(--secondary); border-radius: var(--radius-lg); border: 1px solid rgba(15, 164, 175, 0.2);">
+                    <div style="font-size: 2rem; font-weight: 700; color: var(--highlight);">50 gal</div>
+                    <div style="color: var(--text-secondary); margin-top: var(--spacing-xs);">Water/Week</div>
+                </div>
+                <div style="text-align: center; padding: var(--spacing-lg); background: var(--secondary); border-radius: var(--radius-lg); border: 1px solid rgba(15, 164, 175, 0.2);">
+                    <div style="font-size: 2rem; font-weight: 700; color: var(--highlight);">3 hrs</div>
+                    <div style="color: var(--text-secondary); margin-top: var(--spacing-xs);">Maintenance/Week</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="cta-section" style="text-align: center; padding: var(--spacing-xl) var(--spacing-lg); margin-top: var(--spacing-xl);">
+            <h2 style="font-size: 1.75rem; color: var(--text-primary); margin-bottom: var(--spacing-md);">See Urban Farming in Context</h2>
+            <p style="color: var(--text-secondary); margin-bottom: var(--spacing-lg); max-width: 600px; margin-left: auto; margin-right: auto;">
+                Experience how container gardens transform Water Alley in the immersive 3D Digital Twin.
+            </p>
+            <div style="display: flex; gap: var(--spacing-md); justify-content: center; flex-wrap: wrap;">
+                <a href="/unreal-viewer" class="btn-primary">Launch Digital Twin</a>
+                <a href="/" class="btn-outline">Back to Alley 3</a>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Simple static page - no complex interactions
+        const farmingTypes = [
+            {
+                id: 'vertical-garden',
+                name: 'Vertical Gardens',
+                icon: 'VG',
+                description: 'Wall-mounted growing systems that maximize vertical space. Perfect for narrow alleys and walls. Great for herbs, leafy greens, and strawberries.',
+                specs: {
+                    space: '2-4 ft wide',
+                    maintenance: 'Medium',
+                    water: '5-10 gal/week',
+                    yield: '100-200 lbs/yr'
+                },
+                metrics: { yield: 150, water: 8, cooling: 3, community: 7 },
+                elements: ['planter-wall', 'vertical-rack']
+            },
+            {
+                id: 'raised-beds',
+                name: 'Raised Beds',
+                icon: 'RB',
+                description: 'Elevated growing beds filled with quality soil. Ideal for vegetables, root crops, and companion planting. Accessible height for all ages.',
+                specs: {
+                    space: '4x8 ft each',
+                    maintenance: 'Low',
+                    water: '15-20 gal/week',
+                    yield: '200-400 lbs/yr'
+                },
+                metrics: { yield: 300, water: 18, cooling: 4, community: 8 },
+                elements: ['raised-bed', 'trellis']
+            },
+            {
+                id: 'container-garden',
+                name: 'Container Gardening',
+                icon: 'CG',
+                description: 'Flexible pots and containers that can be moved and rearranged. Perfect for renters and temporary installations. Grow almost anything.',
+                specs: {
+                    space: 'Flexible',
+                    maintenance: 'Low',
+                    water: '10-15 gal/week',
+                    yield: '50-150 lbs/yr'
+                },
+                metrics: { yield: 100, water: 12, cooling: 2, community: 6 },
+                elements: ['container-large', 'container-small']
+            },
+            {
+                id: 'hydroponics',
+                name: 'Hydroponic Systems',
+                icon: 'HP',
+                description: 'Soil-free growing using nutrient-rich water. Faster growth, higher yields, and less water usage. Best for leafy greens and herbs.',
+                specs: {
+                    space: '3-6 ft wide',
+                    maintenance: 'High',
+                    water: '3-5 gal/week',
+                    yield: '300-500 lbs/yr'
+                },
+                metrics: { yield: 400, water: 4, cooling: 2, community: 5 },
+                elements: ['hydro-tower', 'hydro-channel']
+            },
+            {
+                id: 'edible-landscaping',
+                name: 'Edible Landscaping',
+                icon: 'EL',
+                description: 'Fruit trees, berry bushes, and edible flowers integrated into the landscape. Beautiful and productive. Long-term investment.',
+                specs: {
+                    space: '6-10 ft per tree',
+                    maintenance: 'Low',
+                    water: '20-30 gal/week',
+                    yield: '100-300 lbs/yr'
+                },
+                metrics: { yield: 200, water: 25, cooling: 6, community: 9 },
+                elements: ['fruit-tree', 'berry-bush']
+            }
+        ];
+
+        // ============================================
+        // STATE MANAGEMENT
+        // Track selected farming types and UI state
+        // ============================================
+        let selectedFarmingTypes = [];
+        let comparisonMode = 'after';
+        let farmingLayerVisible = true;
+
+        // ============================================
+        // INITIALIZE PAGE
+        // ============================================
+        document.addEventListener('DOMContentLoaded', () => {
+            renderFarmingCards();
+            setupEventListeners();
+            loadSavedSelections();
+        });
+
+        // ============================================
+        // RENDER FARMING TYPE CARDS
+        // ============================================
+        function renderFarmingCards() {
+            const grid = document.getElementById('farmingGrid');
+            grid.innerHTML = farmingTypes.map(type => `
+                <div class="farming-card" data-id="${type.id}" onclick="toggleFarmingType('${type.id}')">
+                    <div class="farming-image">
+                        <span class="farming-image-icon">${type.icon}</span>
+                    </div>
+                    <div class="farming-content">
+                        <div class="farming-name">${type.name}</div>
+                        <div class="farming-description">${type.description}</div>
+                        <div class="farming-specs">
+                            <div class="spec-item">
+                                <span class="spec-label">Space Required</span>
+                                <span class="spec-value">${type.specs.space}</span>
+                            </div>
+                            <div class="spec-item">
+                                <span class="spec-label">Maintenance</span>
+                                <span class="spec-value">${type.specs.maintenance}</span>
+                            </div>
+                            <div class="spec-item">
+                                <span class="spec-label">Water Usage</span>
+                                <span class="spec-value">${type.specs.water}</span>
+                            </div>
+                            <div class="spec-item">
+                                <span class="spec-label">Est. Yield</span>
+                                <span class="spec-value">${type.specs.yield}</span>
+                            </div>
+                        </div>
+                        <button class="add-to-twin-btn" onclick="event.stopPropagation(); addToDigitalTwin('${type.id}')">
+                            Add to Digital Twin
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // ============================================
+        // FARMING TYPE SELECTION
+        // Toggle selection of farming types
+        // ============================================
+        function toggleFarmingType(typeId) {
+            const index = selectedFarmingTypes.indexOf(typeId);
+            if (index > -1) {
+                selectedFarmingTypes.splice(index, 1);
+            } else {
+                selectedFarmingTypes.push(typeId);
+            }
+            updateUI();
+            saveSelections();
+            
+            // INTEGRATION POINT: Dispatch event for Digital Twin
+            dispatchFarmingEvent('farming-selection-changed', {
+                selectedTypes: selectedFarmingTypes,
+                action: index > -1 ? 'removed' : 'added',
+                typeId: typeId
+            });
+        }
+
+        // ============================================
+        // ADD TO DIGITAL TWIN
+        // Direct add action from card button
+        // ============================================
+        function addToDigitalTwin(typeId) {
+            if (!selectedFarmingTypes.includes(typeId)) {
+                selectedFarmingTypes.push(typeId);
+                updateUI();
+                saveSelections();
+                showNotification('Added to Digital Twin', `${getFarmingType(typeId).name} added to your alley design`);
+                
+                // INTEGRATION POINT: Dispatch event for Digital Twin
+                dispatchFarmingEvent('farming-element-added', {
+                    typeId: typeId,
+                    type: getFarmingType(typeId)
+                });
+            } else {
+                showNotification('Already Added', `${getFarmingType(typeId).name} is already in your design`);
+            }
+        }
+
+        // ============================================
+        // REMOVE FROM SELECTION
+        // ============================================
+        function removeFromSelection(typeId) {
+            const index = selectedFarmingTypes.indexOf(typeId);
+            if (index > -1) {
+                selectedFarmingTypes.splice(index, 1);
+                updateUI();
+                saveSelections();
+                
+                // INTEGRATION POINT: Dispatch event for Digital Twin
+                dispatchFarmingEvent('farming-element-removed', {
+                    typeId: typeId
+                });
+            }
+        }
+
+        // ============================================
+        // UPDATE UI BASED ON SELECTIONS
+        // ============================================
+        function updateUI() {
+            // Update card selection states
+            document.querySelectorAll('.farming-card').forEach(card => {
+                const id = card.dataset.id;
+                card.classList.toggle('selected', selectedFarmingTypes.includes(id));
+            });
+
+            // Update selected items tags
+            const selectedItemsContainer = document.getElementById('selectedItems');
+            selectedItemsContainer.innerHTML = selectedFarmingTypes.map(typeId => {
+                const type = getFarmingType(typeId);
+                return `
+                    <div class="selected-tag">
+                        ${type.icon} ${type.name}
+                        <span class="remove" onclick="removeFromSelection('${typeId}')">&times;</span>
+                    </div>
+                `;
+            }).join('');
+
+            // Update preview visibility
+            const placeholder = document.getElementById('previewPlaceholder');
+            const alleyScene = document.getElementById('alleyScene');
+            const openTwinBtn = document.getElementById('openTwinBtn');
+
+            if (selectedFarmingTypes.length > 0) {
+                placeholder.style.display = 'none';
+                alleyScene.style.display = 'block';
+                openTwinBtn.disabled = false;
+                renderAlleyScene();
+            } else {
+                placeholder.style.display = 'block';
+                alleyScene.style.display = 'none';
+                openTwinBtn.disabled = true;
+            }
+
+            // Update impact metrics
+            updateImpactMetrics();
+        }
+
+        // ============================================
+        // RENDER ALLEY SCENE VISUALIZATION
+        // Simple 2D representation of farming elements
+        // ============================================
+        function renderAlleyScene() {
+            const scene = document.getElementById('alleyScene');
+            const ground = scene.querySelector('.alley-ground');
+            
+            // Clear existing farming elements
+            scene.querySelectorAll('.farming-element').forEach(el => el.remove());
+
+            if (comparisonMode === 'before' || !farmingLayerVisible) {
+                // Show empty alley
+                return;
+            }
+
+            // Add farming elements based on selections
+            let xPosition = 10;
+            selectedFarmingTypes.forEach((typeId, index) => {
+                const type = getFarmingType(typeId);
+                const element = document.createElement('div');
+                element.className = 'farming-element';
+                element.style.cssText = `
+                    position: absolute;
+                    bottom: 40%;
+                    left: ${xPosition}%;
+                    font-size: 3rem;
+                    text-align: center;
+                    animation: fadeInUp 0.5s ease ${index * 0.1}s forwards;
+                    opacity: 0;
+                `;
+                element.innerHTML = `
+                    <div style="font-size: 4rem;">${type.icon}</div>
+                    <div style="font-size: 0.8rem; color: var(--highlight); margin-top: 4px;">${type.name}</div>
+                `;
+                scene.appendChild(element);
+                
+                setTimeout(() => element.classList.add('visible'), 100 * index);
+                xPosition += 18;
+            });
+        }
+
+        // ============================================
+        // UPDATE IMPACT METRICS
+        // Calculate combined metrics from selections
+        // ============================================
+        function updateImpactMetrics() {
+            if (selectedFarmingTypes.length === 0) {
+                document.getElementById('yieldValue').textContent = '--';
+                document.getElementById('waterValue').textContent = '--';
+                document.getElementById('coolingValue').textContent = '--';
+                document.getElementById('communityValue').textContent = '--';
+                return;
+            }
+
+            let totalYield = 0;
+            let totalWater = 0;
+            let maxCooling = 0;
+            let avgCommunity = 0;
+
+            selectedFarmingTypes.forEach(typeId => {
+                const type = getFarmingType(typeId);
+                totalYield += type.metrics.yield;
+                totalWater += type.metrics.water;
+                maxCooling = Math.max(maxCooling, type.metrics.cooling);
+                avgCommunity += type.metrics.community;
+            });
+
+            avgCommunity = Math.round(avgCommunity / selectedFarmingTypes.length);
+
+            document.getElementById('yieldValue').textContent = totalYield.toLocaleString();
+            document.getElementById('waterValue').textContent = totalWater;
+            document.getElementById('coolingValue').textContent = `-${maxCooling}°F`;
+            document.getElementById('communityValue').textContent = `${avgCommunity}/10`;
+        }
+
+        // ============================================
+        // COMPARISON MODE (Before/After)
+        // ============================================
+        function showComparison(mode) {
+            comparisonMode = mode;
+            document.getElementById('beforeBtn').classList.toggle('active', mode === 'before');
+            document.getElementById('afterBtn').classList.toggle('active', mode === 'after');
+            renderAlleyScene();
+            
+            // INTEGRATION POINT: Notify Digital Twin of comparison mode
+            dispatchFarmingEvent('comparison-mode-changed', { mode: mode });
+        }
+
+        // ============================================
+        // EVENT LISTENERS
+        // ============================================
+        function setupEventListeners() {
+            // Farming layer toggle
+            document.getElementById('farmingLayerToggle').addEventListener('change', (e) => {
+                farmingLayerVisible = e.target.checked;
+                renderAlleyScene();
+                
+                // INTEGRATION POINT: Toggle farming layer in Digital Twin
+                dispatchFarmingEvent('farming-layer-toggled', { visible: farmingLayerVisible });
+            });
+
+            // Mobile nav toggle
+            const navToggle = document.getElementById('navToggle');
+            const navTabs = document.getElementById('navTabs');
+            if (navToggle && navTabs) {
+                navToggle.addEventListener('click', () => {
+                    navTabs.classList.toggle('active');
+                });
+            }
+        }
+
+        // ============================================
+        // DIGITAL TWIN INTEGRATION
+        // Custom events for external integration
+        // ============================================
+        function dispatchFarmingEvent(eventName, data) {
+            // Dispatch custom event that Digital Twin can listen for
+            const event = new CustomEvent(eventName, {
+                detail: {
+                    ...data,
+                    timestamp: Date.now(),
+                    source: 'urban-farming-page'
+                },
+                bubbles: true
+            });
+            document.dispatchEvent(event);
+            
+            // Also store in localStorage for cross-page communication
+            localStorage.setItem('urbanFarmingState', JSON.stringify({
+                selectedTypes: selectedFarmingTypes,
+                comparisonMode: comparisonMode,
+                farmingLayerVisible: farmingLayerVisible,
+                lastUpdated: Date.now()
+            }));
+            
+            console.log(`[Urban Farming] Event dispatched: ${eventName}`, data);
+        }
+
+        // ============================================
+        // OPEN IN FULL DIGITAL TWIN
+        // Navigate to Digital Twin with farming config
+        // ============================================
+        function openInDigitalTwin() {
+            // Save state before navigation
+            localStorage.setItem('urbanFarmingConfig', JSON.stringify({
+                selectedTypes: selectedFarmingTypes,
+                farmingTypes: selectedFarmingTypes.map(id => getFarmingType(id))
+            }));
+            
+            // Navigate to Digital Twin with parameter
+            window.location.href = '/unreal-viewer?mode=urban-farming';
+        }
+
+        // ============================================
+        // EXPORT DESIGN CONFIGURATION
+        // ============================================
+        function exportDesign() {
+            const config = {
+                version: '1.0',
+                createdAt: new Date().toISOString(),
+                selectedFarmingTypes: selectedFarmingTypes.map(id => getFarmingType(id)),
+                metrics: {
+                    estimatedYield: document.getElementById('yieldValue').textContent,
+                    waterUsage: document.getElementById('waterValue').textContent,
+                    heatReduction: document.getElementById('coolingValue').textContent,
+                    communityScore: document.getElementById('communityValue').textContent
+                }
+            };
+
+            const blob = new Blob([JSON.stringify(config, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'urban-farming-config.json';
+            a.click();
+            URL.revokeObjectURL(url);
+
+            showNotification('Configuration Saved', 'Your urban farming design has been exported');
+        }
+
+        // ============================================
+        // HELPER FUNCTIONS
+        // ============================================
+        function getFarmingType(typeId) {
+            return farmingTypes.find(t => t.id === typeId);
+        }
+
+        function scrollToTwin() {
+            document.getElementById('twinSection').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function saveSelections() {
+            localStorage.setItem('selectedFarmingTypes', JSON.stringify(selectedFarmingTypes));
+        }
+
+        function loadSavedSelections() {
+            const saved = localStorage.getItem('selectedFarmingTypes');
+            if (saved) {
+                selectedFarmingTypes = JSON.parse(saved);
+                updateUI();
+            }
+        }
+
+        function showNotification(title, message) {
+            const notification = document.createElement('div');
+            notification.className = 'notification success';
+            notification.innerHTML = `
+                <div class="notification-title">${title}</div>
+                <div class="notification-message">${message}</div>
+            `;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) reverse';
+                setTimeout(() => notification.remove(), 300);
+            }, 2500);
+        }
+
+        // Add CSS animation for farming elements
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeInUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(20px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

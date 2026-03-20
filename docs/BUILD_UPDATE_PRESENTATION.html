@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alley Bloom - Build Update Presentation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .presentation-container {
+            width: 100%;
+            max-width: 1200px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .slide {
+            display: none;
+            min-height: 700px;
+            padding: 60px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .slide.active {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Slide 1 - Title Slide */
+        .slide-1 {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+            justify-content: center;
+        }
+
+        .slide-1 h1 {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .slide-1 .subtitle {
+            font-size: 1.8rem;
+            margin-bottom: 40px;
+            opacity: 0.95;
+        }
+
+        .slide-1 .date {
+            font-size: 1.2rem;
+            opacity: 0.8;
+            margin-top: 40px;
+        }
+
+        /* Slide 2 - Platform Overview */
+        .slide-2 {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .slide-2 h2 {
+            color: white;
+            font-size: 3rem;
+            margin-bottom: 40px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .feature-card h3 {
+            color: #f5576c;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        .feature-card p {
+            color: #333;
+            line-height: 1.6;
+            font-size: 1.1rem;
+        }
+
+        /* Slide 3 - Technical Stack */
+        .slide-3 {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .slide-3 h2 {
+            color: white;
+            font-size: 3rem;
+            margin-bottom: 40px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .tech-stack {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 25px;
+            margin-top: 40px;
+        }
+
+        .tech-item {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .tech-item .icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        .tech-item h4 {
+            color: #00f2fe;
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+        }
+
+        .tech-item p {
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        /* Slide 4 - Pages & Features */
+        .slide-4 {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+
+        .slide-4 h2 {
+            color: white;
+            font-size: 3rem;
+            margin-bottom: 40px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .pages-showcase {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-top: 40px;
+        }
+
+        .page-item {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .page-item h4 {
+            color: #38f9d7;
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+        }
+
+        .page-item p {
+            color: #666;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        /* Slide 5 - Deployment Ready */
+        .slide-5 {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        }
+
+        .slide-5 h2 {
+            color: white;
+            font-size: 3rem;
+            margin-bottom: 40px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .deployment-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-top: 40px;
+        }
+
+        .deployment-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            border-left: 5px solid #fa709a;
+        }
+
+        .deployment-card h4 {
+            color: #fa709a;
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+        }
+
+        .deployment-card .time {
+            background: #fee140;
+            color: #333;
+            padding: 8px 15px;
+            border-radius: 20px;
+            display: inline-block;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .deployment-card p {
+            color: #666;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        /* Navigation */
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 60px;
+            background: #f5f7fa;
+            border-top: 1px solid #ddd;
+        }
+
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        button:hover {
+            background: #764ba2;
+        }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .slide-counter {
+            font-size: 1.1rem;
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .dots {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #ddd;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .dot.active {
+            background: #667eea;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .slide {
+                padding: 40px 20px;
+                min-height: auto;
+            }
+
+            .slide-1 h1 {
+                font-size: 2.5rem;
+            }
+
+            .slide-1 .subtitle {
+                font-size: 1.3rem;
+            }
+
+            .features-grid, .tech-stack, .pages-showcase, .deployment-options {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-buttons {
+                padding: 15px 20px;
+                flex-wrap: wrap;
+                gap: 15px;
+            }
+
+            .slide-2 h2, .slide-3 h2, .slide-4 h2, .slide-5 h2 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation-container">
+        <!-- Slide 1: Title -->
+        <div class="slide slide-1 active">
+            <h1>🌿 Alley Bloom</h1>
+            <p class="subtitle">Innovation Alleys Digital Twin Platform</p>
+            <p class="subtitle">Build Update & Current Status</p>
+            <p class="date">January 2026</p>
+        </div>
+
+        <!-- Slide 2: Platform Overview -->
+        <div class="slide slide-2">
+            <h2>🎯 Platform Overview</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h3>🌍 Real-time Collaboration</h3>
+                    <p>Multi-user WebSocket support enabling teams to collaborate on designs simultaneously with live updates and shared workspaces.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>📊 Environmental Tracking</h3>
+                    <p>Live dashboard with real-time environmental metrics including air quality, weather, solar radiation, and biodiversity data.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>🗺️ Interactive Maps</h3>
+                    <p>12 Innovation Alleys mapped in Pico-Union with Street View integration and before/after scenario visualization.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>🎨 Design Studio</h3>
+                    <p>Drag-and-drop canvas with layer management, auto-save, and export to PNG/JSON for professional design workflows.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: Technical Stack -->
+        <div class="slide slide-3">
+            <h2>⚙️ Technical Stack</h2>
+            <div class="tech-stack">
+                <div class="tech-item">
+                    <div class="icon">🐍</div>
+                    <h4>Backend</h4>
+                    <p>Flask 3.0 with SocketIO for real-time communication and SQLAlchemy ORM</p>
+                </div>
+                <div class="tech-item">
+                    <div class="icon">🌐</div>
+                    <h4>Frontend</h4>
+                    <p>Responsive HTML5 with modern CSS and vanilla JavaScript for interactive UI</p>
+                </div>
+                <div class="tech-item">
+                    <div class="icon">☁️</div>
+                    <h4>APIs</h4>
+                    <p>8 integrated APIs: Google Cloud, NASA, iNaturalist, OpenWeatherMap</p>
+                </div>
+                <div class="tech-item">
+                    <div class="icon">🎮</div>
+                    <h4>3D Visualization</h4>
+                    <p>Unreal Engine Pixel Streaming for immersive 3D digital twin experience</p>
+                </div>
+                <div class="tech-item">
+                    <div class="icon">💾</div>
+                    <h4>Database</h4>
+                    <p>SQLite for development, PostgreSQL ready for production deployment</p>
+                </div>
+                <div class="tech-item">
+                    <div class="icon">🚀</div>
+                    <h4>Deployment</h4>
+                    <p>Production-ready with Heroku, Railway, AWS, and Google Cloud support</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: Pages & Features -->
+        <div class="slide slide-4">
+            <h2>📄 10 Core Pages</h2>
+            <div class="pages-showcase">
+                <div class="page-item">
+                    <h4>🏠 Home Page</h4>
+                    <p>Professional landing page with project overview and navigation to all features</p>
+                </div>
+                <div class="page-item">
+                    <h4>🎨 Visualization Studio</h4>
+                    <p>Street View explorer with improved layout, enhanced spacing, and responsive design</p>
+                </div>
+                <div class="page-item">
+                    <h4>🔄 Before & After</h4>
+                    <p>Scenario comparison tool with improved typography and visual consistency</p>
+                </div>
+                <div class="page-item">
+                    <h4>🏗️ Design Workspace</h4>
+                    <p>Co-design studio with drag-and-drop canvas and collaborative tools</p>
+                </div>
+                <div class="page-item">
+                    <h4>📋 Scenarios</h4>
+                    <p>Scenario management system for organizing and tracking design variations</p>
+                </div>
+                <div class="page-item">
+                    <h4>📊 Live Dashboard</h4>
+                    <p>Real-time environmental metrics and performance tracking</p>
+                </div>
+                <div class="page-item">
+                    <h4>🌱 Plant Library</h4>
+                    <p>Comprehensive plant database with species information and characteristics</p>
+                </div>
+                <div class="page-item">
+                    <h4>🗺️ Innovation Map</h4>
+                    <p>Interactive map showing all 12 Innovation Alleys with detailed information</p>
+                </div>
+                <div class="page-item">
+                    <h4>🎮 3D Viewer</h4>
+                    <p>Unreal Engine Pixel Streaming for immersive 3D digital twin visualization</p>
+                </div>
+                <div class="page-item">
+                    <h4>📝 Design Brief</h4>
+                    <p>Project documentation and design specifications</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: Deployment Ready -->
+        <div class="slide slide-5">
+            <h2>🚀 Deployment Ready</h2>
+            <div class="deployment-options">
+                <div class="deployment-card">
+                    <h4>⚡ Heroku (Recommended)</h4>
+                    <div class="time">5 minutes</div>
+                    <p>Quick setup with free tier available. Auto-deploy from GitHub with WebSocket support and production-ready configuration.</p>
+                </div>
+                <div class="deployment-card">
+                    <h4>🚂 Railway.app</h4>
+                    <div class="time">5 minutes</div>
+                    <p>Modern alternative with excellent performance. Free tier available and seamless GitHub integration.</p>
+                </div>
+                <div class="deployment-card">
+                    <h4>☁️ AWS</h4>
+                    <div class="time">30 minutes</div>
+                    <p>Enterprise-grade scalability with complete documentation and security best practices included.</p>
+                </div>
+                <div class="deployment-card">
+                    <h4>🔵 Google Cloud</h4>
+                    <div class="time">30 minutes</div>
+                    <p>Integrated with Google APIs for seamless data access and advanced analytics capabilities.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="nav-buttons">
+            <button id="prevBtn" onclick="changeSlide(-1)">← Previous</button>
+            <div class="dots" id="dotsContainer"></div>
+            <span class="slide-counter"><span id="currentSlide">1</span> / <span id="totalSlides">5</span></span>
+            <button id="nextBtn" onclick="changeSlide(1)">Next →</button>
+        </div>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 5;
+
+        function showSlide(n) {
+            const slides = document.querySelectorAll('.slide');
+            
+            if (n > totalSlides) currentSlide = totalSlides;
+            if (n < 1) currentSlide = 1;
+            
+            slides.forEach(slide => slide.classList.remove('active'));
+            slides[currentSlide - 1].classList.add('active');
+            
+            document.getElementById('currentSlide').textContent = currentSlide;
+            document.getElementById('prevBtn').disabled = currentSlide === 1;
+            document.getElementById('nextBtn').disabled = currentSlide === totalSlides;
+            
+            updateDots();
+        }
+
+        function changeSlide(n) {
+            currentSlide += n;
+            showSlide(currentSlide);
+        }
+
+        function updateDots() {
+            const dots = document.querySelectorAll('.dot');
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentSlide - 1);
+            });
+        }
+
+        function initDots() {
+            const dotsContainer = document.getElementById('dotsContainer');
+            for (let i = 0; i < totalSlides; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'dot';
+                dot.onclick = () => {
+                    currentSlide = i + 1;
+                    showSlide(currentSlide);
+                };
+                dotsContainer.appendChild(dot);
+            }
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') changeSlide(-1);
+            if (e.key === 'ArrowRight') changeSlide(1);
+        });
+
+        // Initialize
+        initDots();
+        showSlide(currentSlide);
+    </script>
+</body>
+</html>

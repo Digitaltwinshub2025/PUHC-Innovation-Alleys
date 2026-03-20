@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pages Priority Guide - Alley Bloom</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 50px;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .priority-section {
+            margin-bottom: 50px;
+        }
+
+        .priority-title {
+            font-size: 2rem;
+            color: white;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid white;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .priority-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .badge-critical {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .badge-high {
+            background: #ffa94d;
+            color: white;
+        }
+
+        .badge-medium {
+            background: #51cf66;
+            color: white;
+        }
+
+        .pages-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .page-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-left: 5px solid #667eea;
+        }
+
+        .page-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        .page-card.critical {
+            border-left-color: #ff6b6b;
+            background: linear-gradient(135deg, #fff5f5 0%, #ffffff 100%);
+        }
+
+        .page-card.high {
+            border-left-color: #ffa94d;
+            background: linear-gradient(135deg, #fffbf0 0%, #ffffff 100%);
+        }
+
+        .page-card.medium {
+            border-left-color: #51cf66;
+            background: linear-gradient(135deg, #f1fdf4 0%, #ffffff 100%);
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 15px;
+            gap: 15px;
+        }
+
+        .page-name {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #333;
+            flex: 1;
+        }
+
+        .page-icon {
+            font-size: 2rem;
+        }
+
+        .page-status {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .status-complete {
+            background: #d3f9d8;
+            color: #2b8a3e;
+        }
+
+        .status-in-progress {
+            background: #fff3bf;
+            color: #856404;
+        }
+
+        .status-needs-work {
+            background: #ffe0e0;
+            color: #c92a2a;
+        }
+
+        .page-description {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            font-size: 0.95rem;
+        }
+
+        .page-details {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9rem;
+            color: #555;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: #333;
+            min-width: 100px;
+        }
+
+        .action-button {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: background 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .action-button:hover {
+            background: #764ba2;
+        }
+
+        .summary-box {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 40px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .summary-box h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .summary-stat {
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 10px;
+        }
+
+        .summary-stat .number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .summary-stat .label {
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }
+
+        .recommendation {
+            background: #f0f4ff;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .recommendation h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .recommendation p {
+            color: #555;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .priority-title {
+                font-size: 1.5rem;
+            }
+
+            .pages-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📋 Pages Priority Guide</h1>
+            <p>Which pages to focus on for maximum impact</p>
+        </div>
+
+        <!-- CRITICAL PRIORITY -->
+        <div class="priority-section">
+            <div class="priority-title">
+                <span class="priority-badge badge-critical">🔴 CRITICAL - Focus First</span>
+            </div>
+            <div class="pages-grid">
+                <div class="page-card critical">
+                    <div class="page-header">
+                        <div>
+                            <div class="page-name">🏠 Home Page</div>
+                            <span class="page-status status-complete">✓ Complete</span>
+                        </div>
+                        <div class="page-icon">1</div>
+                    </div>
+                    <p class="page-description">Landing page - first impression of the platform. Users start here.</p>
+                    <div class="page-details">
+                        <div class="detail-item">
+                            <span class="detail-label">Status:</span>
+                            <span>Fully functional with navigation</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Priority:</span>
+                            <span>Must be polished and welcoming</span>
+                        </div>
+                    </div>
+                    <button class="action-button">View Page</button>
+                </div>
+
+                <div class="page-card critical">
+                    <div class="page-header">
+                        <div>
+                            <div class="page-name">🎨 Visualization Studio</div>
+                            <span class="page-status status-in-progress">⚙ Improved</span>
+                        </div>
+                        <div class="page-icon">2</div>
+                    </div>
+                    <p class="page-description">Street View explorer - core feature for exploring alleys and neighborhoods.</p>
+                    <div class="page-details">
+                        <div class="detail-item">
+                            <span class="detail-label">Status:</span>
+                            <span>Layout improved, responsive design verified</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Priority:</span>
+                            <span>Most-used page - ensure smooth performance</span>
+                        </div>
+                    </div>
+                    <button class="action-button">View Page</button>
+                </div>
+
+                <div class="page-card critical">
+                    <div class="page-header">
+                        <div>
+                            <div class="page-name">🗺️ Innovation Alleys Map</div>
+                            <span class="page-status status-complete">✓ Complete</span>
+                        </div>
+                        <div class="page-icon">3</div>
+                    </div>
+                    <p class="page-description">Interactive map showing all 12 Innovation Alleys with real data integration.</p>
+                    <div class="page-details">
+                        <div class="detail-item">
+                            <span class="detail-label">Status:</span>
+                            <span>Fully functional with Google Maps integration</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Priority:</span>
+                            <span>Key navigation hub for users</span>
+                        </div>
+                    </div>
+                    <button class="action-button">View Page</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- HIGH PRIORITY -->
+        <div class="priority-section">
+            <div class="priority-title">
+                <span class="priority-badge badge-high">🟠 HIGH - Polish & Verify</span>
+            </div>
+            <div class="pages-grid">
+                <div class="page-card high">
+                    <div class="page-header">
+                        <div>
+                            <div class="page-name">🔄 Before & After</div>
+                            <span class="page-status status-in-progress">⚙ Improved</span>
+                        </div>
+                        <div class="page-icon">4</div>
+                    </div>
+                    <p class="page-description">Scenario comparison tool - visualize design impact and transformations.</p>
+                    <div class="page-details">
+                        <div class="detail-item">
+                            <span class="detail-label">Status:</span>
+                            <span>Typography and margins improved</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Priority:</span>
+                            <span>Verify responsive design and image loading</span>
+                        </div>
+                    </div>
+                    <button class="action-button">View Page</button>
+                </div>
+
+                <div class="page-card high">
+                    <div class="page-header">
+                        <div>
+                            <div class="page-name">📊 Live Dashboard</div>
+                            <span class="page-status status-complete">✓ Complete</span>
+                        </div>
+                        <div class="page-icon">5</div>
+                    </div>
+                    <p class="page-description">Real-time environmental metrics and performance tracking with live data.</p>
+                    <div class="page-details">
+                        <div class="detail-item">
+                            <span class="detail-label">Status:</span>
+                            <span>Fully functional with API integration</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Priority:</span>
+                            <span>Test data refresh and chart performance</span>
+                        </div>
+                    </div>
+                    <button class="action-button">View Page</button>
+                </div>
+
+                <div class="page-card high">
+                    <div class="page-header">
+                        <div>
+                            <div class="page-name">🏗️ Design Workspace</div>
+                            <span class="page-status status-complete">✓ Complete</span>
+                        </div>
+                        <div class="page-icon">6</div>
+                    </div>
+                    <p class="page-description">Co-design studio with drag-and-drop canvas and collaborative tools.</p>
+                    <div class="page-details">
+                        <div class="detail-item">
+                            <span class="detail-label">Status:</span>
+                            <span>Fully functional with WebSocket support</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Priority:</span>
+                            <span>Test real-time collaboration features</span>
+                        </div>
+                    </div>
+                    <button class="action-button">View Page</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MEDIUM PRIORITY -->
+        <div class="priority-section">
+            <div class="priority-title">
+                <span class="priority-badge badge-medium">🟡 MEDIUM - Complete & Polish</span>
+            </div>
+            <div class="pages-grid">
+                <div class="page-card medium">
+                    <div class="page-header">
+                        <div>
+                            <div class="page-name">🌱 Plant Library</div>
+                            <span class="page-status status-complete">✓ Complete</span>
+                        </div>
+                        <div class="page-icon">7</div>
+                    </div>
+                    <p class="page-description">Comprehensive plant database with species information and characteristics.</p>
+                    <div class="page-details">
+                        <div class="detail-item">
+                            <span class="detail-label">Status:</span>
+                            <span>Fully functional with search and filters</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Priority:</span>
+                            <span>Verify data completeness and search performance</span>
+                        </div>
+                    </div>
+                    <button class="action-button">View Page</button>
+                </div>
+
+                <div class="page-card medium">
+                    <div class="page-header">
+                        <div>
+                            <div class="page-name">📋 Scenarios</div>
+                            <span class="page-status status-complete">✓ Complete</span>
+                        </div>
+                        <div class="page-icon">8</div>
+                    </div>
+                    <p class="page-description">Scenario management system for organizing and tracking design variations.</p>
+                    <div class="page-details">
+                        <div class="detail-item">
+                            <span class="detail-label">Status:</span>
+                            <span>Fully functional with save/load features</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Priority:</span>
+                            <span>Test data persistence and export functionality</span>
+                        </div>
+                    </div>
+                    <button class="action-button">View Page</button>
+                </div>
+
+                <div class="page-card medium">
+                    <div class="page-header">
+                        <div>
+                            <div class="page-name">🎮 3D Viewer</div>
+                            <span class="page-status status-complete">✓ Complete</span>
+                        </div>
+                        <div class="page-icon">9</div>
+                    </div>
+                    <p class="page-description">Unreal Engine Pixel Streaming for immersive 3D digital twin visualization.</p>
+                    <div class="page-details">
+                        <div class="detail-item">
+                            <span class="detail-label">Status:</span>
+                            <span>Fully functional with streaming support</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Priority:</span>
+                            <span>Test connection stability and performance</span>
+                        </div>
+                    </div>
+                    <button class="action-button">View Page</button>
+                </div>
+
+                <div class="page-card medium">
+                    <div class="page-header">
+                        <div>
+                            <div class="page-name">📝 Design Brief</div>
+                            <span class="page-status status-complete">✓ Complete</span>
+                        </div>
+                        <div class="page-icon">10</div>
+                    </div>
+                    <p class="page-description">Project documentation and design specifications for reference.</p>
+                    <div class="page-details">
+                        <div class="detail-item">
+                            <span class="detail-label">Status:</span>
+                            <span>Fully functional with documentation</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Priority:</span>
+                            <span>Ensure content is up-to-date and accessible</span>
+                        </div>
+                    </div>
+                    <button class="action-button">View Page</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- SUMMARY -->
+        <div class="summary-box">
+            <h2>📊 Summary & Recommendations</h2>
+            
+            <div class="summary-grid">
+                <div class="summary-stat">
+                    <div class="number">10</div>
+                    <div class="label">Total Pages</div>
+                </div>
+                <div class="summary-stat">
+                    <div class="number">3</div>
+                    <div class="label">Critical Pages</div>
+                </div>
+                <div class="summary-stat">
+                    <div class="number">3</div>
+                    <div class="label">High Priority</div>
+                </div>
+                <div class="summary-stat">
+                    <div class="number">4</div>
+                    <div class="label">Medium Priority</div>
+                </div>
+            </div>
+
+            <div class="recommendation">
+                <h3>🎯 What to Focus On Now</h3>
+                <p><strong>1. Home Page:</strong> Ensure it's visually stunning and clearly guides users to key features. This is the first impression.</p>
+                <p style="margin-top: 10px;"><strong>2. Visualization Studio:</strong> This is the most-used page. Verify responsive design, performance, and Street View integration work smoothly.</p>
+                <p style="margin-top: 10px;"><strong>3. Innovation Alleys Map:</strong> Test all 12 alleys load correctly with proper data and coordinates.</p>
+            </div>
+
+            <div class="recommendation" style="margin-top: 20px;">
+                <h3>✅ Testing Checklist</h3>
+                <p>□ All pages load without errors<br>
+                □ Navigation works across all pages<br>
+                □ Responsive design verified (mobile, tablet, desktop)<br>
+                □ All buttons and links functional<br>
+                □ API data loads correctly<br>
+                □ WebSocket collaboration works<br>
+                □ Export functionality tested<br>
+                □ Performance acceptable on slow connections</p>
+            </div>
+
+            <div class="recommendation" style="margin-top: 20px;">
+                <h3>🚀 Next Steps</h3>
+                <p>1. <strong>Deploy to production</strong> (Heroku/Railway - 5 minutes)<br>
+                2. <strong>Test live</strong> with real users<br>
+                3. <strong>Gather feedback</strong> on usability<br>
+                4. <strong>Iterate</strong> based on user feedback<br>
+                5. <strong>Optimize performance</strong> as needed</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

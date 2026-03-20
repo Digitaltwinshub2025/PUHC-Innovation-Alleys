@@ -1,0 +1,32 @@
+{
+  "_meta": {
+    "last_edited": "2026-02-10T20:12:39.722417",
+    "page": "home",
+    "template": "index_unified.html"
+  },
+  "digital_twin_section": {
+    "description": "Unreal Engine-based digital twin enables zone-specific exploration of Water Alley's transformation. Toggle intervention layers to test design combinations and assess spatial impact.",
+    "title": "Digital Twin"
+  },
+  "hero": {
+    "badge": "PROTOTYPE PROJECT -- WATER ALLEY",
+    "cta_text": "Explore Water Alley Prototype",
+    "description": "A four-zone alley infrastructure project in Pico-Union, Los Angeles. This platform demonstrates site-specific design interventions through real-world documentation and 3D spatial simulation.",
+    "hero_image": "/static/images/hero-alley.png",
+    "subtitle": "Spatial Planning & Digital Twin Visualization",
+    "title": "PUHC Innovation Alleys "
+  },
+  "interventions_section": {
+    "subtitle": "Infrastructure improvements applied to specific alley zones based on existing conditions and spatial compatibility.",
+    "title": "Three Design Intervention Systems"
+  },
+  "problem_statement": {
+    "paragraph_1": "Los Angeles contains over 900 miles of underutilized alleys that are heat-exposed, lack community infrastructure, and remain disconnected from neighborhood activity. Water Alley serves as a prototype for systematic transformation.",
+    "paragraph_2": "Located between W 11th and W 12th Street in Pico-Union, Water Alley is divided into four distinct infrastructure zones. This platform demonstrates zone-specific design interventions through site documentation and Unreal Engine-based spatial simulation.",
+    "title": "Urban Alley Infrastructure Challenge"
+  },
+  "zones_section": {
+    "subtitle": "Water Alley is divided into four physical zones, each with distinct characteristics and infrastructure needs. Explore existing conditions and proposed interventions by area.",
+    "title": "Four Transformation Zones"
+  }
+}

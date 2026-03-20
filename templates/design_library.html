@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Design Library - Alley 3 | PUHC Innovation Alleys</title>
+    <meta name="description" content="Explore design elements for Innovation Alley 3 - Three interventions: Shade Structures, Community Murals, and Urban Farming.">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/global-theme.css') }}">
+    <script src="{{ url_for('static', filename='js/cache-buster.js') }}"></script>
+    <style>
+        .page-container {
+            margin-top: 70px;
+            min-height: calc(100vh - 70px);
+            padding: var(--spacing-xl);
+            max-width: 1400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: var(--spacing-xxl);
+        }
+
+        .page-title {
+            font-size: 2.75rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .page-subtitle {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+
+        .alley-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            background: linear-gradient(135deg, rgba(15, 164, 175, 0.2), rgba(15, 164, 175, 0.1));
+            border: 1px solid var(--accent);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: var(--spacing-md);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .interventions-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--spacing-xl);
+            margin-bottom: var(--spacing-xxl);
+        }
+
+        .intervention-card {
+            background: var(--secondary);
+            border: 1px solid rgba(15, 164, 175, 0.15);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: block;
+        }
+
+        .intervention-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(15, 164, 175, 0.2);
+        }
+
+        .card-header {
+            padding: var(--spacing-xl);
+            background: linear-gradient(135deg, rgba(15, 164, 175, 0.1), transparent);
+            border-bottom: 1px solid rgba(15, 164, 175, 0.1);
+        }
+
+        .card-icon {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .card-description {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .card-content {
+            padding: var(--spacing-lg);
+        }
+
+        .card-metrics {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .metric {
+            text-align: center;
+            padding: var(--spacing-md);
+            background: rgba(15, 164, 175, 0.05);
+            border-radius: var(--radius-md);
+        }
+
+        .metric-value {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .metric-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .card-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, var(--accent), #0CB5C2);
+            color: white;
+            font-weight: 600;
+            border-radius: var(--radius-md);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .card-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(15, 164, 175, 0.4);
+        }
+
+        .quick-links {
+            background: var(--secondary);
+            border: 1px solid rgba(15, 164, 175, 0.15);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-xl);
+            text-align: center;
+        }
+
+        .quick-links-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .quick-links-grid {
+            display: flex;
+            justify-content: center;
+            gap: var(--spacing-md);
+            flex-wrap: wrap;
+        }
+
+        .quick-link {
+            padding: 12px 24px;
+            background: rgba(15, 164, 175, 0.1);
+            border: 1px solid rgba(15, 164, 175, 0.3);
+            border-radius: var(--radius-md);
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .quick-link:hover {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: var(--primary);
+        }
+
+        @media (max-width: 900px) {
+            .interventions-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .page-title {
+                font-size: 2rem;
+            }
+
+            .card-metrics {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+    </style>
+    {% include 'includes/edit_mode.html' ignore missing %}
+</head>
+<body data-edit-page="design_library">
+    <!-- Global Navigation -->
+    <nav class="global-nav">
+        <div class="nav-container">
+            <a href="/" class="nav-logo">
+                <span class="nav-logo-text">PUHC Innovation Alleys</span>
+            </a>
+            
+            <ul class="nav-tabs" id="navTabs">
+                <li class="nav-tab"><a href="/">Alley 3</a></li>
+                <li class="nav-tab"><a href="/existing">Before</a></li>
+                <li class="nav-tab"><a href="/fence-map">Fence Map</a></li>
+                <li class="nav-tab"><a href="/unreal-viewer">Explore</a></li>
+                <li class="nav-tab"><a href="/compare">Compare</a></li>
+            </ul>
+            
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+                ☰
+            </button>
+        </div>
+    </nav>
+
+    <div class="page-container">
+        <!-- Header -->
+        <div class="page-header">
+            <span class="alley-badge">Innovation Alley 3 - Water Alley</span>
+            <h1 class="page-title">Design Library</h1>
+            <p class="page-subtitle">
+                Explore the four design interventions transforming Alley 3 into Pico-Union's first eco-cultural corridor. 
+                Each element addresses specific community needs from heat reduction to food access.
+            </p>
+        </div>
+
+        <!-- Interventions Grid -->
+        <div class="interventions-grid">
+            <!-- Solar Shades -->
+            <a href="/solar-shades" class="intervention-card">
+                <div class="card-header">
+                    <div class="card-icon">SOLAR</div>
+                    <h2 class="card-title">Solar Shades</h2>
+                    <p class="card-description">
+                        Overhead shade structures that cool the alley while generating clean solar energy for the community.
+                    </p>
+                </div>
+                <div class="card-content">
+                    <div class="card-metrics">
+                        <div class="metric">
+                            <div class="metric-value">15°F</div>
+                            <div class="metric-label">Temp Reduction</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">5kW</div>
+                            <div class="metric-label">Solar Capacity</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">85%</div>
+                            <div class="metric-label">Shade Coverage</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">20yr</div>
+                            <div class="metric-label">Lifespan</div>
+                        </div>
+                    </div>
+                    <span class="card-cta">Explore Solar Shades</span>
+                </div>
+            </a>
+
+            <!-- Community Murals -->
+            <a href="/murals" class="intervention-card">
+                <div class="card-header">
+                    <div class="card-icon">ART</div>
+                    <h2 class="card-title">Community Murals</h2>
+                    <p class="card-description">
+                        Culturally significant artwork celebrating Pico-Union's heritage on the alley walls.
+                    </p>
+                </div>
+                <div class="card-content">
+                    <div class="card-metrics">
+                        <div class="metric">
+                            <div class="metric-value">4</div>
+                            <div class="metric-label">Wall Sections</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">1,200</div>
+                            <div class="metric-label">Square Feet</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">3+</div>
+                            <div class="metric-label">Local Artists</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">4</div>
+                            <div class="metric-label">Themes</div>
+                        </div>
+                    </div>
+                    <span class="card-cta">Explore Murals</span>
+                </div>
+            </a>
+
+            <!-- Urban Farming -->
+            <a href="/urban-farming" class="intervention-card">
+                <div class="card-header">
+                    <div class="card-icon">FARM</div>
+                    <h2 class="card-title">Urban Farming</h2>
+                    <p class="card-description">
+                        Container gardens and vertical planters providing fresh produce for the community.
+                    </p>
+                </div>
+                <div class="card-content">
+                    <div class="card-metrics">
+                        <div class="metric">
+                            <div class="metric-value">500+</div>
+                            <div class="metric-label">Lbs/Year</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">5</div>
+                            <div class="metric-label">System Types</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">6°F</div>
+                            <div class="metric-label">Cooling Effect</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">High</div>
+                            <div class="metric-label">Community</div>
+                        </div>
+                    </div>
+                    <span class="card-cta">Explore Urban Farming</span>
+                </div>
+            </a>
+        </div>
+
+        <!-- Quick Links -->
+        <div class="quick-links">
+            <h3 class="quick-links-title">More Tools & Resources</h3>
+            <div class="quick-links-grid">
+                <a href="/plant-library" class="quick-link">Native Plants</a>
+                <a href="/design-brief" class="quick-link">Design Proposals</a>
+                <a href="/visualization-studio" class="quick-link">Street View</a>
+                <a href="/unreal-viewer" class="quick-link">Digital Twin</a>
+                <a href="/scenarios" class="quick-link">Compare Scenarios</a>
+                <a href="/live-dashboard" class="quick-link">Environmental Data</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        const navToggle = document.getElementById('navToggle');
+        const navTabs = document.getElementById('navTabs');
+        
+        navToggle.addEventListener('click', () => {
+            navTabs.classList.toggle('active');
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!navToggle.contains(e.target) && !navTabs.contains(e.target)) {
+                navTabs.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>
