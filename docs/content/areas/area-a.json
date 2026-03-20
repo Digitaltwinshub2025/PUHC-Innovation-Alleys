@@ -1,0 +1,12 @@
+{
+  "_meta": {
+    "area": "A",
+    "zone_name": "North Entrance Zone",
+    "last_edited": null
+  },
+  "label": "AREA A",
+  "name": "North Entrance Zone",
+  "description": "Residential gateway with white fencing and entrance features. Urban farming intervention zone.",
+  "interventions": "Urban Farming",
+  "image": "/static/images/alley_zones/area_a/existing/White Wooden Fence (Graffiti Removal + Repaint + Ground Detailing) 1.png"
+}

@@ -1,0 +1,14 @@
+{
+  "_meta": {
+    "description": "Theme-level typography settings",
+    "last_edited": "2026-02-10T20:33:23.393670"
+  },
+  "badge_size": "0.75rem",
+  "body_size": "0.95rem",
+  "caption_size": "0.8rem",
+  "font_family": "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+  "hero_subtitle_size": "1.15rem",
+  "hero_title_size": "3.5rem",
+  "section_subtitle_size": "1rem",
+  "section_title_size": "2rem"
+}

@@ -1,0 +1,12 @@
+{
+  "_meta": {
+    "area": "D",
+    "zone_name": "South Exit / Rear Zone",
+    "last_edited": null
+  },
+  "label": "AREA D",
+  "name": "South Exit / Rear Zone",
+  "description": "Rear access area with garage structures and large wall surfaces. Mural intervention zone.",
+  "interventions": "Community Murals",
+  "image": "/static/images/alley_zones/area_d/existing/Garage Doors + Wall Sections (Excludes Roof) 1.png"
+}
