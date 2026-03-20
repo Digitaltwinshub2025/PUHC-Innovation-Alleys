@@ -1,0 +1,391 @@
+{
+  "source": "AREAS A - C Information.pdf (64 pages, OCR extracted)",
+  "projects": [
+    {
+      "id": "project-2",
+      "area": "A",
+      "project": "Project 2",
+      "title": "Area A - Project 2",
+      "sections": "Sections 1-6",
+      "scope": "Full revitalization of residential alleyway. Sections 1-6 address damaged fencing, graffiti, and deteriorating pavement.",
+      "primary_image": "/static/images/areas/project-2/White Wooden Fence (Graffiti Removal + Repaint + Ground Detailing) 1.png",
+      "image_caption": "Existing Condition -- White wooden fence with graffiti, Area A",
+      "rhino_file": "/static/docs/rhino/project-2.3dm",
+      "map_label": "S1-S6 Fence Segment",
+      "cost_table": {
+        "wall": {
+          "items": [
+            {"item": "Paint", "low": 1080, "high": 2965},
+            {"item": "Brushes", "low": "Incl./$90", "high": "Incl./$90"}
+          ],
+          "labor_hrs": {"low": 120.5, "high": 157.5},
+          "labor_cost": {"low": 2890, "high": 4860},
+          "total": {"low": 5060, "high": 7915},
+          "notes": "Combined total includes white, black, and blue paint types across wood and metal surfaces. Brushes estimated at $15/section if not included in kits."
+        },
+        "pavement": {
+          "items": [
+            {"item": "Paint/Buffer", "low": 640, "high": 1345},
+            {"item": "Brushes", "low": "Included", "high": "Included"}
+          ],
+          "labor_hrs": {"low": 16, "high": 28},
+          "labor_cost": {"low": 490, "high": 955},
+          "total": {"low": 1130, "high": 2300},
+          "notes": "Includes base repairs, light patching, weed trimming, planter additions, and surface smoothing."
+        },
+        "grand_total": {"low": 6190, "high": 10215}
+      },
+      "wall_description": "Improvements across all sections include cleaning, graffiti removal, sanding, and repainting both metal and wood fences. Multiple paint types were used, including neutral black, white, and water-themed tones to brighten the alley and improve visual cohesion. Anti-rust coatings, anti-graffiti sealants, and primer were applied where needed to protect against long-term wear. In some areas, structural upgrades like replacing wood planks or rebuilding damaged fencing were essential to restore safety and stability.",
+      "pavement_description": "Pavement upgrades were mostly light-to-moderate interventions such as weed removal, surface patching, crack filling, and base cleaning. Some sections included brick base demo and rebuild, while others added planters or green buffers to soften harsh transitions and define walking space."
+    },
+    {
+      "id": "project-3",
+      "area": "A",
+      "project": "Project 3",
+      "title": "Area A - Project 3",
+      "sections": "Sections 1-7",
+      "scope": "Continued alley restoration covering fences, gates, stucco, rust removal, repainting, panel repairs, and optional trim.",
+      "primary_image": "/static/images/areas/project-3/Gate Segment with Rusted Frame, Painted Panel, and Overgrown Pavemen 1.png",
+      "image_caption": "Existing Condition -- Rusted gate frame with overgrown pavement, Area A",
+      "rhino_file": "/static/docs/rhino/project-3.3dm",
+      "map_label": "S1-S7 Gate & Fence",
+      "cost_table": {
+        "wall": {
+          "items": [
+            {"item": "Paint", "low": 1075, "high": 1875},
+            {"item": "Brushes", "low": 1115, "high": 1885}
+          ],
+          "labor_hrs": {"low": 35, "high": 50},
+          "labor_cost": {"low": 1235, "high": 1880},
+          "total": {"low": 3355, "high": 5640},
+          "notes": "Covers fences, gates, stucco, rust removal, repainting, panel repairs, optional trim, etc."
+        },
+        "pavement": {
+          "items": [
+            {"item": "Repair/Buffer", "low": 610, "high": 1145},
+            {"item": "Brushes/Tools", "low": "Included", "high": "Included"}
+          ],
+          "labor_hrs": {"low": 14, "high": 20},
+          "labor_cost": {"low": 370, "high": 590},
+          "total": {"low": 980, "high": 1735},
+          "notes": "Includes crack sealing, patching, weed removal, curb cleanup and paint."
+        },
+        "roofline": {
+          "items": [
+            {"item": "Fascia/Shingle Work", "low": 40, "high": 60}
+          ],
+          "labor_hrs": {"low": 1, "high": 2},
+          "labor_cost": {"low": 30, "high": 50},
+          "total": {"low": 70, "high": 110},
+          "notes": "Only from Section 3; includes fascia/shingle patches (minor)."
+        },
+        "landscaping": {
+          "items": [
+            {"item": "Trim/Planter Work", "low": 40, "high": 150}
+          ],
+          "notes": "Section 1 only -- includes vegetation trimming and optional planter refresh."
+        },
+        "grand_total": {"low": 4445, "high": 7745}
+      },
+      "wall_description": "Wall repairs across all sections included cleaning, sanding, patching, and repainting both metal and masonry surfaces. Sections with rusted iron gates and weathered concrete were treated with primer, rust protectants, and durable finishes. A mix of paint types like neutrals, bold accent colors, and water-themed tones were used to improve visual consistency.",
+      "pavement_description": "Pavement improvements ranged from basic weed removal and surface sweeping to more detailed crack filling, patching, and curb repairs."
+    },
+    {
+      "id": "project-4",
+      "area": "B",
+      "project": "Project 4",
+      "title": "Area B - Project 4",
+      "sections": "Sections 1-3",
+      "scope": "Large and mid-sized wall repairs with varying levels of graffiti, cracking, chipping, and weather wear.",
+      "primary_image": "/static/images/areas/project-4/Concrete Wall with Graffiti, Chipping, and Surface Burn 1.png",
+      "image_caption": "Existing Condition -- Concrete wall with graffiti and surface burn, Area B",
+      "rhino_file": "/static/docs/rhino/project-4.3dm",
+      "map_label": "S1-S3 Wall Segment",
+      "cost_table": {
+        "wall": {
+          "items": [
+            {"item": "Paint", "low": 495, "high": 825},
+            {"item": "Materials", "low": 375, "high": 590}
+          ],
+          "labor_hrs": {"low": 17, "high": 20},
+          "labor_cost": {"low": 625, "high": 890},
+          "total": {"low": 1495, "high": 2305},
+          "notes": "Includes two-coat repainting, rust-resistant and anti-graffiti primer, stucco patching, wall prep, and minor sealing."
+        },
+        "pavement": {
+          "items": [
+            {"item": "Repair/Buffer", "low": 235, "high": 395},
+            {"item": "Brushes/Tools", "low": "Included", "high": "Included"}
+          ],
+          "labor_hrs": {"low": 3.5, "high": 5.5},
+          "labor_cost": {"low": 110, "high": 160},
+          "total": {"low": 345, "high": 555},
+          "notes": "Includes crack patching, curb fill, sweeping, and light sealing."
+        },
+        "grand_total": {"low": 1840, "high": 2860}
+      },
+      "wall_description": "Sections 1 through 3 involved a mix of large and mid-sized wall repairs with varying levels of graffiti, cracking, chipping, and weather wear. Interventions included full stucco resurfacing, sealant application, cement-based patching, and multi-coat repainting.",
+      "pavement_description": "Pavement work across all three sections centered on crack filling, light patching, and debris removal."
+    },
+    {
+      "id": "project-5",
+      "area": "B",
+      "project": "Project 5",
+      "title": "Area B - Project 5",
+      "sections": "Sections 1-3",
+      "scope": "Full-surface rust removal, sanding, and repainting of metal gates and fences across three key sections.",
+      "primary_image": "/static/images/areas/project-5/Iron Fence + Concrete Base1.png",
+      "image_caption": "Existing Condition -- Iron fence with concrete base, Area B",
+      "rhino_file": "/static/docs/rhino/project-5.3dm",
+      "map_label": "S1-S3 Iron Fence",
+      "cost_table": {
+        "wall": {
+          "items": [
+            {"item": "Paint", "low": 240, "high": 390},
+            {"item": "Materials", "low": 460, "high": 640}
+          ],
+          "labor_hrs": {"low": 13, "high": 14.5},
+          "labor_cost": {"low": 650, "high": 730},
+          "total": {"low": 1350, "high": 1760},
+          "notes": "Includes full rust treatment, 2-coat painting, topcoat or color detail, and primer across all wall sections."
+        },
+        "pavement": {
+          "items": [
+            {"item": "Repair/Patch", "low": 140, "high": 200},
+            {"item": "Cleaning/Seal", "low": 75, "high": 110}
+          ],
+          "labor_hrs": {"low": 5, "high": 6},
+          "labor_cost": {"low": 200, "high": 310},
+          "total": {"low": 475, "high": 620},
+          "notes": "Includes concrete crack fill, edge patching, sealant, and light cleaning for pavement in all 3 sections."
+        },
+        "grand_total": {"low": 1825, "high": 2380}
+      },
+      "wall_description": "The wall improvements across Sections 1-3 involved full-surface rust removal, sanding, and repainting of metal gates and fences. Each section received two coats of rust-inhibiting enamel paint, with optional color detailing or topcoats to improve visual consistency and protect against future wear.",
+      "pavement_description": "Pavement work addressed cosmetic and functional issues throughout the same three sections. Crews filled visible cracks, patched edge lines, and performed power washing and sealant application where needed."
+    },
+    {
+      "id": "project-6",
+      "area": "C",
+      "project": "Project 6",
+      "title": "Area C - Project 6",
+      "sections": "Sections 1-3",
+      "scope": "Restoring continuous stretch of black iron fencing with varying gate styles.",
+      "primary_image": "/static/images/areas/project-6/Curved Black Iron Fence with Concrete Base (Right of Gate) 1.png",
+      "image_caption": "Existing Condition -- Black iron fence with concrete base, Area C",
+      "rhino_file": "/static/docs/rhino/project-6.3dm",
+      "map_label": "S1-S3 Iron Fence",
+      "cost_table": {
+        "wall": {
+          "items": [
+            {"item": "Paint", "low": 495, "high": 825},
+            {"item": "Materials", "low": 385, "high": 565}
+          ],
+          "labor_hrs": {"low": 11.5, "high": 13.5},
+          "labor_cost": {"low": 600, "high": 685},
+          "total": {"low": 1480, "high": 2075},
+          "notes": "Includes scraping, sanding, 2-coat painting, color detail, clear topcoat, rust protection, and sealing across all wall sections."
+        },
+        "pavement": {
+          "items": [
+            {"item": "Repair/Buffer", "low": 235, "high": 370},
+            {"item": "Brushes/Tools", "low": "Included", "high": "Included"}
+          ],
+          "labor_hrs": {"low": 3.5, "high": 4},
+          "labor_cost": {"low": 160, "high": 185},
+          "total": {"low": 395, "high": 555},
+          "notes": "Includes patching, power washing, edge sealing, and debris clearing at all pavement locations."
+        },
+        "grand_total": {"low": 1875, "high": 2630}
+      },
+      "wall_description": "Across Sections 1 to 3, the wall interventions focused on restoring a continuous stretch of black iron fencing with varying gate styles. Each section required rust removal, sanding, and full repainting using a durable, rust-resistant finish.",
+      "pavement_description": "The pavement improvements were tailored to each section's surface condition. Repairs included crack filling, patching, edge sealing, and concrete touch-ups."
+    },
+    {
+      "id": "project-7",
+      "area": "C",
+      "project": "Project 7",
+      "title": "Area C - Project 7",
+      "sections": "Sections 1-6",
+      "scope": "Concrete walls, mural walls, and metal gates. Surface cleaning, paint restoration, rust removal, and anti-graffiti/UV protection.",
+      "primary_image": "/static/images/areas/project-7/Concrete Wall with Painted Mural 1.png",
+      "image_caption": "Existing Condition -- Concrete wall with painted mural, Area C",
+      "rhino_file": "/static/docs/rhino/project-7.3dm",
+      "map_label": "S1-S6 Mural & Gate",
+      "cost_table": {
+        "wall": {
+          "items": [
+            {"item": "Paint", "low": 780, "high": 1285},
+            {"item": "Materials", "low": 555, "high": 870}
+          ],
+          "labor_hrs": {"low": 16.5, "high": 21.5},
+          "labor_cost": {"low": 900, "high": 1160},
+          "total": {"low": 2235, "high": 3315},
+          "notes": "Wall work includes all paint prep, color detailing, UV/mural sealants, rust removal, and full-surface restoration across 4 concrete walls and 2 gates."
+        },
+        "pavement": {
+          "items": [
+            {"item": "Repair/Buffer", "low": 355, "high": 565},
+            {"item": "Tools/Brushes", "low": "Included", "high": "Included"}
+          ],
+          "labor_hrs": {"low": 6, "high": 9},
+          "labor_cost": {"low": 300, "high": 430},
+          "total": {"low": 655, "high": 995},
+          "notes": "Includes patching, line work, curb repaint, drain cleanouts, and basic sweep/weed removal for all paved areas in Sections 1-6."
+        },
+        "combined": {
+          "materials_total": {"low": 1310, "high": 2155},
+          "labor_hrs": {"low": 22.5, "high": 31},
+          "labor_cost": {"low": 1200, "high": 1590}
+        },
+        "grand_total": {"low": 2510, "high": 3745}
+      },
+      "wall_description": "Sections 1 through 6 include a mix of concrete walls, mural walls, and metal gates. Work across these areas focused on surface cleaning, paint restoration, rust removal, and anti-graffiti/UV protection. Painted murals such as the 'Respect' mural and other community art pieces were carefully retouched or sealed for long-term preservation.",
+      "pavement_description": "Pavement repairs across all sections included surface crack patching, drain cleanouts, repainting curb or edge lines, and general sweeping."
+    },
+    {
+      "id": "project-8",
+      "area": "C",
+      "project": "Project 8",
+      "title": "Area C - Project 8",
+      "sections": "Sections 1-3",
+      "scope": "Restoring gate and garage wall surfaces with sanding, rust removal, and fresh coats of rust-resistant paint. Roof restoration for garage units.",
+      "primary_image": "/static/images/areas/project-8/Garage Doors + Wall Sections (Excludes Roof) 1.png",
+      "image_caption": "Existing Condition -- Garage doors and wall sections, Area C",
+      "rhino_file": "/static/docs/rhino/project-8.3dm",
+      "map_label": "S1-S3 Garage & Gate",
+      "cost_table": {
+        "wall": {
+          "items": [
+            {"item": "Paint", "low": 195, "high": 285},
+            {"item": "Materials (Primer, Enamel, Tools)", "low": 130, "high": 260}
+          ],
+          "labor_hrs": {"low": 5, "high": 6},
+          "labor_cost": {"low": 225, "high": 285},
+          "total": {"low": 550, "high": 840},
+          "notes": "Includes rust removal, 2-coat painting, optional gloss/sealant, and wall prep for garage doors and gates."
+        },
+        "pavement": {
+          "items": [
+            {"item": "Cleaning, Debris, Edge Detail, Patching", "low": 65, "high": 120},
+            {"item": "Tools/Brushes", "low": "Included", "high": "Included"}
+          ],
+          "labor_hrs": {"low": 1.5, "high": 2},
+          "labor_cost": {"low": 95, "high": 75},
+          "total": {"low": 120, "high": 195},
+          "notes": "Includes trash removal, edge sweeping, optional crack filler near gate/garage bases."
+        },
+        "roof": {
+          "items": [
+            {"item": "Sealant (2 Coats), Primer (Optional)", "low": 130, "high": 250},
+            {"item": "Materials (Sealant, Squeegee, Tools)", "low": 90, "high": 150}
+          ],
+          "labor_hrs": {"low": 3.5, "high": 4.5},
+          "labor_cost": {"low": 130, "high": 170},
+          "total": {"low": 350, "high": 570},
+          "notes": "Covers roof scraping, optional waterproof topcoat, and full sealant application."
+        },
+        "combined": {
+          "materials_total": {"low": 350, "high": 570},
+          "labor_hrs": {"low": 10, "high": 13},
+          "labor_cost": {"low": 410, "high": 540}
+        },
+        "grand_total": {"low": 1315, "high": 2145}
+      },
+      "wall_description": "Sections 1 through 3 involved restoring various gate and garage wall surfaces with sanding, rust removal, and fresh coats of rust-resistant paint. Optional gloss or sealant finishes were offered for added durability and visual enhancement.",
+      "pavement_description": "Pavement work across the three sections focused on clearing trash, removing overgrown weeds, edge detailing, and optional crack patching near base areas.",
+      "roof_description": "Roof restoration was focused on the garage units in Section 2, where moss buildup and worn coatings were addressed. The repair plan included surface scraping, two layers of roof sealant, and optional waterproofing topcoats and primers."
+    },
+    {
+      "id": "project-9",
+      "area": "D",
+      "project": "Project 9",
+      "title": "Area D - Project 9",
+      "sections": "Sections 1-7",
+      "scope": "Full perimeter gate and fence restoration. Red and black metal fence segments, multiple gates and walk-through doors.",
+      "primary_image": "/static/images/areas/project-9/Red Fence Gate 1.png",
+      "image_caption": "Existing Condition -- Red fence gate with barbed wire, Area D",
+      "rhino_file": "/static/docs/rhino/project-9.3dm",
+      "map_label": "S1-S7 Red & Black Fence",
+      "cost_table": {
+        "gate_wall": {
+          "items": [
+            {"item": "Paint/Primer/Top Coat/Finish", "low": 215, "high": 320},
+            {"item": "Rod Replacement/Welding/Bar Work", "low": 240, "high": 400},
+            {"item": "Optional: Barbed Wire/Mesh/Signage", "low": 50, "high": 100},
+            {"item": "Materials", "low": 505, "high": 820}
+          ],
+          "labor_hrs": {"low": 25, "high": 30},
+          "labor_cost": {"low": 875, "high": 1100},
+          "total": {"low": 1380, "high": 1920},
+          "notes": "Total includes all bar alignment, rod replacement, weld repair, and optional components like mesh, signage, or barbed wire. High-end reflects complete repainting and full weed servicing."
+        },
+        "pavement": {
+          "items": [
+            {"item": "Cleanup, Weed Removal, Patch Repairs", "low": 125, "high": 200},
+            {"item": "Materials", "low": "Included", "high": "Included"}
+          ],
+          "labor_hrs": {"low": 9, "high": 10.5},
+          "labor_cost": {"low": 315, "high": 375},
+          "total": {"low": 440, "high": 575},
+          "notes": "Includes clearing, minor patching, and sidewalk detailing at all gate bases. Labor varies based on scope and frequency of ground servicing."
+        },
+        "combined": {
+          "materials_total": {"low": 505, "high": 820},
+          "labor_hrs": {"low": 34, "high": 41},
+          "labor_cost": {"low": 1190, "high": 1475}
+        },
+        "grand_total": {"low": 1695, "high": 2295}
+      },
+      "wall_description": "Across Sections 1 through 7, extensive repairs were completed on both red and black metal fence segments, including multiple gates and walk-through doors. Work involved full rust removal, repainting with anti-rust coatings, and bar replacement where structural damage had occurred.",
+      "pavement_description": "Pavement work throughout the area focused on cleaning, weed removal, edge detailing, and minor patching near the base of each gate and fence panel."
+    },
+    {
+      "id": "project-10",
+      "area": "D",
+      "project": "Project 10",
+      "title": "Area D - Project 10",
+      "sections": "Sections 1-8",
+      "scope": "Full-length intervention addressing long-term neglect. Metal fence panels, rolling gates, walk-through gates, and large mural walls.",
+      "primary_image": "/static/images/areas/project-10/Large Mural Wall with Pipe Detail 1.png",
+      "image_caption": "Existing Condition -- Large mural wall with pipe detail, Area D",
+      "rhino_file": "/static/docs/rhino/project-10.3dm",
+      "map_label": "S1-S8 Mural & Rolling Gate",
+      "cost_table": {
+        "wall": {
+          "items": [
+            {"item": "Paint & Materials", "low": 590, "high": 845}
+          ],
+          "labor_hrs": {"low": 21, "high": 26.5},
+          "labor_cost": {"low": 850, "high": 1130},
+          "total": {"low": 1440, "high": 1975},
+          "notes": "Includes repainting, rust prep, bar repairs, latch fixes, and anti-graffiti protection across walls and gates."
+        },
+        "pavement": {
+          "items": [
+            {"item": "Ground Materials", "low": 90, "high": 135}
+          ],
+          "labor_hrs": {"low": 6.5, "high": 8},
+          "labor_cost": {"low": 270, "high": 370},
+          "total": {"low": 360, "high": 505},
+          "notes": "Ground prep includes scraping, weeding, debris removal, patching, and clearing for all bases."
+        },
+        "combined": {
+          "materials_total": {"low": 680, "high": 980},
+          "labor_hrs": {"low": 27.5, "high": 35},
+          "labor_cost": {"low": 1120, "high": 1500}
+        },
+        "grand_total": {"low": 1800, "high": 2480}
+      },
+      "wall_description": "This area includes a mix of metal fence panels, rolling gates, walk-through gates, and large mural walls. Across all sections, walls received repairs for bar alignment, fastener replacements, latch fixes, and minor welding. Mural walls were cleaned, repainted, and preserved to restore their visual impact.",
+      "pavement_description": "Pavement restoration focused on clearing grime, weeds, and debris along the base of all gates and walls. Surface patching and protective coatings were applied where needed to improve safety and durability."
+    }
+  ],
+  "summary": {
+    "area_a_total": {"low": 10635, "high": 17960, "projects": ["Project 2", "Project 3"]},
+    "area_b_total": {"low": 3665, "high": 5240, "projects": ["Project 4", "Project 5"]},
+    "area_c_total": {"low": 5700, "high": 8520, "projects": ["Project 6", "Project 7", "Project 8"]},
+    "area_d_total": {"low": 3495, "high": 4775, "projects": ["Project 9", "Project 10"]},
+    "overall_grand_total": {"low": 23495, "high": 36495}
+  }
+}

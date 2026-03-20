@@ -1,0 +1,12 @@
+{
+  "_meta": {
+    "area": "B",
+    "zone_name": "Mid-North / Red Trellis Zone",
+    "last_edited": null
+  },
+  "label": "AREA B",
+  "name": "Mid-North / Red Trellis Zone",
+  "description": "Widest corridor section with existing red trellis structure. Shade and farming intervention zone.",
+  "interventions": "Shade Structures, Urban Farming",
+  "image": "/static/images/alley_zones/area_b/existing/Red Fence Gate 1.png"
+}

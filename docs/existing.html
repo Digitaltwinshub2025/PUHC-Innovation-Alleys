@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Before the Transformation | PUHC Innovation Alleys</title>
+    <link rel="stylesheet" href="static/css/global-theme.css">
+    <style>
+        body {
+            background: var(--primary);
+            color: var(--text-primary);
+        }
+
+        .page-header-section {
+            background: #132f4c;
+            border-bottom: 1px solid rgba(15,164,175,0.2);
+            padding: 32px 0;
+            margin-top: 70px;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 28px;
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .before-grid {
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: 32px;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 28px;
+            align-items: start;
+        }
+
+        .hero-image-container {
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 32px;
+            border: 1px solid rgba(15,164,175,0.2);
+        }
+
+        .hero-image-container img {
+            width: 100%;
+            height: 380px;
+            object-fit: cover;
+            filter: grayscale(20%) brightness(0.85);
+        }
+
+        .hero-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(10,25,41,0.95), transparent);
+            padding: 40px 24px 20px;
+        }
+
+        .hero-badges {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .hero-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            background: rgba(10,25,41,0.8);
+            border-radius: 6px;
+            font-size: 0.72rem;
+            font-weight: 500;
+        }
+
+        .condition-summary {
+            background: var(--panel-bg);
+            padding: 20px 24px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 32px;
+        }
+
+        .photo-group {
+            margin-bottom: 28px;
+        }
+
+        .photo-group-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .condition-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .condition-dot.critical { background: #e74c3c; }
+        .condition-dot.poor { background: #e8a838; }
+        .condition-dot.fair { background: #78909c; }
+
+        .photo-grid {
+            display: grid;
+            gap: 10px;
+        }
+
+        .photo-grid.cols-1 { grid-template-columns: 1fr; }
+        .photo-grid.cols-2 { grid-template-columns: 1fr 1fr; }
+        .photo-grid.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+
+        .photo-item {
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: zoom-in;
+            border: 1px solid rgba(15,164,175,0.15);
+        }
+
+        .photo-item.wide { aspect-ratio: 16/7; }
+        .photo-item.square { aspect-ratio: 4/3; }
+
+        .photo-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: grayscale(15%) brightness(0.9);
+            transition: transform 0.3s ease;
+        }
+
+        .photo-item:hover img {
+            transform: scale(1.05);
+        }
+
+        .photo-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(10,25,41,0.85) 0%, transparent 50%);
+        }
+
+        .photo-caption {
+            position: absolute;
+            bottom: 8px;
+            left: 10px;
+            right: 10px;
+            color: #b0bec5;
+            font-size: 0.68rem;
+            line-height: 1.4;
+        }
+
+        .cost-accordion {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .accordion-item {
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .accordion-trigger {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .accordion-trigger:hover {
+            background: rgba(15,164,175,0.05);
+        }
+
+        .accordion-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .accordion-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .accordion-content {
+            padding: 0 20px 16px;
+            display: none;
+        }
+
+        .accordion-content.open {
+            display: block;
+        }
+
+        .cost-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 14px;
+            background: rgba(10,25,41,0.5);
+            border-radius: 6px;
+            border: 1px solid rgba(15,164,175,0.1);
+            margin-bottom: 8px;
+        }
+
+        .sidebar-panel {
+            background: var(--panel-bg);
+            padding: 20px 24px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 20px;
+        }
+
+        .sidebar-title {
+            color: #0FA4AF;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 16px;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(15,164,175,0.1);
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .thumbnail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+        }
+
+        .thumbnail {
+            border-radius: 6px;
+            overflow: hidden;
+            cursor: zoom-in;
+            aspect-ratio: 4/3;
+            border: 1px solid rgba(15,164,175,0.12);
+        }
+
+        .thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: grayscale(20%);
+        }
+
+        .lightbox {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.9);
+            z-index: 9999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+
+        .lightbox.active {
+            display: flex;
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255,255,255,0.1);
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #fff;
+            font-size: 1.5rem;
+        }
+
+        .lightbox-content {
+            max-width: 900px;
+            width: 100%;
+        }
+
+        .lightbox-content img {
+            width: 100%;
+            max-height: 80vh;
+            object-fit: contain;
+            border-radius: 12px;
+        }
+
+        .lightbox-caption {
+            color: #b0bec5;
+            font-size: 0.85rem;
+            margin-top: 12px;
+            text-align: center;
+        }
+
+        .grand-total {
+            margin-top: 20px;
+            padding: 20px 24px;
+            background: rgba(15,164,175,0.08);
+            border: 1px solid rgba(15,164,175,0.3);
+            border-radius: 10px;
+        }
+
+        @media (max-width: 900px) {
+            .before-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .photo-grid.cols-3 {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Global Navigation -->
+    <nav class="global-nav">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">
+                <span class="nav-logo-text">PUHC Innovation Alleys</span>
+            </a>
+            <ul class="nav-tabs">
+                <li class="nav-tab"><a href="index.html">Alley 3</a></li>
+                <li class="nav-tab active"><a href="existing.html">Before</a></li>
+                <li class="nav-tab"><a href="interactive-fence-map.html">Fence Map</a></li>
+                <li class="nav-tab"><a href="unreal-viewer.html">Explore</a></li>
+                <li class="nav-tab"><a href="compare.html">Compare</a></li>
+            </ul>
+            <button class="nav-toggle" aria-label="Toggle navigation">☰</button>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <div class="page-header-section">
+        <div class="header-content">
+            <div>
+                <div class="badge badge-infrastructure" style="margin-bottom: 12px;">Existing Conditions</div>
+                <h1 style="color: #fff; font-size: 2.25rem; font-weight: 700; margin-bottom: 8px;">Before the Transformation</h1>
+                <div style="display: flex; align-items: center; gap: 8px; color: #78909c; font-size: 0.85rem;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0FA4AF" stroke-width="2">
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                        <circle cx="12" cy="10" r="3"></circle>
+                    </svg>
+                    Alley 3 · W 11th & W 12th St · Pico-Union, Los Angeles
+                </div>
+            </div>
+            <a href="compare.html" class="btn-primary">See Transformation →</a>
+        </div>
+    </div>
+
+    <div class="before-grid">
+        <!-- MAIN CONTENT -->
+        <div>
+            <!-- Hero Image -->
+            <div class="hero-image-container">
+                <img src="static/images/street-view/Street View Alley 3 image 1.jpg" alt="Existing alley conditions">
+                <div class="hero-overlay">
+                    <div class="hero-badges">
+                        <div class="hero-badge" style="border: 1px solid #e74c3c40;">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#e74c3c" stroke-width="2">
+                                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                                <line x1="12" y1="9" x2="12" y2="13"></line>
+                                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                            </svg>
+                            <span style="color: #e74c3c;">Deteriorated Paving</span>
+                        </div>
+                        <div class="hero-badge" style="border: 1px solid #e8a83840;">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#e8a838" stroke-width="2">
+                                <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
+                            </svg>
+                            <span style="color: #e8a838;">Drainage Issues</span>
+                        </div>
+                        <div class="hero-badge" style="border: 1px solid #78909c40;">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#78909c" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <polyline points="12 6 12 12 16 14"></polyline>
+                            </svg>
+                            <span style="color: #78909c;">Pre-Intervention (2024)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Condition Summary -->
+            <div class="condition-summary">
+                <h3 style="color: #0FA4AF; font-size: 1rem; font-weight: 700; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px;">
+                    Site Assessment Summary
+                </h3>
+                <p style="color: #b0bec5; font-size: 0.9rem; line-height: 1.7; margin-bottom: 0;">
+                    Alley 3 presents a <strong style="color: #e74c3c;">critical condition</strong> in its drainage infrastructure and a <strong style="color: #e8a838;">poor condition</strong> across its paving surface. Original concrete alley construction dates to approximately 1952. Standing water, root heave, and years of deferred maintenance have created safety hazards and stormwater compliance issues that the Innovation Alleys project aims to fully remediate.
+                </p>
+            </div>
+
+            <!-- Photo Documentation -->
+            <div style="margin-bottom: 36px;">
+                <h3 style="color: #fff; font-size: 1.15rem; font-weight: 700; margin-bottom: 4px; display: flex; align-items: center; gap: 8px;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0FA4AF" stroke-width="2">
+                        <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                        <circle cx="12" cy="13" r="4"></circle>
+                    </svg>
+                    Site Photo Documentation
+                </h3>
+                <p style="color: #78909c; font-size: 0.8rem; margin-bottom: 20px;">Click any photo to enlarge · Pico-Union Alley 3 · 2024</p>
+
+                <!-- Entry Gates & Perimeter -->
+                <div class="photo-group">
+                    <div class="photo-group-header">
+                        <div class="condition-dot poor"></div>
+                        <span style="color: #b0bec5; font-size: 0.82rem; font-weight: 600;">Entry Gates & Perimeter</span>
+                        <span class="badge badge-poor">Poor</span>
+                    </div>
+                    <div class="photo-grid cols-3">
+                        <div class="photo-item square" onclick="openLightbox(this)">
+                            <img src="static/images/alley_zones/area_b/existing/Iron & Wood Fence with Concrete Columns and Pavement Issues 1.png" alt="Iron gate" data-caption="North entry iron gate — corroded, misaligned hinges">
+                            <div class="photo-overlay"></div>
+                            <div class="photo-caption">North entry iron gate — corroded, misaligned hinges</div>
+                        </div>
+                        <div class="photo-item square" onclick="openLightbox(this)">
+                            <img src="static/images/alley_zones/area_b/existing/Large Driveway Gate with Pavement Repair 1.png" alt="Sliding gate" data-caption="South sliding gate — restricted access, signage deficient">
+                            <div class="photo-overlay"></div>
+                            <div class="photo-caption">South sliding gate — restricted access, signage deficient</div>
+                        </div>
+                        <div class="photo-item square" onclick="openLightbox(this)">
+                            <img src="static/images/alley_zones/area_d/existing/Red Fence Gate 1.png" alt="Red fence" data-caption="Red iron fence section — litter accumulation at base, no ground cover">
+                            <div class="photo-overlay"></div>
+                            <div class="photo-caption">Red iron fence section — litter accumulation at base</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Alley Paving Surface -->
+                <div class="photo-group">
+                    <div class="photo-group-header">
+                        <div class="condition-dot critical"></div>
+                        <span style="color: #b0bec5; font-size: 0.82rem; font-weight: 600;">Alley Paving Surface</span>
+                        <span class="badge badge-poor" style="background: rgba(231, 76, 60, 0.2); color: #e74c3c; border-color: rgba(231, 76, 60, 0.3);">Critical</span>
+                    </div>
+                    <div class="photo-grid cols-3">
+                        <div class="photo-item square" onclick="openLightbox(this)">
+                            <img src="static/images/street-view/Street View Alley 3 image 1.jpg" alt="Alley south" data-caption="Looking south — cracked asphalt, no drainage channel">
+                            <div class="photo-overlay"></div>
+                            <div class="photo-caption">Looking south — cracked asphalt, no drainage channel</div>
+                        </div>
+                        <div class="photo-item square" onclick="openLightbox(this)">
+                            <img src="static/images/street-view/Street View Alley 3 image 3.png" alt="Alley mid" data-caption="Mid-alley view north — utility poles, scattered debris">
+                            <div class="photo-overlay"></div>
+                            <div class="photo-caption">Mid-alley view north — utility poles, scattered debris</div>
+                        </div>
+                        <div class="photo-item square" onclick="openLightbox(this)">
+                            <img src="static/images/street-view/Street View Alley 3 image 4.png" alt="Alley north" data-caption="North entry from W 11th St — multi-story backing, overhead utilities">
+                            <div class="photo-overlay"></div>
+                            <div class="photo-caption">North entry from W 11th St — multi-story backing</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Fence Conditions -->
+                <div class="photo-group">
+                    <div class="photo-group-header">
+                        <div class="condition-dot poor"></div>
+                        <span style="color: #b0bec5; font-size: 0.82rem; font-weight: 600;">Fence Conditions</span>
+                        <span class="badge badge-poor">Poor</span>
+                    </div>
+                    <div class="photo-grid cols-3">
+                        <div class="photo-item square" onclick="openLightbox(this)">
+                            <img src="static/images/alley_zones/area_a/existing/White Wooden Fence (Graffiti Removal + Repaint + Ground Detailing) 1.png" alt="White fence" data-caption="White palisade fence — aged, leaning sections">
+                            <div class="photo-overlay"></div>
+                            <div class="photo-caption">White palisade fence — aged, leaning sections</div>
+                        </div>
+                        <div class="photo-item square" onclick="openLightbox(this)">
+                            <img src="static/images/alley_zones/area_a/existing/Black Metal Gate and Ground Overgrowth 1.png" alt="Black fence" data-caption="Black iron fence — heavy graffiti tagging">
+                            <div class="photo-overlay"></div>
+                            <div class="photo-caption">Black iron fence — heavy graffiti tagging</div>
+                        </div>
+                        <div class="photo-item square" onclick="openLightbox(this)">
+                            <img src="static/images/alley_zones/area_a/existing/Overgrown Fence with Vegetation and Cracked Pavement 1.png" alt="Fence tree" data-caption="Residential fence + mature tree — root heave cracking adjacent paving">
+                            <div class="photo-overlay"></div>
+                            <div class="photo-caption">Residential fence + mature tree — root heave cracking</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Walls & Fencing -->
+                <div class="photo-group">
+                    <div class="photo-group-header">
+                        <div class="condition-dot fair"></div>
+                        <span style="color: #b0bec5; font-size: 0.82rem; font-weight: 600;">Walls & Fencing</span>
+                        <span class="badge badge-fair">Fair</span>
+                    </div>
+                    <div class="photo-grid cols-2">
+                        <div class="photo-item square" onclick="openLightbox(this)">
+                            <img src="static/images/alley_zones/area_c/existing/Concrete Wall with Graffiti, Chipping, and Surface Burn 1.png" alt="Graffiti wall" data-caption="East wall — heavy gang tagging, bare unpainted masonry">
+                            <div class="photo-overlay"></div>
+                            <div class="photo-caption">East wall — heavy gang tagging, bare unpainted masonry</div>
+                        </div>
+                        <div class="photo-item square" onclick="openLightbox(this)">
+                            <img src="static/images/alley_zones/area_a/existing/Wall & Pavement Repair with Paint and Base Work 1.png" alt="Wall repair" data-caption="Wall and pavement repair area — structural crack visible">
+                            <div class="photo-overlay"></div>
+                            <div class="photo-caption">Wall and pavement repair area — structural crack visible</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cost Estimates -->
+            <h3 style="color: #fff; font-size: 1.15rem; font-weight: 700; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0FA4AF" stroke-width="2">
+                    <line x1="12" y1="1" x2="12" y2="23"></line>
+                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                </svg>
+                Remediation Cost Estimates
+            </h3>
+
+            <div class="cost-accordion">
+                <!-- Entry Gates -->
+                <div class="accordion-item">
+                    <button class="accordion-trigger" onclick="toggleAccordion(this)">
+                        <div class="accordion-left">
+                            <div class="condition-dot poor"></div>
+                            <span>Entry Gates & Perimeter</span>
+                            <span class="badge badge-poor">Poor</span>
+                        </div>
+                        <div class="accordion-right">
+                            <span style="color: #0FA4AF; font-weight: 700; font-size: 1rem;">$11,700</span>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#78909c" stroke-width="2" class="chevron">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </div>
+                    </button>
+                    <div class="accordion-content">
+                        <p style="color: #78909c; font-size: 0.85rem; margin-bottom: 16px; line-height: 1.6;">
+                            Northern alley entry from W 11th St — aging chainlink gates, cracked concrete apron, missing signage.
+                        </p>
+                        <div class="cost-item">
+                            <div>
+                                <div style="color: #b0bec5; font-size: 0.85rem; font-weight: 500;">Chainlink gate replacement</div>
+                                <div style="color: #78909c; font-size: 0.72rem; margin-top: 2px;">2 × gate</div>
+                            </div>
+                            <div style="color: #fff; font-weight: 600; font-size: 0.9rem;">$5,600</div>
+                        </div>
+                        <div class="cost-item">
+                            <div>
+                                <div style="color: #b0bec5; font-size: 0.85rem; font-weight: 500;">Concrete apron repair</div>
+                                <div style="color: #78909c; font-size: 0.72rem; margin-top: 2px;">1 × lump sum</div>
+                            </div>
+                            <div style="color: #fff; font-weight: 600; font-size: 0.9rem;">$4,200</div>
+                        </div>
+                        <div class="cost-item">
+                            <div>
+                                <div style="color: #b0bec5; font-size: 0.85rem; font-weight: 500;">Signage & wayfinding</div>
+                                <div style="color: #78909c; font-size: 0.72rem; margin-top: 2px;">1 × lump sum</div>
+                            </div>
+                            <div style="color: #fff; font-weight: 600; font-size: 0.9rem;">$1,500</div>
+                        </div>
+                        <div style="display: flex; justify-content: flex-end; margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(15,164,175,0.15);">
+                            <div>
+                                <span style="color: #78909c; font-size: 0.8rem; margin-right: 8px;">Area Subtotal</span>
+                                <span style="color: #0FA4AF; font-weight: 700; font-size: 1.1rem;">$11,700</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Alley Paving -->
+                <div class="accordion-item">
+                    <button class="accordion-trigger" onclick="toggleAccordion(this)">
+                        <div class="accordion-left">
+                            <div class="condition-dot critical"></div>
+                            <span>Alley Paving Surface</span>
+                            <span class="badge badge-poor" style="background: rgba(231, 76, 60, 0.2); color: #e74c3c; border-color: rgba(231, 76, 60, 0.3);">Critical</span>
+                        </div>
+                        <div class="accordion-right">
+                            <span style="color: #0FA4AF; font-weight: 700; font-size: 1rem;">$68,500</span>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#78909c" stroke-width="2" class="chevron">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </div>
+                    </button>
+                    <div class="accordion-content">
+                        <p style="color: #78909c; font-size: 0.85rem; margin-bottom: 16px; line-height: 1.6;">
+                            Central 360 linear feet of alley — deteriorated asphalt with standing water, root heave, oil staining throughout.
+                        </p>
+                        <div class="cost-item">
+                            <div>
+                                <div style="color: #b0bec5; font-size: 0.85rem; font-weight: 500;">Asphalt removal & disposal</div>
+                                <div style="color: #78909c; font-size: 0.72rem; margin-top: 2px;">1 × lump sum</div>
+                            </div>
+                            <div style="color: #fff; font-weight: 600; font-size: 0.9rem;">$18,500</div>
+                        </div>
+                        <div class="cost-item">
+                            <div>
+                                <div style="color: #b0bec5; font-size: 0.85rem; font-weight: 500;">Subgrade grading & prep</div>
+                                <div style="color: #78909c; font-size: 0.72rem; margin-top: 2px;">1 × lump sum</div>
+                            </div>
+                            <div style="color: #fff; font-weight: 600; font-size: 0.9rem;">$6,200</div>
+                        </div>
+                        <div class="cost-item">
+                            <div>
+                                <div style="color: #b0bec5; font-size: 0.85rem; font-weight: 500;">Permeable pavers (360 LF)</div>
+                                <div style="color: #78909c; font-size: 0.72rem; margin-top: 2px;">1 × lump sum</div>
+                            </div>
+                            <div style="color: #fff; font-weight: 600; font-size: 0.9rem;">$42,000</div>
+                        </div>
+                        <div class="cost-item">
+                            <div>
+                                <div style="color: #b0bec5; font-size: 0.85rem; font-weight: 500;">ADA compliance striping</div>
+                                <div style="color: #78909c; font-size: 0.72rem; margin-top: 2px;">1 × lump sum</div>
+                            </div>
+                            <div style="color: #fff; font-weight: 600; font-size: 0.9rem;">$1,800</div>
+                        </div>
+                        <div style="display: flex; justify-content: flex-end; margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(15,164,175,0.15);">
+                            <div>
+                                <span style="color: #78909c; font-size: 0.8rem; margin-right: 8px;">Area Subtotal</span>
+                                <span style="color: #0FA4AF; font-weight: 700; font-size: 1.1rem;">$68,500</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Utilities & Drainage -->
+                <div class="accordion-item">
+                    <button class="accordion-trigger" onclick="toggleAccordion(this)">
+                        <div class="accordion-left">
+                            <div class="condition-dot critical"></div>
+                            <span>Utilities & Drainage</span>
+                            <span class="badge badge-poor" style="background: rgba(231, 76, 60, 0.2); color: #e74c3c; border-color: rgba(231, 76, 60, 0.3);">Critical</span>
+                        </div>
+                        <div class="accordion-right">
+                            <span style="color: #0FA4AF; font-weight: 700; font-size: 1rem;">$63,500</span>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#78909c" stroke-width="2" class="chevron">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </div>
+                    </button>
+                    <div class="accordion-content">
+                        <p style="color: #78909c; font-size: 0.85rem; margin-bottom: 16px; line-height: 1.6;">
+                            Existing catch basins are undersized and frequently overflow during storms. Water pooling is a persistent nuisance.
+                        </p>
+                        <div class="cost-item">
+                            <div>
+                                <div style="color: #b0bec5; font-size: 0.85rem; font-weight: 500;">Catch basin upsizing (4x)</div>
+                                <div style="color: #78909c; font-size: 0.72rem; margin-top: 2px;">1 × lump sum</div>
+                            </div>
+                            <div style="color: #fff; font-weight: 600; font-size: 0.9rem;">$12,000</div>
+                        </div>
+                        <div class="cost-item">
+                            <div>
+                                <div style="color: #b0bec5; font-size: 0.85rem; font-weight: 500;">Bioswale installation</div>
+                                <div style="color: #78909c; font-size: 0.72rem; margin-top: 2px;">1 × lump sum</div>
+                            </div>
+                            <div style="color: #fff; font-weight: 600; font-size: 0.9rem;">$28,000</div>
+                        </div>
+                        <div class="cost-item">
+                            <div>
+                                <div style="color: #b0bec5; font-size: 0.85rem; font-weight: 500;">Underground cistern (2,000 gal)</div>
+                                <div style="color: #78909c; font-size: 0.72rem; margin-top: 2px;">2 × unit</div>
+                            </div>
+                            <div style="color: #fff; font-weight: 600; font-size: 0.9rem;">$30,000</div>
+                        </div>
+                        <div class="cost-item">
+                            <div>
+                                <div style="color: #b0bec5; font-size: 0.85rem; font-weight: 500;">Electrical conduit upgrade</div>
+                                <div style="color: #78909c; font-size: 0.72rem; margin-top: 2px;">1 × lump sum</div>
+                            </div>
+                            <div style="color: #fff; font-weight: 600; font-size: 0.9rem;">$8,500</div>
+                        </div>
+                        <div style="display: flex; justify-content: flex-end; margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(15,164,175,0.15);">
+                            <div>
+                                <span style="color: #78909c; font-size: 0.8rem; margin-right: 8px;">Area Subtotal</span>
+                                <span style="color: #0FA4AF; font-weight: 700; font-size: 1.1rem;">$63,500</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Walls & Fencing -->
+                <div class="accordion-item">
+                    <button class="accordion-trigger" onclick="toggleAccordion(this)">
+                        <div class="accordion-left">
+                            <div class="condition-dot fair"></div>
+                            <span>Walls & Fencing</span>
+                            <span class="badge badge-fair">Fair</span>
+                        </div>
+                        <div class="accordion-right">
+                            <span style="color: #0FA4AF; font-weight: 700; font-size: 1rem;">$49,300</span>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#78909c" stroke-width="2" class="chevron">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </div>
+                    </button>
+                    <div class="accordion-content">
+                        <p style="color: #78909c; font-size: 0.85rem; margin-bottom: 16px; line-height: 1.6;">
+                            Property-line walls and existing chain-link fencing along 720 linear feet — graffiti, rust, structural damage in sections.
+                        </p>
+                        <div class="cost-item">
+                            <div>
+                                <div style="color: #b0bec5; font-size: 0.85rem; font-weight: 500;">Graffiti removal & sealing</div>
+                                <div style="color: #78909c; font-size: 0.72rem; margin-top: 2px;">1 × lump sum</div>
+                            </div>
+                            <div style="color: #fff; font-weight: 600; font-size: 0.9rem;">$4,500</div>
+                        </div>
+                        <div class="cost-item">
+                            <div>
+                                <div style="color: #b0bec5; font-size: 0.85rem; font-weight: 500;">Fence panel replacement</div>
+                                <div style="color: #78909c; font-size: 0.72rem; margin-top: 2px;">1 × lump sum</div>
+                            </div>
+                            <div style="color: #fff; font-weight: 600; font-size: 0.9rem;">$9,800</div>
+                        </div>
+                        <div class="cost-item">
+                            <div>
+                                <div style="color: #b0bec5; font-size: 0.85rem; font-weight: 500;">Wall surface preparation</div>
+                                <div style="color: #78909c; font-size: 0.72rem; margin-top: 2px;">1 × lump sum</div>
+                            </div>
+                            <div style="color: #fff; font-weight: 600; font-size: 0.9rem;">$6,200</div>
+                        </div>
+                        <div class="cost-item">
+                            <div>
+                                <div style="color: #b0bec5; font-size: 0.85rem; font-weight: 500;">Decorative medallion posts</div>
+                                <div style="color: #78909c; font-size: 0.72rem; margin-top: 2px;">8 × post</div>
+                            </div>
+                            <div style="color: #fff; font-weight: 600; font-size: 0.9rem;">$25,600</div>
+                        </div>
+                        <div style="display: flex; justify-content: flex-end; margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(15,164,175,0.15);">
+                            <div>
+                                <span style="color: #78909c; font-size: 0.8rem; margin-right: 8px;">Area Subtotal</span>
+                                <span style="color: #0FA4AF; font-weight: 700; font-size: 1.1rem;">$49,300</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Grand Total -->
+            <div class="grand-total">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <div style="color: #b0bec5; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Total Remediation Estimate</div>
+                        <div style="color: #78909c; font-size: 0.72rem; margin-top: 2px;">Before planned interventions · Subject to final engineering</div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="color: #0FA4AF; font-size: 2rem; font-weight: 700;">$193,000</div>
+                        <div style="color: #78909c; font-size: 0.72rem;">Preliminary estimate</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SIDEBAR -->
+        <div>
+            <!-- Project Details -->
+            <div class="sidebar-panel">
+                <h4 class="sidebar-title">Project Details</h4>
+                <div class="detail-row">
+                    <span style="color: #78909c; font-size: 0.8rem;">Alley</span>
+                    <span style="color: #b0bec5; font-size: 0.8rem; font-weight: 500;">Alley 3</span>
+                </div>
+                <div class="detail-row">
+                    <span style="color: #78909c; font-size: 0.8rem;">Location</span>
+                    <span style="color: #b0bec5; font-size: 0.8rem; font-weight: 500;">W 11th–12th St</span>
+                </div>
+                <div class="detail-row">
+                    <span style="color: #78909c; font-size: 0.8rem;">Neighborhood</span>
+                    <span style="color: #b0bec5; font-size: 0.8rem; font-weight: 500;">Pico-Union, LA</span>
+                </div>
+                <div class="detail-row">
+                    <span style="color: #78909c; font-size: 0.8rem;">Length</span>
+                    <span style="color: #b0bec5; font-size: 0.8rem; font-weight: 500;">360 linear ft</span>
+                </div>
+                <div class="detail-row">
+                    <span style="color: #78909c; font-size: 0.8rem;">Width</span>
+                    <span style="color: #b0bec5; font-size: 0.8rem; font-weight: 500;">~20 ft</span>
+                </div>
+                <div class="detail-row">
+                    <span style="color: #78909c; font-size: 0.8rem;">Total Area</span>
+                    <span style="color: #b0bec5; font-size: 0.8rem; font-weight: 500;">~6,200 sq ft</span>
+                </div>
+                <div class="detail-row">
+                    <span style="color: #78909c; font-size: 0.8rem;">Construction Era</span>
+                    <span style="color: #b0bec5; font-size: 0.8rem; font-weight: 500;">c.1952</span>
+                </div>
+                <div class="detail-row">
+                    <span style="color: #78909c; font-size: 0.8rem;">Theme</span>
+                    <span style="color: #b0bec5; font-size: 0.8rem; font-weight: 500;">Water / Stormwater</span>
+                </div>
+            </div>
+
+            <!-- Condition Legend -->
+            <div class="sidebar-panel">
+                <h4 class="sidebar-title">Condition Index</h4>
+                <div style="display: flex; align-items: flex-start; gap: 10px; margin-bottom: 12px;">
+                    <div style="width: 10px; height: 10px; border-radius: 50%; background: #e74c3c; margin-top: 4px; flex-shrink: 0; box-shadow: 0 0 6px #e74c3c80;"></div>
+                    <div>
+                        <div style="color: #e74c3c; font-weight: 600; font-size: 0.82rem;">Critical</div>
+                        <div style="color: #78909c; font-size: 0.72rem;">Immediate action required</div>
+                    </div>
+                </div>
+                <div style="display: flex; align-items: flex-start; gap: 10px; margin-bottom: 12px;">
+                    <div style="width: 10px; height: 10px; border-radius: 50%; background: #e8a838; margin-top: 4px; flex-shrink: 0; box-shadow: 0 0 6px #e8a83880;"></div>
+                    <div>
+                        <div style="color: #e8a838; font-weight: 600; font-size: 0.82rem;">Poor</div>
+                        <div style="color: #78909c; font-size: 0.72rem;">Significant deterioration</div>
+                    </div>
+                </div>
+                <div style="display: flex; align-items: flex-start; gap: 10px;">
+                    <div style="width: 10px; height: 10px; border-radius: 50%; background: #78909c; margin-top: 4px; flex-shrink: 0; box-shadow: 0 0 6px #78909c80;"></div>
+                    <div>
+                        <div style="color: #78909c; font-weight: 600; font-size: 0.82rem;">Fair</div>
+                        <div style="color: #78909c; font-size: 0.72rem;">Functional with issues</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation -->
+            <div class="sidebar-panel">
+                <h4 class="sidebar-title">Explore the Design</h4>
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <a href="interactive-fence-map.html" class="btn-primary" style="width: 100%; justify-content: center; font-size: 0.85rem; padding: 10px 16px;">
+                        Fence Map
+                    </a>
+                    <a href="compare.html" class="btn-outline" style="width: 100%; justify-content: center; font-size: 0.85rem; padding: 10px 16px;">
+                        Before / After
+                    </a>
+                    <a href="unreal-viewer.html" class="btn-secondary" style="width: 100%; justify-content: center; font-size: 0.85rem; padding: 10px 16px;">
+                        3D Explorer
+                    </a>
+                </div>
+            </div>
+
+            <!-- All Site Photos -->
+            <div class="sidebar-panel">
+                <h4 class="sidebar-title">All Site Photos</h4>
+                <div class="thumbnail-grid">
+                    <div class="thumbnail" onclick="openLightbox(this)">
+                        <img src="static/images/street-view/Street View Alley 3 image 1.jpg" alt="Alley south view" data-caption="Alley south view">
+                    </div>
+                    <div class="thumbnail" onclick="openLightbox(this)">
+                        <img src="static/images/street-view/Street View Alley 3 image 3.png" alt="Alley mid-view" data-caption="Alley mid-view">
+                    </div>
+                    <div class="thumbnail" onclick="openLightbox(this)">
+                        <img src="static/images/street-view/Street View Alley 3 image 4.png" alt="Alley north entry" data-caption="Alley north entry">
+                    </div>
+                    <div class="thumbnail" onclick="openLightbox(this)">
+                        <img src="static/images/alley_zones/area_b/existing/Iron & Wood Fence with Concrete Columns and Pavement Issues 1.png" alt="North entry gate" data-caption="North entry gate">
+                    </div>
+                    <div class="thumbnail" onclick="openLightbox(this)">
+                        <img src="static/images/alley_zones/area_a/existing/White Wooden Fence (Graffiti Removal + Repaint + Ground Detailing) 1.png" alt="White palisade fence" data-caption="White palisade fence">
+                    </div>
+                    <div class="thumbnail" onclick="openLightbox(this)">
+                        <img src="static/images/alley_zones/area_a/existing/Black Metal Gate and Ground Overgrowth 1.png" alt="Black iron fence" data-caption="Black iron fence">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+        <button class="lightbox-close" onclick="closeLightbox()">×</button>
+        <div class="lightbox-content" onclick="event.stopPropagation()">
+            <img id="lightboxImage" src="" alt="">
+            <p class="lightbox-caption" id="lightboxCaption"></p>
+        </div>
+    </div>
+
+    <script>
+        function toggleAccordion(button) {
+            const content = button.nextElementSibling;
+            const chevron = button.querySelector('.chevron');
+            const isOpen = content.classList.contains('open');
+            
+            document.querySelectorAll('.accordion-content').forEach(c => c.classList.remove('open'));
+            document.querySelectorAll('.chevron').forEach(ch => ch.style.transform = '');
+            
+            if (!isOpen) {
+                content.classList.add('open');
+                chevron.style.transform = 'rotate(180deg)';
+            }
+        }
+
+        function openLightbox(element) {
+            const img = element.querySelector('img');
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImage = document.getElementById('lightboxImage');
+            const lightboxCaption = document.getElementById('lightboxCaption');
+            
+            lightboxImage.src = img.src;
+            lightboxCaption.textContent = img.dataset.caption || img.alt;
+            lightbox.classList.add('active');
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightbox').classList.remove('active');
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeLightbox();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,45 @@
+{
+  "_meta": {
+    "description": "Image captions and alt text for site-wide images",
+    "last_edited": "2026-02-10T20:33:23.393062"
+  },
+  "existing_alley": {
+    "alt": "Water Alley existing conditions - exposed asphalt with no shade",
+    "caption": "Exposed asphalt corridor / no shade or infrastructure",
+    "path": "/static/images/existing-alley.jpg"
+  },
+  "garden_transformation": {
+    "alt": "Container-based urban farming applied to Alley 3",
+    "caption": "Container gardens along alley edges / raised planters with clear circulation path",
+    "path": "/static/images/garden-transformation-alley3.png"
+  },
+  "hero_alley": {
+    "alt": "Water Alley aerial view",
+    "path": "/static/images/hero-alley.png"
+  },
+  "intervention_farming": {
+    "alt": "Urban Farming",
+    "caption": "Baseline intervention image",
+    "path": "/static/images/intervention-farming.png"
+  },
+  "intervention_murals": {
+    "alt": "Community Murals",
+    "caption": "Baseline intervention image",
+    "path": "/static/images/intervention-murals.png"
+  },
+  "intervention_overview": {
+    "alt": "Integrated design interventions",
+    "caption": "Integrated design interventions visualized in Alley 3",
+    "path": "/static/images/intervention-overview.png"
+  },
+  "intervention_shade": {
+    "alt": "Shade Structures",
+    "caption": "Baseline intervention image",
+    "path": "/static/images/intervention-shade.png"
+  },
+  "solar_canopy": {
+    "alt": "Solar canopy shade structure prototype in a narrow urban alley",
+    "caption": "Generic solar canopy system for reference",
+    "path": "/static/images/solar-canopy-system.png"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "_meta": {
+    "area": "C",
+    "zone_name": "Mid-South / Mural Zone",
+    "last_edited": null
+  },
+  "label": "AREA C",
+  "name": "Mid-South / Mural Zone",
+  "description": "Concrete walls with existing murals and graffiti. Shade and mural intervention zone.",
+  "interventions": "Shade Structures, Community Murals",
+  "image": "/static/images/alley_zones/area_c/murals/Large Mural Wall with Pipe Detail 1.png"
+}

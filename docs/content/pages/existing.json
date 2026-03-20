@@ -1,0 +1,29 @@
+{
+  "_meta": {
+    "last_edited": "2026-02-10T20:33:23.392790",
+    "page": "existing",
+    "template": "existing.html"
+  },
+  "baseline_metrics": {
+    "description": "These values represent current conditions and serve as comparison points for evaluating intervention impact.",
+    "title": "Baseline Metrics (Before Intervention)"
+  },
+  "hero": {
+    "badge": "BEFORE",
+    "hero_image": "/static/images/alley-street-1.jpg",
+    "location": "W 11th & W 12th St, Pico-Union, Los Angeles",
+    "subtitle": "Documented baseline conditions used for before-after comparison.",
+    "title": "Alley 3 Today"
+  },
+  "photos_section": {
+    "title": "Site Photos"
+  },
+  "streetview_section": {
+    "subtitle": "Street View imagery documenting Water Alley's existing layout",
+    "title": "Street View Reference"
+  },
+  "zones_section": {
+    "subtitle": "Existing conditions documented by alley zone. Each zone has distinct characteristics and planned interventions.",
+    "title": "Zone-by-Zone Documentation"
+  }
+}
