@@ -17,7 +17,7 @@ load_dotenv()
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'alley-transformation-secret-key')
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///alley_bloom.db')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///puhc_innovation_alleys.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SESSION_COOKIE_SECURE'] = os.environ.get('FLASK_ENV') == 'production'
 app.config['SESSION_COOKIE_HTTPONLY'] = True
@@ -1880,13 +1880,13 @@ if __name__ == '__main__':
         hostname = socket.gethostname()
         local_ip = socket.gethostbyname(hostname)
         print("\n" + "="*60)
-        print("ALLEY BLOOM - Innovation Alleys Platform")
+        print("PUHC INNOVATION ALLEYS - Platform")
         print("="*60)
         print(f"Local Access:     http://localhost:5000")
         print(f"Network Access:   http://{local_ip}:5000")
         print(f"Share with team:  http://{local_ip}:5000")
         print("="*60)
-        print("Database: SQLite (alley_bloom.db)")
+        print("Database: SQLite (puhc_innovation_alleys.db)")
         print("Authentication: Enabled")
         print("="*60)
         print("PIXEL STREAMING (Unreal Engine)")
@@ -1895,6 +1895,6 @@ if __name__ == '__main__':
         print("Add this URL to your Unreal Engine project!")
         print("="*60 + "\n")
     except:
-        print("\nAlley Bloom is running on http://localhost:5000\n")
+        print("\nPUHC Innovation Alleys is running on http://localhost:5000\n")
     
     socketio.run(app, debug=True, host='0.0.0.0', port=5000)
