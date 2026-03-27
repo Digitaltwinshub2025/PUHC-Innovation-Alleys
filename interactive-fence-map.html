@@ -203,8 +203,12 @@
         }
 
         /* ── Simulation View ── */
-        .simulation-view { display: none; }
-        .simulation-view.visible { display: block; }
+        .simulation-view {
+            display: none;
+        }
+        .simulation-view.visible {
+            display: block;
+        }
         
         .sim-workspace { display: flex; flex-direction: column; gap: 12px; margin-bottom: 16px; }
 
@@ -299,7 +303,7 @@
             position: relative;
             width: 100%;
             height: 650px;
-            overflow: hidden;
+            overflow: visible;
             background: #f0f0f0;
             border-radius: 8px;
             display: block;
@@ -348,6 +352,11 @@
         
         .medallion-container {
             z-index: 3;
+            pointer-events: none;
+        }
+        
+        .medallion-container > * {
+            pointer-events: auto;
         }
         
         .medallion-container > * {
@@ -423,10 +432,10 @@
 
         /* Placed Medallions */
         .placed-medallion {
-            position: absolute; cursor: move; z-index: 10;
-            filter: drop-shadow(0 2px 6px rgba(0,0,0,.7));
-            transition: filter .15s ease-out, outline .15s ease-out;
-            border-radius: 50%; outline: 2px solid transparent;
+            position: absolute;
+            cursor: move;
+            z-index: 10;
+            transition: box-shadow .2s;
             pointer-events: auto;
         }
         .placed-medallion:hover {
@@ -1292,23 +1301,36 @@ function setMode(on) {
     
     var existingView = document.getElementById("existingView");
     var simulationView = document.getElementById("simulationView");
+    var panel = document.getElementById("elevationViewerPanel");
+    var tabDetails = document.getElementById("tabDetails");
+    var tabSim = document.getElementById("tabSim");
     
     if (!existingView || !simulationView) return;
     
     if (on) {
-        existingView.classList.add("compact");
-        existingView.classList.remove("hidden");
+        existingView.style.display = "none";
         simulationView.style.display = "block";
+        simulationView.classList.add("visible");
+        if (panel) panel.classList.add("sim-active");
+        if (tabDetails) tabDetails.classList.remove("active");
+        if (tabSim) tabSim.classList.add("active");
         
         if (!elevationLoaded) {
             load2DElevation();
         } else {
-            setTimeout(function() { zoomToFence(); }, 100);
+            setTimeout(function() {
+                drawFenceOverlay();
+                generateFenceAnchors();
+                zoomToFence();
+            }, 150);
         }
     } else {
-        existingView.classList.remove("compact");
-        existingView.classList.remove("hidden");
+        existingView.style.display = "block";
         simulationView.style.display = "none";
+        simulationView.classList.remove("visible");
+        if (panel) panel.classList.remove("sim-active");
+        if (tabDetails) tabDetails.classList.add("active");
+        if (tabSim) tabSim.classList.remove("active");
         zoomLevel = 1;
         panX = 0;
         applyTransform();
