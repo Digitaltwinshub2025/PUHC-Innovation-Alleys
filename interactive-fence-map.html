@@ -49,18 +49,26 @@
 
         /* ── Main Layout ── */
         .main-layout {
-            display: grid; grid-template-columns: 300px 1fr 240px; gap: 20px;
-            padding: 0 28px 40px; max-width: 1600px; margin: 0 auto;
+            display: grid;
+            grid-template-columns: minmax(280px, 320px) 1fr minmax(240px, 280px);
+            gap: 24px;
+            padding: 0 32px 40px;
+            max-width: 1800px;
+            margin: 0 auto;
             min-height: calc(100vh - 200px);
+            align-items: start;
         }
 
         /* ── Left: Segment Map ── */
         .segment-map-panel {
-            background: var(--bg-panel); border: 1px solid var(--border);
-            border-radius: var(--radius); padding: 20px;
-            min-width: 280px;
+            background: var(--bg-panel);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px;
             height: fit-content;
-            position: relative; z-index: 5;
+            position: sticky;
+            top: 90px;
+            z-index: 5;
         }
         .panel-label {
             font-size: .7rem; text-transform: uppercase; letter-spacing: 1.5px;
@@ -100,19 +108,29 @@
 
         /* ── Center: Elevation Viewer Panel ── */
         .elevation-viewer-panel {
-            background: var(--bg-panel); border: 1px solid var(--border);
-            border-radius: var(--radius); padding: 20px 24px;
-            display: flex; flex-direction: column;
-            position: relative; z-index: 10;
+            background: var(--bg-panel);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            z-index: 1;
+            min-width: 0;
         }
         
         /* ── Right: Medallion Gallery Panel ── */
         .medallion-gallery-panel {
-            background: var(--bg-panel); border: 1px solid var(--border);
-            border-radius: var(--radius); padding: 20px 16px;
-            min-width: 240px; max-width: 260px;
-            height: fit-content; position: sticky; top: 90px;
+            background: var(--bg-panel);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px 16px;
+            height: fit-content;
+            position: sticky;
+            top: 90px;
             z-index: 5;
+            max-height: calc(100vh - 120px);
+            overflow-y: auto;
         }
         .elevation-viewer-panel.sim-active { border-color: var(--accent); box-shadow: 0 0 20px var(--accent-dim); }
         .detail-header { display: flex; align-items: center; margin-bottom: 16px; }
@@ -280,13 +298,11 @@
         .fence-canvas {
             position: relative;
             width: 100%;
-            height: 600px;
+            height: 650px;
             overflow: hidden;
             background: #f0f0f0;
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            border-radius: 8px;
+            display: block;
             border: 1px solid var(--border);
         }
         
@@ -319,7 +335,8 @@
             width: 100%;
             height: 100%;
             object-fit: contain;
-            image-rendering: auto;
+            object-position: center;
+            image-rendering: -webkit-optimize-contrast;
             display: block;
         }
         
@@ -513,15 +530,25 @@
 
         @media (max-width: 1400px) {
             .main-layout { 
-                grid-template-columns: 280px 1fr 220px; 
+                grid-template-columns: 260px 1fr 220px; 
                 gap: 16px;
+                padding: 0 20px 40px;
+            }
+            .fence-canvas {
+                height: 550px;
             }
         }
         
         @media (max-width: 1200px) {
             .main-layout { 
                 grid-template-columns: 1fr; 
-                gap: 24px;
+                gap: 20px;
+                padding: 0 16px 40px;
+            }
+            .segment-map-panel,
+            .medallion-gallery-panel {
+                position: static;
+                max-height: none;
             }
             .segment-map-panel,
             .elevation-viewer-panel,
@@ -529,6 +556,27 @@
                 min-width: unset;
                 width: 100%;
                 max-width: 100%;
+            }
+            .fence-canvas {
+                height: 500px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .page-header {
+                padding: 24px 16px 20px;
+            }
+            .page-header h1 {
+                font-size: 1.5rem;
+            }
+            .main-layout {
+                padding: 0 12px 32px;
+            }
+            .fence-canvas {
+                height: 400px;
+            }
+            .medallion-library {
+                max-height: 400px;
             }
         }
     </style>
