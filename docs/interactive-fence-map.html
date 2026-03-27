@@ -280,8 +280,7 @@
         .fence-canvas {
             position: relative;
             width: 100%;
-            min-height: 500px;
-            height: auto;
+            height: 600px;
             overflow: hidden;
             background: #f0f0f0;
             border-radius: 6px;
@@ -300,10 +299,9 @@
             height: 100%;
             z-index: 1;
             pointer-events: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            display: block;
             background: #f0f0f0;
+            overflow: hidden;
         }
 
         #simulationView .fence-canvas {
@@ -320,10 +318,9 @@
         .elevation-background img {
             width: 100%;
             height: 100%;
-            max-width: 100%;
-            max-height: 100%;
             object-fit: contain;
             image-rendering: auto;
+            display: block;
         }
         
         .fence-overlay {
@@ -1046,12 +1043,6 @@ function load2DElevation() {
             width: elevationImg.naturalWidth,
             height: elevationImg.naturalHeight
         };
-        
-        var canvas = document.getElementById("fenceCanvas");
-        if (canvas) {
-            var aspectRatio = elevationDimensions.width / elevationDimensions.height;
-            canvas.style.aspectRatio = aspectRatio.toString();
-        }
         
         drawFenceOverlay();
         generateFenceAnchors();
