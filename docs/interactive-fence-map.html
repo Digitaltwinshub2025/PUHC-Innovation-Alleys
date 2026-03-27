@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Interactive Fence Map — Alley 3 | PUHC Innovation Alleys</title>
-    <link rel="stylesheet" href="/static/css/global-theme.css">
-    <link rel="stylesheet" href="/static/css/fence-map-improvements.css">
+    <link rel="stylesheet" href="static/css/global-theme.css">
+    <link rel="stylesheet" href="static/css/fence-map-improvements.css">
     <style>
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -541,16 +541,16 @@
 <!-- Global Navigation -->
 <nav class="global-nav">
     <div class="nav-container">
-        <a href="/" class="nav-logo">
+        <a href="index.html" class="nav-logo">
             <span class="nav-logo-text">PUHC Innovation Alleys</span>
         </a>
         
         <ul class="nav-tabs" id="navTabs">
-            <li class="nav-tab"><a href="/">Alley 3</a></li>
-            <li class="nav-tab"><a href="/existing">Before</a></li>
-            <li class="nav-tab active"><a href="/fence-map">Fence Map</a></li>
-            <li class="nav-tab"><a href="/unreal-viewer">Explore</a></li>
-            <li class="nav-tab"><a href="/compare">Compare</a></li>
+            <li class="nav-tab"><a href="index.html">Alley 3</a></li>
+            <li class="nav-tab"><a href="existing.html">Before</a></li>
+            <li class="nav-tab active"><a href="interactive-fence-map.html">Fence Map</a></li>
+            <li class="nav-tab"><a href="unreal-viewer.html">Explore</a></li>
+            <li class="nav-tab"><a href="compare.html">Compare</a></li>
         </ul>
         
         <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
@@ -632,16 +632,16 @@
                                 <label for="elevationSelect">Elevation</label>
                                 <select id="elevationSelect">
                                     <option value="auto" selected>Auto (Project Default)</option>
-                                    <option value="/static/images/Building 2.JPG">Building 2</option>
-                                    <option value="/static/images/Building 3.JPG">Building 3</option>
-                                    <option value="/static/images/Building 4 Snip.JPG">Building 4 (Snip)</option>
-                                    <option value="/static/images/Building 5 Snip.JPG">Building 5 (Snip)</option>
-                                    <option value="/static/images/Building 6.JPG">Building 6</option>
-                                    <option value="/static/images/Building 7.JPG">Building 7</option>
-                                    <option value="/static/images/Building 8.JPG">Building 8</option>
-                                    <option value="/static/images/Building 9.JPG">Building 9</option>
-                                    <option value="/static/images/Building 10.JPG">Building 10</option>
-                                    <option value="/static/images/Building 11.JPG">Building 11</option>
+                                    <option value="static/images/Building 2.JPG">Building 2</option>
+                                    <option value="static/images/Building 3.JPG">Building 3</option>
+                                    <option value="static/images/Building 4 Snip.JPG">Building 4 (Snip)</option>
+                                    <option value="static/images/Building 5 Snip.JPG">Building 5 (Snip)</option>
+                                    <option value="static/images/Building 6.JPG">Building 6</option>
+                                    <option value="static/images/Building 7.JPG">Building 7</option>
+                                    <option value="static/images/Building 8.JPG">Building 8</option>
+                                    <option value="static/images/Building 9.JPG">Building 9</option>
+                                    <option value="static/images/Building 10.JPG">Building 10</option>
+                                    <option value="static/images/Building 11.JPG">Building 11</option>
                                 </select>
                             </span>
                         </span>
@@ -748,49 +748,49 @@ function findProject(id) { return projects.find(function(p){return p.id===id;});
    MEDALLION DATA (Water-themed from Shade Structures)
    ═══════════════════════════════════════════ */
 var medallions = [
-    { id:"m1",  name:"Ocean 1",   cost:250, defaultScale:1, img:"/static/images/medallions/Image 1.webp" },
-    { id:"m2",  name:"Ocean 2",   cost:250, defaultScale:1, img:"/static/images/medallions/image 2.webp" },
-    { id:"m3",  name:"Ocean 3",   cost:250, defaultScale:1, img:"/static/images/medallions/image 3.webp" },
-    { id:"m4",  name:"Ocean 4",   cost:250, defaultScale:1, img:"/static/images/medallions/image 4.webp" },
-    { id:"m5",  name:"Ocean 5",   cost:250, defaultScale:1, img:"/static/images/medallions/image 5.webp" },
-    { id:"m6",  name:"Ocean 6",   cost:250, defaultScale:1, img:"/static/images/medallions/image 6.webp" },
-    { id:"m7",  name:"Ocean 7",   cost:250, defaultScale:1, img:"/static/images/medallions/image 7.webp" },
-    { id:"m8",  name:"Ocean 8",   cost:250, defaultScale:1, img:"/static/images/medallions/image 8.webp" },
-    { id:"m9",  name:"Ocean 9",   cost:250, defaultScale:1, img:"/static/images/medallions/image 9.webp" },
-    { id:"m10", name:"Ocean 10",  cost:250, defaultScale:1, img:"/static/images/medallions/image 10.webp" },
-    { id:"m11", name:"Ocean 11",  cost:250, defaultScale:1, img:"/static/images/medallions/image 11.webp" },
-    { id:"m12", name:"Ocean 12",  cost:250, defaultScale:1, img:"/static/images/medallions/image 12.webp" },
-    { id:"m13", name:"Ocean 13",  cost:250, defaultScale:1, img:"/static/images/medallions/image 13.webp" },
-    { id:"m14", name:"Ocean 14",  cost:250, defaultScale:1, img:"/static/images/medallions/image 14.webp" },
-    { id:"m15", name:"Ocean 15",  cost:250, defaultScale:1, img:"/static/images/medallions/image 15.webp" },
-    { id:"m16", name:"Ocean 16",  cost:250, defaultScale:1, img:"/static/images/medallions/image 16.webp" },
-    { id:"m17", name:"Ocean 17",  cost:250, defaultScale:1, img:"/static/images/medallions/image 17.webp" },
-    { id:"m18", name:"Ocean 18",  cost:250, defaultScale:1, img:"/static/images/medallions/image 18.webp" },
-    { id:"m19", name:"Ocean 19",  cost:250, defaultScale:1, img:"/static/images/medallions/image 19.webp" },
-    { id:"m20", name:"Ocean 20",  cost:250, defaultScale:1, img:"/static/images/medallions/image 20.webp" },
-    { id:"m21", name:"Ocean 21",  cost:250, defaultScale:1, img:"/static/images/medallions/image 21.webp" },
-    { id:"m22", name:"Ocean 22",  cost:250, defaultScale:1, img:"/static/images/medallions/image 22.webp" },
-    { id:"m23", name:"Ocean 23",  cost:250, defaultScale:1, img:"/static/images/medallions/image 23.webp" },
-    { id:"m24", name:"Ocean 24",  cost:250, defaultScale:1, img:"/static/images/medallions/image 24.webp" },
-    { id:"m25", name:"Ocean 25",  cost:250, defaultScale:1, img:"/static/images/medallions/image 25.webp" },
-    { id:"m26", name:"Ocean 26",  cost:250, defaultScale:1, img:"/static/images/medallions/image 26.webp" },
-    { id:"m27", name:"Ocean 27",  cost:250, defaultScale:1, img:"/static/images/medallions/image 27.webp" },
-    { id:"m28", name:"Ocean 28",  cost:250, defaultScale:1, img:"/static/images/medallions/image 28.webp" },
-    { id:"m29", name:"Ocean 29",  cost:250, defaultScale:1, img:"/static/images/medallions/image 29.webp" },
-    { id:"m30", name:"Ocean 30",  cost:250, defaultScale:1, img:"/static/images/medallions/image 30.webp" },
-    { id:"m31", name:"Ocean 31",  cost:250, defaultScale:1, img:"/static/images/medallions/image 31.webp" },
-    { id:"m32", name:"Ocean 32",  cost:250, defaultScale:1, img:"/static/images/medallions/image 32.webp" },
-    { id:"m33", name:"Ocean 33",  cost:250, defaultScale:1, img:"/static/images/medallions/image 33.webp" },
-    { id:"m34", name:"Ocean 34",  cost:250, defaultScale:1, img:"/static/images/medallions/image 34.webp" },
-    { id:"m35", name:"Ocean 35",  cost:250, defaultScale:1, img:"/static/images/medallions/image 35.webp" },
-    { id:"m36", name:"Ocean 36",  cost:250, defaultScale:1, img:"/static/images/medallions/image 36.webp" },
-    { id:"m37", name:"Ocean 37",  cost:250, defaultScale:1, img:"/static/images/medallions/image 37.webp" },
-    { id:"m39", name:"Ocean 39",  cost:250, defaultScale:1, img:"/static/images/medallions/image 39.webp" },
-    { id:"m40", name:"Ocean 40",  cost:250, defaultScale:1, img:"/static/images/medallions/image 40.webp" },
-    { id:"m41", name:"Ocean 41",  cost:250, defaultScale:1, img:"/static/images/medallions/image 41.webp" },
-    { id:"m43", name:"Ocean 43",  cost:250, defaultScale:1, img:"/static/images/medallions/image 43.webp" },
-    { id:"m44", name:"Ocean 44",  cost:250, defaultScale:1, img:"/static/images/medallions/image 44.webp" },
-    { id:"m45", name:"Ocean 45",  cost:250, defaultScale:1, img:"/static/images/medallions/image 45.webp" }
+    { id:"m1",  name:"Ocean 1",   cost:250, defaultScale:1, img:"static/images/medallions/Image 1.webp" },
+    { id:"m2",  name:"Ocean 2",   cost:250, defaultScale:1, img:"static/images/medallions/image 2.webp" },
+    { id:"m3",  name:"Ocean 3",   cost:250, defaultScale:1, img:"static/images/medallions/image 3.webp" },
+    { id:"m4",  name:"Ocean 4",   cost:250, defaultScale:1, img:"static/images/medallions/image 4.webp" },
+    { id:"m5",  name:"Ocean 5",   cost:250, defaultScale:1, img:"static/images/medallions/image 5.webp" },
+    { id:"m6",  name:"Ocean 6",   cost:250, defaultScale:1, img:"static/images/medallions/image 6.webp" },
+    { id:"m7",  name:"Ocean 7",   cost:250, defaultScale:1, img:"static/images/medallions/image 7.webp" },
+    { id:"m8",  name:"Ocean 8",   cost:250, defaultScale:1, img:"static/images/medallions/image 8.webp" },
+    { id:"m9",  name:"Ocean 9",   cost:250, defaultScale:1, img:"static/images/medallions/image 9.webp" },
+    { id:"m10", name:"Ocean 10",  cost:250, defaultScale:1, img:"static/images/medallions/image 10.webp" },
+    { id:"m11", name:"Ocean 11",  cost:250, defaultScale:1, img:"static/images/medallions/image 11.webp" },
+    { id:"m12", name:"Ocean 12",  cost:250, defaultScale:1, img:"static/images/medallions/image 12.webp" },
+    { id:"m13", name:"Ocean 13",  cost:250, defaultScale:1, img:"static/images/medallions/image 13.webp" },
+    { id:"m14", name:"Ocean 14",  cost:250, defaultScale:1, img:"static/images/medallions/image 14.webp" },
+    { id:"m15", name:"Ocean 15",  cost:250, defaultScale:1, img:"static/images/medallions/image 15.webp" },
+    { id:"m16", name:"Ocean 16",  cost:250, defaultScale:1, img:"static/images/medallions/image 16.webp" },
+    { id:"m17", name:"Ocean 17",  cost:250, defaultScale:1, img:"static/images/medallions/image 17.webp" },
+    { id:"m18", name:"Ocean 18",  cost:250, defaultScale:1, img:"static/images/medallions/image 18.webp" },
+    { id:"m19", name:"Ocean 19",  cost:250, defaultScale:1, img:"static/images/medallions/image 19.webp" },
+    { id:"m20", name:"Ocean 20",  cost:250, defaultScale:1, img:"static/images/medallions/image 20.webp" },
+    { id:"m21", name:"Ocean 21",  cost:250, defaultScale:1, img:"static/images/medallions/image 21.webp" },
+    { id:"m22", name:"Ocean 22",  cost:250, defaultScale:1, img:"static/images/medallions/image 22.webp" },
+    { id:"m23", name:"Ocean 23",  cost:250, defaultScale:1, img:"static/images/medallions/image 23.webp" },
+    { id:"m24", name:"Ocean 24",  cost:250, defaultScale:1, img:"static/images/medallions/image 24.webp" },
+    { id:"m25", name:"Ocean 25",  cost:250, defaultScale:1, img:"static/images/medallions/image 25.webp" },
+    { id:"m26", name:"Ocean 26",  cost:250, defaultScale:1, img:"static/images/medallions/image 26.webp" },
+    { id:"m27", name:"Ocean 27",  cost:250, defaultScale:1, img:"static/images/medallions/image 27.webp" },
+    { id:"m28", name:"Ocean 28",  cost:250, defaultScale:1, img:"static/images/medallions/image 28.webp" },
+    { id:"m29", name:"Ocean 29",  cost:250, defaultScale:1, img:"static/images/medallions/image 29.webp" },
+    { id:"m30", name:"Ocean 30",  cost:250, defaultScale:1, img:"static/images/medallions/image 30.webp" },
+    { id:"m31", name:"Ocean 31",  cost:250, defaultScale:1, img:"static/images/medallions/image 31.webp" },
+    { id:"m32", name:"Ocean 32",  cost:250, defaultScale:1, img:"static/images/medallions/image 32.webp" },
+    { id:"m33", name:"Ocean 33",  cost:250, defaultScale:1, img:"static/images/medallions/image 33.webp" },
+    { id:"m34", name:"Ocean 34",  cost:250, defaultScale:1, img:"static/images/medallions/image 34.webp" },
+    { id:"m35", name:"Ocean 35",  cost:250, defaultScale:1, img:"static/images/medallions/image 35.webp" },
+    { id:"m36", name:"Ocean 36",  cost:250, defaultScale:1, img:"static/images/medallions/image 36.webp" },
+    { id:"m37", name:"Ocean 37",  cost:250, defaultScale:1, img:"static/images/medallions/image 37.webp" },
+    { id:"m39", name:"Ocean 39",  cost:250, defaultScale:1, img:"static/images/medallions/image 39.webp" },
+    { id:"m40", name:"Ocean 40",  cost:250, defaultScale:1, img:"static/images/medallions/image 40.webp" },
+    { id:"m41", name:"Ocean 41",  cost:250, defaultScale:1, img:"static/images/medallions/image 41.webp" },
+    { id:"m43", name:"Ocean 43",  cost:250, defaultScale:1, img:"static/images/medallions/image 43.webp" },
+    { id:"m44", name:"Ocean 44",  cost:250, defaultScale:1, img:"static/images/medallions/image 44.webp" },
+    { id:"m45", name:"Ocean 45",  cost:250, defaultScale:1, img:"static/images/medallions/image 45.webp" }
 ];
 
 /* ═══════════════════════════════════════════
@@ -906,21 +906,21 @@ var FENCE_CENTER_Y = 0.7;  // Vertical position of fence in normalized coords (0
 var projectConfigs = {
     // Area A - Building 5
     "P2": {
-        buildingImage: "/static/images/Building 2.JPG",
+        buildingImage: "static/images/Building 2.JPG",
         alleySegment: "Area A",
         projectName: "Project 2",
         fenceRegion: { x: 0.15, width: 0.25, y: 0.50, height: 0.50 },
         snapPoints: 20
     },
     "P3": {
-        buildingImage: "/static/images/Building 3.JPG",
+        buildingImage: "static/images/Building 3.JPG",
         alleySegment: "Area A",
         projectName: "Project 3",
         fenceRegion: { x: 0.42, width: 0.30, y: 0.50, height: 0.50 },
         snapPoints: 20
     },
     "P3c": {
-        buildingImage: "/static/images/Building 3.JPG",
+        buildingImage: "static/images/Building 3.JPG",
         alleySegment: "Area A",
         projectName: "Project 3 (cont.)",
         fenceRegion: { x: 0.73, width: 0.12, y: 0.50, height: 0.50 },
@@ -928,28 +928,28 @@ var projectConfigs = {
     },
     // Area B - Building 4
     "P4": {
-        buildingImage: "/static/images/Building 4 Snip.JPG",
+        buildingImage: "static/images/Building 4 Snip.JPG",
         alleySegment: "Area B",
         projectName: "Project 4",
         fenceRegion: { x: 0.15, width: 0.20, y: 0.50, height: 0.50 },
         snapPoints: 20
     },
     "P5": {
-        buildingImage: "/static/images/Building 5 Snip.JPG",
+        buildingImage: "static/images/Building 5 Snip.JPG",
         alleySegment: "Area B",
         projectName: "Project 5",
         fenceRegion: { x: 0.37, width: 0.25, y: 0.50, height: 0.50 },
         snapPoints: 20
     },
     "P4c": {
-        buildingImage: "/static/images/Building 4 Snip.JPG",
+        buildingImage: "static/images/Building 4 Snip.JPG",
         alleySegment: "Area B",
         projectName: "Project 4 (cont.)",
         fenceRegion: { x: 0.63, width: 0.15, y: 0.50, height: 0.50 },
         snapPoints: 20
     },
     "P5c": {
-        buildingImage: "/static/images/Building 5 Snip.JPG",
+        buildingImage: "static/images/Building 5 Snip.JPG",
         alleySegment: "Area B",
         projectName: "Project 5 (cont.)",
         fenceRegion: { x: 0.80, width: 0.15, y: 0.50, height: 0.50 },
@@ -957,14 +957,14 @@ var projectConfigs = {
     },
     // Area C - Building 5
     "P7": {
-        buildingImage: "/static/images/Building 7.JPG",
+        buildingImage: "static/images/Building 7.JPG",
         alleySegment: "Area C",
         projectName: "Project 7",
         fenceRegion: { x: 0.15, width: 0.35, y: 0.50, height: 0.50 },
         snapPoints: 20
     },
     "P8": {
-        buildingImage: "/static/images/Building 8.JPG",
+        buildingImage: "static/images/Building 8.JPG",
         alleySegment: "Area C",
         projectName: "Project 8",
         fenceRegion: { x: 0.52, width: 0.35, y: 0.50, height: 0.50 },
@@ -972,28 +972,28 @@ var projectConfigs = {
     },
     // Area D - Building 4
     "P9": {
-        buildingImage: "/static/images/Building 9.JPG",
+        buildingImage: "static/images/Building 9.JPG",
         alleySegment: "Area D",
         projectName: "Project 9",
         fenceRegion: { x: 0.10, width: 0.40, y: 0.50, height: 0.50 },
         snapPoints: 20
     },
     "P10": {
-        buildingImage: "/static/images/Building 10.JPG",
+        buildingImage: "static/images/Building 10.JPG",
         alleySegment: "Area D",
         projectName: "Project 10",
         fenceRegion: { x: 0.52, width: 0.40, y: 0.50, height: 0.50 },
         snapPoints: 20
     },
     "P9c": {
-        buildingImage: "/static/images/Building 9.JPG",
+        buildingImage: "static/images/Building 9.JPG",
         alleySegment: "Area D",
         projectName: "Project 9 (cont.)",
         fenceRegion: { x: 0.10, width: 0.20, y: 0.50, height: 0.50 },
         snapPoints: 20
     },
     "P10c": {
-        buildingImage: "/static/images/Building 10.JPG",
+        buildingImage: "static/images/Building 10.JPG",
         alleySegment: "Area D",
         projectName: "Project 10 (cont.)",
         fenceRegion: { x: 0.32, width: 0.20, y: 0.50, height: 0.50 },
@@ -1015,7 +1015,7 @@ function load2DElevation() {
     if (!elevationImg || !elevationBg) return;
     
     var projectConfig = projectConfigs[activeProjectId];
-    var defaultPath = projectConfig ? projectConfig.buildingImage : "/static/images/Building 5 Snip.JPG";
+    var defaultPath = projectConfig ? projectConfig.buildingImage : "static/images/Building 5 Snip.JPG";
     var imagePath = (elevationOverride && elevationOverride !== "auto") ? elevationOverride : defaultPath;
 
     if (elevationLabel) {
@@ -1780,8 +1780,8 @@ if (document.readyState === "loading") {
 
 function preloadImages() {
     var imagesToPreload = [
-        "/static/images/Building 4 Snip.JPG",
-        "/static/images/Building 5 Snip.JPG"
+        "static/images/Building 4 Snip.JPG",
+        "static/images/Building 5 Snip.JPG"
     ];
     
     imagesToPreload.forEach(function(src) {
