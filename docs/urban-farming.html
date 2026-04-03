@@ -696,10 +696,18 @@
             
             <ul class="nav-tabs" id="navTabs">
                 <li class="nav-tab"><a href="index.html">Alley 3</a></li>
-                <li class="nav-tab"><a href="existing.html">Before</a></li>
+                <li class="nav-tab"><a href="existing">Before</a></li>
                 <li class="nav-tab"><a href="fence-map">Fence Map</a></li>
-                <li class="nav-tab"><a href="unreal-viewer.html">Explore</a></li>
-                <li class="nav-tab"><a href="compare.html">Compare</a></li>
+                <li class="nav-tab nav-dropdown">
+                    <button class="nav-dropdown-toggle" id="exploreDropdown">
+                        Explore <span style="font-size: 0.7em;">▼</span>
+                    </button>
+                    <ul class="nav-dropdown-menu" id="exploreMenu">
+                        <li><a href="unreal-viewer">Digital Twin</a></li>
+                        <li><a href="innovation-alleys-map">Innovation Alleys Map</a></li>
+                    </ul>
+                </li>
+                <li class="nav-tab"><a href="compare">Compare</a></li>
             </ul>
             
             <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
@@ -723,7 +731,7 @@
                 This intervention is built and tested in the digital twin using real weather and spatial data from Water Alley.
             </p>
             <div class="hero-buttons">
-                <a href="unreal-viewer.html" class="btn-primary">
+                <a href="unreal-viewer" class="btn-primary">
                     View in Digital Twin
                 </a>
                 <a href="index.html" class="btn-secondary">
@@ -875,8 +883,8 @@
             <div style="text-align: center; margin-top: var(--spacing-xl);">
                 <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: var(--spacing-md);">View existing conditions and proposed transformations in the digital twin</p>
                 <div style="display: flex; gap: var(--spacing-md); justify-content: center; flex-wrap: wrap;">
-                    <a href="existing.html" style="display: inline-block; padding: 12px 24px; background: transparent; color: var(--accent); text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 0.9rem; border: 1px solid var(--accent);">View All Zone Photos</a>
-                    <a href="unreal-viewer.html" style="display: inline-block; padding: 12px 24px; background: var(--accent); color: var(--primary); text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 0.9rem;">Launch Digital Twin</a>
+                    <a href="existing" style="display: inline-block; padding: 12px 24px; background: transparent; color: var(--accent); text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 0.9rem; border: 1px solid var(--accent);">View All Zone Photos</a>
+                    <a href="unreal-viewer" style="display: inline-block; padding: 12px 24px; background: var(--accent); color: var(--primary); text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 0.9rem;">Launch Digital Twin</a>
                 </div>
             </div>
         </section>
@@ -910,7 +918,7 @@
                 Experience how container gardens transform Water Alley in the immersive 3D Digital Twin.
             </p>
             <div style="display: flex; gap: var(--spacing-md); justify-content: center; flex-wrap: wrap;">
-                <a href="unreal-viewer.html" class="btn-primary">Launch Digital Twin</a>
+                <a href="unreal-viewer" class="btn-primary">Launch Digital Twin</a>
                 <a href="index.html" class="btn-outline">Back to Alley 3</a>
             </div>
         </section>

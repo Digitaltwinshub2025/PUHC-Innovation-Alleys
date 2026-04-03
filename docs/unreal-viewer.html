@@ -993,10 +993,18 @@
             
             <ul class="nav-tabs" id="navTabs">
                 <li class="nav-tab"><a href="index.html">Alley 3</a></li>
-                <li class="nav-tab"><a href="existing.html">Before</a></li>
+                <li class="nav-tab"><a href="existing">Before</a></li>
                 <li class="nav-tab"><a href="fence-map">Fence Map</a></li>
-                <li class="nav-tab active"><a href="unreal-viewer.html">Explore</a></li>
-                <li class="nav-tab"><a href="compare.html">Compare</a></li>
+                <li class="nav-tab nav-dropdown active">
+                    <button class="nav-dropdown-toggle active" id="exploreDropdown">
+                        Explore <span style="font-size: 0.7em;">▼</span>
+                    </button>
+                    <ul class="nav-dropdown-menu" id="exploreMenu">
+                        <li><a href="unreal-viewer" class="active">Digital Twin</a></li>
+                        <li><a href="innovation-alleys-map">Innovation Alleys Map</a></li>
+                    </ul>
+                </li>
+                <li class="nav-tab"><a href="compare">Compare</a></li>
             </ul>
             
             <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
@@ -1036,7 +1044,7 @@
             
             <!-- Secondary Actions -->
             <div class="explore-grid">
-                <a class="explore-card" href="existing.html">
+                <a class="explore-card" href="existing">
                     <div class="explore-card-header">
                         <div class="explore-card-icon">ST</div>
                         <div class="explore-card-text">
@@ -1045,7 +1053,7 @@
                         </div>
                     </div>
                 </a>
-                <a class="explore-card" href="compare.html">
+                <a class="explore-card" href="compare">
                     <div class="explore-card-header">
                         <div class="explore-card-icon">BA</div>
                         <div class="explore-card-text">

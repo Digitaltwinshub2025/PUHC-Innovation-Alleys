@@ -349,10 +349,18 @@
             </a>
             <ul class="nav-tabs">
                 <li class="nav-tab"><a href="index.html">Alley 3</a></li>
-                <li class="nav-tab active"><a href="existing.html">Before</a></li>
-                <li class="nav-tab"><a href="interactive-fence-map.html">Fence Map</a></li>
-                <li class="nav-tab"><a href="unreal-viewer.html">Explore</a></li>
-                <li class="nav-tab"><a href="compare.html">Compare</a></li>
+                <li class="nav-tab active"><a href="existing">Before</a></li>
+                <li class="nav-tab"><a href="interactive-fence-map">Fence Map</a></li>
+                <li class="nav-tab nav-dropdown">
+                    <button class="nav-dropdown-toggle" id="exploreDropdown">
+                        Explore <span style="font-size: 0.7em;">▼</span>
+                    </button>
+                    <ul class="nav-dropdown-menu" id="exploreMenu">
+                        <li><a href="unreal-viewer">Digital Twin</a></li>
+                        <li><a href="innovation-alleys-map">Innovation Alleys Map</a></li>
+                    </ul>
+                </li>
+                <li class="nav-tab"><a href="compare">Compare</a></li>
             </ul>
             <button class="nav-toggle" aria-label="Toggle navigation">☰</button>
         </div>
@@ -372,7 +380,7 @@
                     Alley 3 · W 11th & W 12th St · Pico-Union, Los Angeles
                 </div>
             </div>
-            <a href="compare.html" class="btn-primary">See Transformation →</a>
+            <a href="compare" class="btn-primary">See Transformation →</a>
         </div>
     </div>
 
@@ -842,13 +850,13 @@
             <div class="sidebar-panel">
                 <h4 class="sidebar-title">Explore the Design</h4>
                 <div style="display: flex; flex-direction: column; gap: 8px;">
-                    <a href="interactive-fence-map.html" class="btn-primary" style="width: 100%; justify-content: center; font-size: 0.85rem; padding: 10px 16px;">
+                    <a href="interactive-fence-map" class="btn-primary" style="width: 100%; justify-content: center; font-size: 0.85rem; padding: 10px 16px;">
                         Fence Map
                     </a>
-                    <a href="compare.html" class="btn-outline" style="width: 100%; justify-content: center; font-size: 0.85rem; padding: 10px 16px;">
+                    <a href="compare" class="btn-outline" style="width: 100%; justify-content: center; font-size: 0.85rem; padding: 10px 16px;">
                         Before / After
                     </a>
-                    <a href="unreal-viewer.html" class="btn-secondary" style="width: 100%; justify-content: center; font-size: 0.85rem; padding: 10px 16px;">
+                    <a href="unreal-viewer" class="btn-secondary" style="width: 100%; justify-content: center; font-size: 0.85rem; padding: 10px 16px;">
                         3D Explorer
                     </a>
                 </div>

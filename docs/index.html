@@ -402,10 +402,18 @@
             
             <ul class="nav-tabs" id="navTabs">
                 <li class="nav-tab active"><a href="index.html">Alley 3</a></li>
-                <li class="nav-tab"><a href="existing.html">Before</a></li>
+                <li class="nav-tab"><a href="existing">Before</a></li>
                 <li class="nav-tab"><a href="fence-map">Fence Map</a></li>
-                <li class="nav-tab"><a href="unreal-viewer.html">Explore</a></li>
-                <li class="nav-tab"><a href="compare.html">Compare</a></li>
+                <li class="nav-tab nav-dropdown">
+                    <button class="nav-dropdown-toggle" id="exploreDropdown">
+                        Explore <span style="font-size: 0.7em;">▼</span>
+                    </button>
+                    <ul class="nav-dropdown-menu" id="exploreMenu">
+                        <li><a href="unreal-viewer">Digital Twin</a></li>
+                        <li><a href="innovation-alleys-map">Innovation Alleys Map</a></li>
+                    </ul>
+                </li>
+                <li class="nav-tab"><a href="compare">Compare</a></li>
             </ul>
             
             <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
@@ -428,7 +436,7 @@
                 A four-zone alley infrastructure project in Pico-Union, Los Angeles. This platform demonstrates site-specific design interventions through real-world documentation and 3D spatial simulation.
             </p>
             <div class="hero-cta-group">
-                <a href="existing.html" class="btn-digital-twin">
+                <a href="existing" class="btn-digital-twin">
                     Explore Water Alley Prototype
                 </a>
             </div>
@@ -527,7 +535,7 @@
             </div>
             
             <div style="text-align: center; margin-top: var(--spacing-xl);">
-                <a href="existing.html" style="display: inline-block; padding: 14px 28px; background: linear-gradient(135deg, var(--accent), #0CB5C2); color: white; font-weight: 600; border-radius: var(--radius-md); text-decoration: none; transition: all 0.3s ease;">View All Zone Documentation</a>
+                <a href="existing" style="display: inline-block; padding: 14px 28px; background: linear-gradient(135deg, var(--accent), #0CB5C2); color: white; font-weight: 600; border-radius: var(--radius-md); text-decoration: none; transition: all 0.3s ease;">View All Zone Documentation</a>
             </div>
         </div>
     </section>
@@ -541,7 +549,7 @@
 
         <div class="intervention-grid" style="grid-template-columns: repeat(3, 1fr);">
             <!-- Shade Structures -->
-            <a href="solar-shades.html" class="intervention-card">
+            <a href="solar-shades" class="intervention-card">
                 <img src="static/images/heroes/shade-structures-hero.png" alt="Shade Structures" class="intervention-card-image" loading="lazy">
                 <p style="text-align: center; color: var(--text-muted); font-size: 0.7rem; padding: 4px 8px; margin: 0; background: rgba(0,0,0,0.3);">Design intervention</p>
                 <div class="intervention-card-content">
@@ -555,7 +563,7 @@
             </a>
 
             <!-- Murals -->
-            <a href="murals.html" class="intervention-card">
+            <a href="murals" class="intervention-card">
                 <img src="static/images/heroes/community-murals-hero.png" alt="Community Murals" class="intervention-card-image" loading="lazy">
                 <p style="text-align: center; color: var(--text-muted); font-size: 0.7rem; padding: 4px 8px; margin: 0; background: rgba(0,0,0,0.3);">Design intervention</p>
                 <div class="intervention-card-content">
@@ -569,7 +577,7 @@
             </a>
 
             <!-- Urban Farming -->
-            <a href="urban-farming.html" class="intervention-card">
+            <a href="urban-farming" class="intervention-card">
                 <img src="static/images/heroes/urban-farming-hero.png" alt="Urban Farming" class="intervention-card-image" loading="lazy">
                 <p style="text-align: center; color: var(--text-muted); font-size: 0.7rem; padding: 4px 8px; margin: 0; background: rgba(0,0,0,0.3);">Design intervention</p>
                 <div class="intervention-card-content">
@@ -602,7 +610,7 @@
             <div class="twin-preview-box">
                 <div class="twin-preview-placeholder">3D</div>
                 <p class="twin-preview-text">Spatial Simulation Tool</p>
-                <a href="unreal-viewer.html" class="btn-secondary-outline">Launch Digital Twin</a>
+                <a href="unreal-viewer" class="btn-secondary-outline">Launch Digital Twin</a>
             </div>
         </div>
     </section>
@@ -621,18 +629,18 @@
                 <div>
                     <h4 style="color: var(--highlight); margin-bottom: var(--spacing-md); font-weight: 700; font-size: 1rem; letter-spacing: 0.5px;">Three Interventions</h4>
                     <ul style="list-style: none; padding: 0; margin: 0;">
-                        <li style="margin-bottom: 0.6rem;"><a href="solar-shades.html" style="color: var(--text-secondary); text-decoration: none; font-size: 0.9rem; transition: all 0.2s ease; display: inline-block;">Shade Structures</a></li>
-                        <li style="margin-bottom: 0.6rem;"><a href="murals.html" style="color: var(--text-secondary); text-decoration: none; font-size: 0.9rem; transition: all 0.2s ease; display: inline-block;">Community Murals</a></li>
-                        <li style="margin-bottom: 0.6rem;"><a href="urban-farming.html" style="color: var(--text-secondary); text-decoration: none; font-size: 0.9rem; transition: all 0.2s ease; display: inline-block;">Urban Farming</a></li>
+                        <li style="margin-bottom: 0.6rem;"><a href="solar-shades" style="color: var(--text-secondary); text-decoration: none; font-size: 0.9rem; transition: all 0.2s ease; display: inline-block;">Shade Structures</a></li>
+                        <li style="margin-bottom: 0.6rem;"><a href="murals" style="color: var(--text-secondary); text-decoration: none; font-size: 0.9rem; transition: all 0.2s ease; display: inline-block;">Community Murals</a></li>
+                        <li style="margin-bottom: 0.6rem;"><a href="urban-farming" style="color: var(--text-secondary); text-decoration: none; font-size: 0.9rem; transition: all 0.2s ease; display: inline-block;">Urban Farming</a></li>
                     </ul>
                 </div>
                 <!-- Explore -->
                 <div>
                     <h4 style="color: var(--highlight); margin-bottom: var(--spacing-md); font-weight: 700; font-size: 1rem; letter-spacing: 0.5px;">Explore</h4>
                     <ul style="list-style: none; padding: 0; margin: 0;">
-                        <li style="margin-bottom: 0.6rem;"><a href="existing.html" style="color: var(--text-secondary); text-decoration: none; font-size: 0.9rem; transition: all 0.2s ease; display: inline-block;">Existing Conditions</a></li>
-                        <li style="margin-bottom: 0.6rem;"><a href="unreal-viewer.html" style="color: var(--text-secondary); text-decoration: none; font-size: 0.9rem; transition: all 0.2s ease; display: inline-block;">Digital Twin</a></li>
-                        <li style="margin-bottom: 0.6rem;"><a href="compare.html" style="color: var(--text-secondary); text-decoration: none; font-size: 0.9rem; transition: all 0.2s ease; display: inline-block;">Transformation Comparison</a></li>
+                        <li style="margin-bottom: 0.6rem;"><a href="existing" style="color: var(--text-secondary); text-decoration: none; font-size: 0.9rem; transition: all 0.2s ease; display: inline-block;">Existing Conditions</a></li>
+                        <li style="margin-bottom: 0.6rem;"><a href="unreal-viewer" style="color: var(--text-secondary); text-decoration: none; font-size: 0.9rem; transition: all 0.2s ease; display: inline-block;">Digital Twin</a></li>
+                        <li style="margin-bottom: 0.6rem;"><a href="compare" style="color: var(--text-secondary); text-decoration: none; font-size: 0.9rem; transition: all 0.2s ease; display: inline-block;">Transformation Comparison</a></li>
                     </ul>
                 </div>
             </div>
@@ -659,6 +667,21 @@
             }
         });
 
+        // Dropdown menu functionality
+        const exploreDropdown = document.getElementById('exploreDropdown');
+        const exploreMenu = document.getElementById('exploreMenu');
+        
+        if (exploreDropdown && exploreMenu) {
+            exploreDropdown.addEventListener('click', (e) => {
+                e.stopPropagation();
+                exploreMenu.classList.toggle('show');
+            });
+            
+            document.addEventListener('click', () => {
+                exploreMenu.classList.remove('show');
+            });
+        }
+
         // Highlight active nav tab
         const currentPath = window.location.pathname;
         document.querySelectorAll('.nav-tab a').forEach(link => {
@@ -666,6 +689,13 @@
                 link.parentElement.classList.add('active');
             }
         });
+        
+        // Highlight dropdown if on dropdown page
+        if (currentPath === '/unreal-viewer' || currentPath === '/innovation-alleys-map') {
+            const dropdown = document.querySelector('.nav-dropdown');
+            if (dropdown) dropdown.classList.add('active');
+            if (exploreDropdown) exploreDropdown.classList.add('active');
+        }
 
         // Smooth entrance animations
         document.addEventListener('DOMContentLoaded', () => {

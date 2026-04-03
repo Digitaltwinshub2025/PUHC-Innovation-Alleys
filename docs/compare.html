@@ -326,10 +326,18 @@
             </a>
             <ul class="nav-tabs" id="navTabs">
                 <li class="nav-tab"><a href="index.html">Alley 3</a></li>
-                <li class="nav-tab"><a href="existing.html">Before</a></li>
+                <li class="nav-tab"><a href="existing">Before</a></li>
                 <li class="nav-tab"><a href="fence-map">Fence Map</a></li>
-                <li class="nav-tab"><a href="unreal-viewer.html">Explore</a></li>
-                <li class="nav-tab active"><a href="compare.html">Compare</a></li>
+                <li class="nav-tab nav-dropdown">
+                    <button class="nav-dropdown-toggle" id="exploreDropdown">
+                        Explore <span style="font-size: 0.7em;">▼</span>
+                    </button>
+                    <ul class="nav-dropdown-menu" id="exploreMenu">
+                        <li><a href="unreal-viewer">Digital Twin</a></li>
+                        <li><a href="innovation-alleys-map">Innovation Alleys Map</a></li>
+                    </ul>
+                </li>
+                <li class="nav-tab active"><a href="compare">Compare</a></li>
             </ul>
             <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">☰</button>
         </div>
@@ -522,8 +530,8 @@
 
         <!-- CTA Section -->
         <div class="cta-section">
-            <a href="unreal-viewer.html" class="btn-primary">Explore in 3D →</a>
-            <a href="existing.html" class="btn-secondary">← View Existing Conditions</a>
+            <a href="unreal-viewer" class="btn-primary">Explore in 3D →</a>
+            <a href="existing" class="btn-secondary">← View Existing Conditions</a>
         </div>
     </div>
 
