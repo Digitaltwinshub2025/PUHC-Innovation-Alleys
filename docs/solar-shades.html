@@ -289,10 +289,18 @@
             
             <ul class="nav-tabs" id="navTabs">
                 <li class="nav-tab"><a href="index.html">Alley 3</a></li>
-                <li class="nav-tab"><a href="existing.html">Before</a></li>
+                <li class="nav-tab"><a href="existing">Before</a></li>
                 <li class="nav-tab"><a href="fence-map">Fence Map</a></li>
-                <li class="nav-tab"><a href="unreal-viewer.html">Explore</a></li>
-                <li class="nav-tab"><a href="compare.html">Compare</a></li>
+                <li class="nav-tab nav-dropdown">
+                    <button class="nav-dropdown-toggle" id="exploreDropdown">
+                        Explore <span style="font-size: 0.7em;">▼</span>
+                    </button>
+                    <ul class="nav-dropdown-menu" id="exploreMenu">
+                        <li><a href="unreal-viewer">Digital Twin</a></li>
+                        <li><a href="innovation-alleys-map">Innovation Alleys Map</a></li>
+                    </ul>
+                </li>
+                <li class="nav-tab"><a href="compare">Compare</a></li>
             </ul>
             
             <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
@@ -308,7 +316,7 @@
                 <div style="display: inline-block; padding: 6px 14px; background: rgba(15, 164, 175, 0.15); border: 1px solid rgba(15, 164, 175, 0.4); border-radius: 4px; margin-bottom: var(--spacing-md); font-size: 0.7rem; font-weight: 600; color: var(--highlight); letter-spacing: 1px; text-transform: uppercase;">INFRASTRUCTURE INTERVENTION</div>
                 <h1 class="hero-title">Shade Structure System</h1>
                 <p class="hero-subtitle">Overhead canopy infrastructure for thermal regulation and solar energy generation</p>
-                <a href="unreal-viewer.html" class="hero-cta">Enter 3D Shade Simulation</a>
+                <a href="unreal-viewer" class="hero-cta">Enter 3D Shade Simulation</a>
             </div>
         </section>
 
@@ -499,8 +507,8 @@
             <div style="text-align: center; margin-top: var(--spacing-xl);">
                 <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: var(--spacing-md);">View existing conditions and proposed transformations in the digital twin</p>
                 <div style="display: flex; gap: var(--spacing-md); justify-content: center; flex-wrap: wrap;">
-                    <a href="existing.html" style="display: inline-block; padding: 12px 24px; background: transparent; color: var(--accent); text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 0.9rem; border: 1px solid var(--accent);">View All Zone Photos</a>
-                    <a href="unreal-viewer.html" style="display: inline-block; padding: 12px 24px; background: var(--accent); color: var(--primary); text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 0.9rem;">Launch Digital Twin</a>
+                    <a href="existing" style="display: inline-block; padding: 12px 24px; background: transparent; color: var(--accent); text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 0.9rem; border: 1px solid var(--accent);">View All Zone Photos</a>
+                    <a href="unreal-viewer" style="display: inline-block; padding: 12px 24px; background: var(--accent); color: var(--primary); text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 0.9rem;">Launch Digital Twin</a>
                 </div>
             </div>
         </section>
@@ -577,7 +585,7 @@
                 Explore how solar shades integrate with the other interventions in the Water Alley Digital Twin.
             </p>
             <div class="cta-buttons">
-                <a href="unreal-viewer.html" class="btn-primary">
+                <a href="unreal-viewer" class="btn-primary">
                     Launch Digital Twin
                 </a>
                 <a href="index.html" class="btn-outline">

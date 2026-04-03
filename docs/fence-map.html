@@ -265,14 +265,7 @@
             background: rgba(10, 189, 198, 0.1);
             box-shadow: 0 0 12px rgba(10, 189, 198, 0.3);
         }
-        .med-lib-item img {
-            width: 100%; 
-            height: auto; 
-            display: block;
-            border-radius: 4px;
-            image-rendering: -webkit-optimize-contrast;
-            image-rendering: crisp-edges;
-        }
+        /* Removed conflicting .med-lib-item img styles - now handled by .med-thumbnail-frame wrapper in fence-map-improvements.css */
         .med-lib-name {
             font-size: 0.7rem; 
             margin-top: 8px; 
@@ -302,14 +295,15 @@
         .fence-canvas {
             position: relative;
             width: 100%;
-            height: 650px;
+            height: 700px;
             overflow: visible;
             background: #f0f0f0;
-            border-radius: 8px;
-            display: block;
-            border: 1px solid var(--border);
         }
-        
+
+        #simulationView .fence-canvas {
+            min-height: clamp(520px, 70vh, 760px);
+        }
+
         /* Layered Canvas Architecture */
         .elevation-background {
             position: absolute;
@@ -322,10 +316,6 @@
             display: block;
             background: #f0f0f0;
             overflow: hidden;
-        }
-
-        #simulationView .fence-canvas {
-            min-height: clamp(520px, 70vh, 760px);
         }
         
         .elevation-background.loading::before {
@@ -345,9 +335,35 @@
         }
         
         .fence-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             z-index: 2;
             pointer-events: none;
             shape-rendering: crispEdges;
+        }
+        
+        /* Fence Region Highlight */
+        .fence-region-highlight {
+            position: absolute;
+            pointer-events: none;
+            z-index: 4;
+            background: linear-gradient(90deg, 
+                transparent 0%, 
+                rgba(15, 164, 175, 0.06) 20%, 
+                rgba(15, 164, 175, 0.1) 50%, 
+                rgba(15, 164, 175, 0.06) 80%, 
+                transparent 100%);
+            border-top: 1px solid rgba(15, 164, 175, 0.25);
+            border-bottom: 1px solid rgba(15, 164, 175, 0.25);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .fence-canvas.detail-mode .fence-region-highlight {
+            opacity: 1;
         }
         
         .medallion-container {
@@ -446,15 +462,21 @@
             filter: drop-shadow(0 0 12px rgba(10,189,198,.6)) drop-shadow(0 2px 6px rgba(0,0,0,.7));
         }
         .placed-medallion img {
-            width: 52px;
-            height: 52px;
+            width: var(--medallion-size, 52px);
+            height: var(--medallion-size, 52px);
             display: block;
             border-radius: 50%;
             image-rendering: -webkit-optimize-contrast;
             image-rendering: -moz-crisp-edges;
             image-rendering: crisp-edges;
+            transition: width 0.3s ease, height 0.3s ease;
         }
-        .placed-medallion svg { width: 52px; height: 52px; display: block; }
+        .placed-medallion svg { 
+            width: var(--medallion-size, 52px); 
+            height: var(--medallion-size, 52px); 
+            display: block;
+            transition: width 0.3s ease, height 0.3s ease;
+        }
 
         /* Ghost Preview During Drag */
         .ghost-preview {
@@ -595,16 +617,25 @@
 <!-- Global Navigation -->
 <nav class="global-nav">
     <div class="nav-container">
-        <a href="index.html" class="nav-logo">
+        <a href="/" class="nav-logo">
             <span class="nav-logo-text">PUHC Innovation Alleys</span>
         </a>
         
         <ul class="nav-tabs" id="navTabs">
-            <li class="nav-tab"><a href="index.html">Alley 3</a></li>
-            <li class="nav-tab"><a href="existing.html">Before</a></li>
-            <li class="nav-tab active"><a href="interactive-fence-map.html">Fence Map</a></li>
-            <li class="nav-tab"><a href="unreal-viewer.html">Explore</a></li>
-            <li class="nav-tab"><a href="compare.html">Compare</a></li>
+            <li class="nav-tab"><a href="/">Alley 3</a></li>
+            <li class="nav-tab"><a href="/existing">Before</a></li>
+            <li class="nav-tab active"><a href="/fence-map">Fence Map</a></li>
+            <li class="nav-tab nav-dropdown">
+                <button class="nav-dropdown-toggle" id="exploreDropdown">
+                    Explore <span style="font-size: 0.7em;">▼</span>
+                </button>
+                <ul class="nav-dropdown-menu" id="exploreMenu">
+                    <li><a href="/unreal-viewer">Digital Twin</a></li>
+                    <li><a href="/innovation-alleys-map">Innovation Alleys Map</a></li>
+                    <li><a href="/puhc-puede">PUHC PUEDE</a></li>
+                </ul>
+            </li>
+            <li class="nav-tab"><a href="/compare">Compare</a></li>
         </ul>
         
         <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
@@ -681,7 +712,7 @@
                             <span id="elevationLabel">Building Elevation — Architectural View</span>
                         </span>
                         <span class="fence-canvas-label-right">
-                            <button id="fenceFocusBtn" style="padding:4px 12px; background:var(--accent); color:#fff; border:none; border-radius:4px; font-size:0.75rem; font-weight:600; cursor:pointer;">Focus Fence (2x)</button>
+                            <button id="fenceFocusBtn" style="padding:6px 16px; background:var(--accent); color:#fff; border:none; border-radius:6px; font-size:0.75rem; font-weight:600; cursor:pointer; transition:all 0.2s;">Fence Detail View</button>
                             <span class="elevation-controls">
                                 <label for="elevationSelect">Elevation</label>
                                 <select id="elevationSelect">
@@ -921,7 +952,7 @@ function buildMedallionLibrary() {
         item.setAttribute("data-med-id", m.id);
         item.setAttribute("title", m.name + " - $" + m.cost);
         
-        item.innerHTML = '<img src="' + m.img + '" alt="' + m.name + '" draggable="false">' +
+        item.innerHTML = '<div class="med-thumbnail-frame"><img src="' + m.img + '" alt="' + m.name + '" draggable="false"></div>' +
                         '<div class="med-lib-name">' + m.name + '</div>' +
                         '<div class="med-cost-tag">$' + m.cost + '</div>';
         
@@ -948,12 +979,18 @@ var elevationLoaded = false;
 
 // Constrained Camera System for Architectural Elevation
 var zoomLevel = 1;
-var MIN_ZOOM = 1;
-var MAX_ZOOM = 3;
-var panX = 0;  // Horizontal offset only
+var panX = 0;
 var isPanning = false;
 var panStartX = 0;
-var FENCE_CENTER_Y = 0.7;  // Vertical position of fence in normalized coords (0-1)
+var transformPending = false;
+var MIN_ZOOM = 1;
+var MAX_ZOOM = 3;
+var FENCE_CENTER_Y = 0.65;
+
+// Fence Detail View System
+var viewMode = 'full'; // 'full' or 'detail'
+var detailZoomLevel = 2.5; // Zoom level for detail view
+var detailMedallionScale = 1.4; // Medallion scale multiplier in detail view
 
 // Structured Project Configuration System
 // Each project has its own building elevation, fence guides, and metadata
@@ -1227,11 +1264,73 @@ function constrainPan() {
     panX = Math.max(-maxPanX, Math.min(panX, maxPanX));
 }
 
+// Convert screen coordinates to canvas coordinates (inverse transform)
+function screenToCanvasCoords(screenX, screenY) {
+    var canvas = document.getElementById("fenceCanvas");
+    if (!canvas) return { x: 0, y: 0 };
+    
+    var rect = canvas.getBoundingClientRect();
+    var fenceY = rect.height * FENCE_CENTER_Y;
+    var scaledFenceY = fenceY * zoomLevel;
+    var verticalOffset = fenceY - scaledFenceY;
+    
+    // Convert screen position to canvas-relative position
+    var canvasX = screenX - rect.left;
+    var canvasY = screenY - rect.top;
+    
+    // Apply inverse transform
+    var transformedX = (canvasX - panX) / zoomLevel;
+    var transformedY = (canvasY - verticalOffset) / zoomLevel;
+    
+    return { x: transformedX, y: transformedY };
+}
+
+// Update all placed medallion sizes based on current view mode
+function updateMedallionScales() {
+    var medSize = viewMode === 'detail' ? Math.round(52 * detailMedallionScale) : 52;
+    var medallions = document.querySelectorAll('.placed-medallion');
+    medallions.forEach(function(el) {
+        el.style.setProperty('--medallion-size', medSize + 'px');
+    });
+}
+
 function zoomToFence() {
-    zoomLevel = 2;
-    panX = 0;
+    var canvas = document.getElementById('fenceCanvas');
+    var btn = document.getElementById('fenceFocusBtn');
+    
+    if (viewMode === 'full') {
+        // Switch to detail view
+        viewMode = 'detail';
+        zoomLevel = detailZoomLevel;
+        panX = 0;
+        
+        if (canvas) canvas.classList.add('detail-mode');
+        if (btn) {
+            btn.textContent = 'Full Elevation';
+            btn.style.background = 'rgba(15, 164, 175, 0.3)';
+        }
+    } else {
+        // Switch back to full view
+        viewMode = 'full';
+        zoomLevel = 1;
+        panX = 0;
+        
+        if (canvas) canvas.classList.remove('detail-mode');
+        if (btn) {
+            btn.textContent = 'Fence Detail View';
+            btn.style.background = 'var(--accent)';
+        }
+    }
+    
     constrainPan();
     applyTransform();
+    updateMedallionScales();
+}
+
+// Update medallion scales when zoom changes
+function handleZoomChange() {
+    // Medallions scale with detail view, not with manual zoom
+    // This keeps them consistently sized relative to the fence
 }
 
 function initZoomPan() {
@@ -1462,11 +1561,13 @@ canvas.addEventListener("dragover", function(e) {
     e.dataTransfer.dropEffect = "copy";
     canvas.classList.add("drag-over");
     if (ghostPreview) {
-        ghostPreview.style.left = e.clientX - 26 + "px";
-        ghostPreview.style.top = e.clientY - 26 + "px";
+        var ghostSize = viewMode === 'detail' ? 90 : 70;
+        ghostPreview.style.left = e.clientX - (ghostSize / 2) + "px";
+        ghostPreview.style.top = e.clientY - (ghostSize / 2) + "px";
     }
     var rect = canvas.getBoundingClientRect();
-    showSnapGuide(e.clientX - rect.left - MED_SIZE / 2);
+    var canvasCoords = screenToCanvasCoords(e.clientX, e.clientY);
+    showSnapGuide(canvasCoords.x - MED_SIZE / 2);
 });
 canvas.addEventListener("dragleave", function() {
     canvas.classList.remove("drag-over");
@@ -1479,14 +1580,20 @@ canvas.addEventListener("drop", function(e) {
     removeGhostPreview();
     var medId = e.dataTransfer.getData("text/plain");
     if (!medId) return;
-    var rect = canvas.getBoundingClientRect();
-    var x = e.clientX - rect.left - MED_SIZE / 2;
-    var y = e.clientY - rect.top - MED_SIZE / 2;
+    
+    // Convert screen coordinates to canvas coordinates (accounting for zoom/pan)
+    var canvasCoords = screenToCanvasCoords(e.clientX, e.clientY);
+    var x = canvasCoords.x - MED_SIZE / 2;
+    var y = canvasCoords.y - MED_SIZE / 2;
+    
     var snap = snapToAnchor(x);
     x = snap.x;
     y = clampToFenceHeight(y);
+    
+    var rect = canvas.getBoundingClientRect();
     x = Math.max(0, Math.min(x, rect.width - MED_SIZE));
     y = Math.max(0, Math.min(y, rect.height - MED_SIZE));
+    
     placeMedallion(medId, x, y, false, { anchorIndex: snap.anchorIndex });
     recordAction("place", { medId: medId, x: x, y: y, anchorIndex: snap.anchorIndex });
 });
@@ -1503,9 +1610,10 @@ canvas.addEventListener("click", function(e) {
    ═══════════════════════════════════════════ */
 function createGhostPreview(medallion) {
     removeGhostPreview();
+    var ghostSize = viewMode === 'detail' ? 90 : 70;
     ghostPreview = document.createElement("div");
     ghostPreview.className = "ghost-preview";
-    ghostPreview.innerHTML = '<img src="'+medallion.img+'" alt="'+medallion.name+'" style="width:70px;height:70px;display:block;opacity:0.7;filter:drop-shadow(0 0 12px var(--accent));">';
+    ghostPreview.innerHTML = '<img src="'+medallion.img+'" alt="'+medallion.name+'" style="width:'+ghostSize+'px;height:'+ghostSize+'px;display:block;opacity:0.7;filter:drop-shadow(0 0 12px var(--accent));">';
     document.body.appendChild(ghostPreview);
 }
 
@@ -1534,7 +1642,9 @@ function placeMedallion(medId, x, y, silent, extra) {
     el.className = "placed-medallion";
     el.setAttribute("data-uid", thisUID);
     el.setAttribute("data-med-id", medId);
-    el.innerHTML = '<img src="'+m.img+'" alt="'+m.name+'" style="width:52px;height:52px;display:block;">';
+    var medSize = viewMode === 'detail' ? Math.round(52 * detailMedallionScale) : 52;
+    el.style.setProperty('--medallion-size', medSize + 'px');
+    el.innerHTML = '<img src="'+m.img+'" alt="'+m.name+'" style="display:block;">';
     el.style.left = x + "px";
     el.style.top = y + "px";
     if (mScale !== 1 || rotation !== 0) el.style.transform = "scale(" + mScale + ") rotate(" + rotation + "deg)";
@@ -1856,6 +1966,21 @@ function initializeFenceMap() {
     buildSegmentMap();
     buildMedallionLibrary();
     selectProject("P2");
+    
+    // Dropdown menu functionality
+    var exploreDropdown = document.getElementById('exploreDropdown');
+    var exploreMenu = document.getElementById('exploreMenu');
+    
+    if (exploreDropdown && exploreMenu) {
+        exploreDropdown.addEventListener('click', function(e) {
+            e.stopPropagation();
+            exploreMenu.classList.toggle('show');
+        });
+        
+        document.addEventListener('click', function() {
+            exploreMenu.classList.remove('show');
+        });
+    }
 
     var elevationSelect = document.getElementById("elevationSelect");
     if (elevationSelect) {
