@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PUHC PUEDE Alleys - Research, Mapping, and Design for Environmental Justice</title>
+    <link rel="stylesheet" href="/static/css/global-theme.css">
+    <style>
+        /* Page-specific styles */
+        .case-study-page {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            min-height: 100vh;
+            padding-top: 70px;
+        }
+
+        .case-study-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--spacing-xl) var(--spacing-lg);
+        }
+
+        /* Hero Section */
+        .case-study-hero {
+            text-align: center;
+            padding: var(--spacing-xxl) 0;
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .case-study-badge {
+            display: inline-block;
+            padding: 10px 20px;
+            background: linear-gradient(135deg, rgba(15, 164, 175, 0.15), rgba(15, 164, 175, 0.08));
+            border: 1px solid rgba(15, 164, 175, 0.3);
+            border-radius: var(--radius-full);
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--highlight);
+            letter-spacing: 1.8px;
+            text-transform: uppercase;
+            margin-bottom: var(--spacing-lg);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .case-study-title {
+            font-size: 3.5rem;
+            font-weight: 700;
+            font-family: var(--font-heading);
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-md);
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+        }
+
+        .case-study-subtitle {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            font-weight: 400;
+            max-width: 800px;
+            margin: 0 auto var(--spacing-lg);
+            line-height: 1.6;
+        }
+
+        .case-study-intro {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            max-width: 900px;
+            margin: 0 auto;
+            line-height: 1.8;
+            padding: var(--spacing-xl);
+            background: linear-gradient(135deg, rgba(15, 164, 175, 0.08), rgba(15, 164, 175, 0.04));
+            border-left: 4px solid var(--highlight);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* Section Styles */
+        .case-study-section {
+            margin-bottom: var(--spacing-xxxl);
+            padding: var(--spacing-xxl);
+            background: linear-gradient(135deg, rgba(19, 47, 76, 0.5), rgba(19, 47, 76, 0.3));
+            border-radius: var(--radius-xl);
+            border: 1px solid rgba(15, 164, 175, 0.15);
+            box-shadow: var(--shadow-md);
+            transition: all var(--transition-normal);
+        }
+
+        .case-study-section:hover {
+            border-color: rgba(15, 164, 175, 0.25);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .section-header {
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .section-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--highlight), #0CB5C2);
+            color: var(--primary);
+            border-radius: 50%;
+            font-weight: 700;
+            font-size: 1.25rem;
+            margin-right: var(--spacing-md);
+            box-shadow: var(--shadow-glow);
+            font-family: var(--font-heading);
+        }
+
+        .section-title {
+            font-size: 2.25rem;
+            font-family: var(--font-heading);
+            letter-spacing: -0.01em;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-sm);
+            display: inline-block;
+        }
+
+        .section-description {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin-bottom: var(--spacing-md);
+        }
+
+        /* AURA Attribution - Premium Design */
+        .aura-attribution {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            padding: 12px 24px;
+            background: linear-gradient(135deg, rgba(15, 164, 175, 0.12), rgba(15, 164, 175, 0.06));
+            border: 1px solid rgba(15, 164, 175, 0.3);
+            border-radius: var(--radius-lg);
+            margin: var(--spacing-lg) 0;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            box-shadow: var(--shadow-sm);
+            transition: all var(--transition-normal);
+        }
+
+        .aura-attribution:hover {
+            border-color: rgba(15, 164, 175, 0.5);
+            box-shadow: var(--shadow-md);
+            transform: translateY(-1px);
+        }
+
+        .aura-attribution::before {
+            content: '';
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            background: linear-gradient(135deg, var(--highlight), #0CB5C2);
+            border-radius: 4px;
+            margin-right: 8px;
+        }
+
+        .aura-attribution a {
+            color: var(--highlight);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all var(--transition-fast);
+            position: relative;
+        }
+
+        .aura-attribution a::after {
+            content: '→';
+            margin-left: 6px;
+            transition: transform var(--transition-fast);
+            display: inline-block;
+        }
+
+        .aura-attribution a:hover {
+            color: var(--accent-hover);
+        }
+
+        .aura-attribution a:hover::after {
+            transform: translateX(3px);
+        }
+
+        /* Report Title */
+        .report-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            font-family: var(--font-heading);
+            color: var(--text-primary);
+            line-height: 1.5;
+            padding: var(--spacing-md);
+            background: rgba(15, 164, 175, 0.05);
+            border-left: 3px solid var(--highlight);
+            border-radius: var(--radius-sm);
+            margin: var(--spacing-md) 0;
+        }
+
+        /* Key Themes List */
+        .key-themes {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: var(--spacing-md);
+            margin: var(--spacing-lg) 0;
+        }
+
+        .theme-item {
+            padding: var(--spacing-md);
+            background: rgba(15, 164, 175, 0.08);
+            border-radius: var(--radius-md);
+            border: 1px solid rgba(15, 164, 175, 0.2);
+            transition: all var(--transition-normal);
+        }
+
+        .theme-item:hover {
+            background: rgba(15, 164, 175, 0.12);
+            border-color: rgba(15, 164, 175, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .theme-item h4 {
+            color: var(--highlight);
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .theme-item p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        /* Map Container */
+        .map-embed {
+            width: 100%;
+            height: 600px;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            border: 2px solid rgba(15, 164, 175, 0.2);
+            margin: var(--spacing-lg) 0;
+        }
+
+        .map-embed iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* GIS Layers List */
+        .gis-layers {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--spacing-sm);
+            margin: var(--spacing-md) 0;
+        }
+
+        .gis-layer {
+            padding: 10px 14px;
+            background: rgba(15, 164, 175, 0.05);
+            border-left: 3px solid var(--highlight);
+            border-radius: 4px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        /* Design Response Grid */
+        .design-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--spacing-lg);
+            margin: var(--spacing-lg) 0;
+        }
+
+        .design-card {
+            padding: var(--spacing-lg);
+            background: rgba(15, 164, 175, 0.05);
+            border-radius: var(--radius-md);
+            border: 1px solid rgba(15, 164, 175, 0.2);
+            transition: all var(--transition-normal);
+        }
+
+        .design-card:hover {
+            background: rgba(15, 164, 175, 0.1);
+            border-color: var(--highlight);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-card-hover);
+        }
+
+        .design-card h3 {
+            color: var(--highlight);
+            font-size: 1.3rem;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .design-card p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Bridge Section */
+        .bridge-section {
+            background: linear-gradient(135deg, rgba(15, 164, 175, 0.1) 0%, rgba(15, 164, 175, 0.05) 100%);
+            padding: var(--spacing-xl);
+            border-radius: var(--radius-lg);
+            border: 2px solid rgba(15, 164, 175, 0.3);
+            margin: var(--spacing-xxl) 0;
+        }
+
+        .bridge-title {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            text-align: center;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .bridge-flow {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr auto 1fr;
+            gap: var(--spacing-md);
+            align-items: center;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .bridge-item {
+            text-align: center;
+            padding: var(--spacing-lg);
+            background: rgba(19, 47, 76, 0.6);
+            border-radius: var(--radius-md);
+            border: 1px solid rgba(15, 164, 175, 0.3);
+        }
+
+        .bridge-item h4 {
+            color: var(--highlight);
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .bridge-item p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .bridge-arrow {
+            color: var(--highlight);
+            font-size: 2rem;
+            font-weight: 300;
+        }
+
+        /* Buttons */
+        .btn-primary {
+            display: inline-block;
+            padding: 14px 32px;
+            background: var(--highlight);
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            border-radius: var(--radius-md);
+            transition: all var(--transition-normal);
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            margin: var(--spacing-sm);
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(15, 164, 175, 0.3);
+        }
+
+        .btn-secondary {
+            display: inline-block;
+            padding: 14px 32px;
+            background: transparent;
+            color: var(--highlight);
+            text-decoration: none;
+            font-weight: 600;
+            border-radius: var(--radius-md);
+            border: 2px solid var(--highlight);
+            transition: all var(--transition-normal);
+            cursor: pointer;
+            font-size: 1rem;
+            margin: var(--spacing-sm);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(15, 164, 175, 0.1);
+            border-color: var(--accent-hover);
+            color: var(--accent-hover);
+            transform: translateY(-2px);
+        }
+
+        .resources-section {
+            text-align: center;
+            padding: var(--spacing-xl);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .case-study-title {
+                font-size: 2.5rem;
+            }
+
+            .case-study-subtitle {
+                font-size: 1.1rem;
+            }
+
+            .bridge-flow {
+                grid-template-columns: 1fr;
+                gap: var(--spacing-sm);
+            }
+
+            .bridge-arrow {
+                transform: rotate(90deg);
+            }
+
+            .map-embed {
+                height: 400px;
+            }
+        }
+    </style>
+</head>
+<body class="case-study-page">
+    <!-- Global Navigation -->
+    <nav class="global-nav">
+        <div class="nav-container">
+            <a href="/" class="nav-logo">
+                <span class="nav-logo-text">PUHC Innovation Alleys</span>
+            </a>
+            
+            <ul class="nav-tabs" id="navTabs">
+                <li class="nav-tab"><a href="/">Alley 3</a></li>
+                <li class="nav-tab"><a href="/existing">Before</a></li>
+                <li class="nav-tab"><a href="/fence-map">Fence Map</a></li>
+                <li class="nav-tab nav-dropdown active">
+                    <button class="nav-dropdown-toggle active" id="exploreDropdown">
+                        Explore <span style="font-size: 0.7em;">▼</span>
+                    </button>
+                    <ul class="nav-dropdown-menu" id="exploreMenu">
+                        <li><a href="/unreal-viewer">Digital Twin</a></li>
+                        <li><a href="/innovation-alleys-map">Innovation Alleys Map</a></li>
+                        <li><a href="/puhc-puede" class="active">PUHC PUEDE</a></li>
+                    </ul>
+                </li>
+                <li class="nav-tab"><a href="/compare">Compare</a></li>
+            </ul>
+            
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+                ☰
+            </button>
+        </div>
+    </nav>
+
+    <div class="case-study-container">
+        <!-- Hero Section -->
+        <section class="case-study-hero">
+            <div class="case-study-badge">Research-Driven Urban Design</div>
+            <h1 class="case-study-title">PUHC PUEDE Alleys</h1>
+            <p class="case-study-subtitle">Research, Mapping, and Design for Environmental Justice in Pico-Union</p>
+            <div class="case-study-intro">
+                PUHC PUEDE combines research, GIS mapping, and design intervention to reimagine Pico-Union alleys through environmental justice, climate resilience, and community health. Grounded in the AURA report and supported by ArcGIS spatial data, this project translates research into site-specific alley design strategies for South Los Angeles.
+            </div>
+        </section>
+
+        <!-- Section 1: AURA Report / Research -->
+        <section class="case-study-section">
+            <div class="section-header">
+                <span class="section-number">1</span>
+                <h2 class="section-title">Research Foundation</h2>
+            </div>
+            
+            <p class="section-description">
+                The AURA report provides the research framework for understanding environmental justice, climate resilience, and community health in the project area. This external supporting report establishes the analytical foundation for design intervention.
+            </p>
+
+            <div class="aura-attribution">
+                <span>Source:</span>
+                <a href="https://www.auraengine.com/" target="_blank" rel="noopener">AURA Engine</a>
+            </div>
+
+            <div class="report-title">
+                PUHC PUEDE Alleys: Architecture and Urban Design for Environmental Justice, Climate Resilience, and Community Health in South Los Angeles Census Tracts 2098.10 and 2095.20
+            </div>
+
+            <p class="section-description">
+                This report originates from AURA Engine and is included as a supporting research document for the PUHC PUEDE project. It provides critical analysis of environmental conditions, community health indicators, and climate vulnerabilities specific to the Pico-Union census tracts.
+            </p>
+
+            <h3 style="color: var(--highlight); font-size: 1.3rem; margin: var(--spacing-lg) 0 var(--spacing-md);">Key Research Themes</h3>
+            
+            <div class="key-themes">
+                <div class="theme-item">
+                    <h4>Environmental Justice</h4>
+                    <p>Analysis of environmental inequities and community exposure to urban heat, pollution, and inadequate green infrastructure in Pico-Union.</p>
+                </div>
+                <div class="theme-item">
+                    <h4>Climate Resilience</h4>
+                    <p>Strategies for adapting alley corridors to address climate impacts including heat islands, stormwater management, and extreme weather events.</p>
+                </div>
+                <div class="theme-item">
+                    <h4>Community Health</h4>
+                    <p>Documentation of health implications related to environmental conditions and the potential for design interventions to improve public health outcomes.</p>
+                </div>
+                <div class="theme-item">
+                    <h4>Tract-Specific Analysis</h4>
+                    <p>Detailed examination of Census Tracts 2098.10 and 2095.20, providing localized data and context for targeted design responses.</p>
+                </div>
+                <div class="theme-item">
+                    <h4>Design Relevance</h4>
+                    <p>Research-backed recommendations for alley transformation that address documented environmental and social conditions.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Existing Conditions / ArcGIS Map -->
+        <section class="case-study-section">
+            <div class="section-header">
+                <span class="section-number">2</span>
+                <h2 class="section-title">Existing Conditions</h2>
+            </div>
+            
+            <p class="section-description">
+                The ArcGIS map provides the geographic and infrastructural context for the project area, revealing present-day environmental, infrastructural, and regulatory conditions through multiple professional GIS data layers.
+            </p>
+
+            <div class="map-embed">
+                <iframe 
+                    src="https://lattcarch.maps.arcgis.com/apps/mapviewer/index.html?webmap=32cdd4e1df694db19010bbd6f7883456"
+                    allowfullscreen
+                    aria-hidden="false"
+                    tabindex="0">
+                </iframe>
+            </div>
+
+            <h3 style="color: var(--highlight); font-size: 1.3rem; margin: var(--spacing-lg) 0 var(--spacing-md);">GIS Data Layers</h3>
+            
+            <div class="gis-layers">
+                <div class="gis-layer">Tree Canopy by Census Tract</div>
+                <div class="gis-layer">LA County Flood Control Parcels</div>
+                <div class="gis-layer">Construction Permits (since 2025)</div>
+                <div class="gis-layer">Zoning Data (LA County)</div>
+                <div class="gis-layer">Cooling/Heating/Air Quality Relief Centers</div>
+                <div class="gis-layer">Los Angeles Area Rivers</div>
+                <div class="gis-layer">Substructure Utility Lines</div>
+                <div class="gis-layer">DPW Maintained Roads</div>
+                <div class="gis-layer">District Division Boundaries</div>
+            </div>
+
+            <p class="section-description" style="margin-top: var(--spacing-lg);">
+                These layers reveal critical infrastructure patterns, environmental deficits (such as low tree canopy coverage), regulatory constraints (zoning), and existing public resources. The data confirms conditions documented in the AURA report and provides the spatial framework for design intervention.
+            </p>
+        </section>
+
+        <!-- Section 3: Design Response / Alley 3 Prototype -->
+        <section class="case-study-section">
+            <div class="section-header">
+                <span class="section-number">3</span>
+                <h2 class="section-title">Design Response</h2>
+            </div>
+            
+            <p class="section-description">
+                The Alley 3 prototype represents the actionable design solution informed by both the AURA report and mapped ArcGIS conditions. This site-specific intervention addresses documented community and environmental conditions through three integrated strategies.
+            </p>
+
+            <div class="design-grid">
+                <div class="design-card">
+                    <h3>Shade Structures</h3>
+                    <p>Integrated system including overhead solar canopies, vertical trellises, and decorative water medallions. Responds to low tree canopy coverage and urban heat island effects documented in GIS data and AURA research.</p>
+                    <a href="/solar-shades" class="btn-secondary" style="margin-top: var(--spacing-md);">View Details</a>
+                </div>
+                <div class="design-card">
+                    <h3>Community Murals</h3>
+                    <p>Cultural expression and community ownership through public art. Addresses environmental justice and community health by creating spaces for cultural identity and social cohesion in underserved areas.</p>
+                    <a href="/murals" class="btn-secondary" style="margin-top: var(--spacing-md);">View Details</a>
+                </div>
+                <div class="design-card">
+                    <h3>Urban Farming</h3>
+                    <p>Container gardens for food security and community building. Responds to climate resilience needs and community health priorities identified in the AURA report, providing local food access and green infrastructure.</p>
+                    <a href="/urban-farming" class="btn-secondary" style="margin-top: var(--spacing-md);">View Details</a>
+                </div>
+            </div>
+
+            <p class="section-description" style="margin-top: var(--spacing-lg);">
+                Each intervention is calibrated to address specific environmental deficits revealed by GIS analysis and community needs documented in the AURA research. The design translates data and research into tangible spatial improvements that enhance climate resilience, environmental justice, and community health.
+            </p>
+
+            <div style="text-align: center; margin-top: var(--spacing-xl);">
+                <a href="/unreal-viewer" class="btn-primary">Explore in Digital Twin</a>
+                <a href="/compare" class="btn-secondary">View Before & After</a>
+            </div>
+        </section>
+
+        <!-- Bridge Section: Why This Matters -->
+        <section class="bridge-section">
+            <h2 class="bridge-title">Research to Reality</h2>
+            
+            <div class="bridge-flow">
+                <div class="bridge-item">
+                    <h4>AURA Report</h4>
+                    <p>Identifies environmental justice issues, climate vulnerabilities, and community health needs</p>
+                </div>
+                <div class="bridge-arrow">→</div>
+                <div class="bridge-item">
+                    <h4>ArcGIS Map</h4>
+                    <p>Shows real-world conditions, infrastructure patterns, and spatial constraints</p>
+                </div>
+                <div class="bridge-arrow">→</div>
+                <div class="bridge-item">
+                    <h4>PUHC PUEDE Design</h4>
+                    <p>Proposes site-specific interventions that address documented conditions</p>
+                </div>
+            </div>
+
+            <p class="section-description" style="text-align: center; margin-top: var(--spacing-xl); max-width: 800px; margin-left: auto; margin-right: auto;">
+                This project demonstrates how research and spatial data can be translated into practical design strategy. By connecting academic analysis, professional GIS mapping, and architectural intervention, PUHC PUEDE creates a credible, evidence-based approach to alley transformation that prioritizes environmental justice, climate resilience, and community health.
+            </p>
+        </section>
+
+        <!-- Resources Section -->
+        <section class="resources-section">
+            <h2 style="color: var(--text-primary); font-size: 2rem; margin-bottom: var(--spacing-lg);">Supporting Documents</h2>
+            <a href="/static/documents/AURA_REPORT.pdf" class="btn-primary" target="_blank">View AURA Report (PDF)</a>
+            <a href="/innovation-alleys-map" class="btn-secondary">Open ArcGIS Map</a>
+        </section>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // Dropdown menu functionality
+        const exploreDropdown = document.getElementById('exploreDropdown');
+        const exploreMenu = document.getElementById('exploreMenu');
+        
+        if (exploreDropdown && exploreMenu) {
+            exploreDropdown.addEventListener('click', (e) => {
+                e.stopPropagation();
+                exploreMenu.classList.toggle('show');
+            });
+            
+            document.addEventListener('click', () => {
+                exploreMenu.classList.remove('show');
+            });
+        }
+
+        // Mobile navigation toggle
+        const navToggle = document.getElementById('navToggle');
+        const navTabs = document.getElementById('navTabs');
+        
+        if (navToggle && navTabs) {
+            navToggle.addEventListener('click', () => {
+                navTabs.classList.toggle('active');
+            });
+
+            document.addEventListener('click', (e) => {
+                if (!navToggle.contains(e.target) && !navTabs.contains(e.target)) {
+                    navTabs.classList.remove('active');
+                }
+            });
+        }
+    </script>
+</body>
+</html>

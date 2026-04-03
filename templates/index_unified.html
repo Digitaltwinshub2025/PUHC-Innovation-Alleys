@@ -403,7 +403,15 @@
                 <li class="nav-tab active"><a href="/">Alley 3</a></li>
                 <li class="nav-tab"><a href="/existing">Before</a></li>
                 <li class="nav-tab"><a href="/fence-map">Fence Map</a></li>
-                <li class="nav-tab"><a href="/unreal-viewer">Explore</a></li>
+                <li class="nav-tab nav-dropdown">
+                    <button class="nav-dropdown-toggle" id="exploreDropdown">
+                        Explore <span style="font-size: 0.7em;">▼</span>
+                    </button>
+                    <ul class="nav-dropdown-menu" id="exploreMenu">
+                        <li><a href="/unreal-viewer">Digital Twin</a></li>
+                        <li><a href="/innovation-alleys-map">Innovation Alleys Map</a></li>
+                    </ul>
+                </li>
                 <li class="nav-tab"><a href="/compare">Compare</a></li>
             </ul>
             
@@ -658,6 +666,21 @@
             }
         });
 
+        // Dropdown menu functionality
+        const exploreDropdown = document.getElementById('exploreDropdown');
+        const exploreMenu = document.getElementById('exploreMenu');
+        
+        if (exploreDropdown && exploreMenu) {
+            exploreDropdown.addEventListener('click', (e) => {
+                e.stopPropagation();
+                exploreMenu.classList.toggle('show');
+            });
+            
+            document.addEventListener('click', () => {
+                exploreMenu.classList.remove('show');
+            });
+        }
+
         // Highlight active nav tab
         const currentPath = window.location.pathname;
         document.querySelectorAll('.nav-tab a').forEach(link => {
@@ -665,6 +688,13 @@
                 link.parentElement.classList.add('active');
             }
         });
+        
+        // Highlight dropdown if on dropdown page
+        if (currentPath === '/unreal-viewer' || currentPath === '/innovation-alleys-map') {
+            const dropdown = document.querySelector('.nav-dropdown');
+            if (dropdown) dropdown.classList.add('active');
+            if (exploreDropdown) exploreDropdown.classList.add('active');
+        }
 
         // Smooth entrance animations
         document.addEventListener('DOMContentLoaded', () => {
