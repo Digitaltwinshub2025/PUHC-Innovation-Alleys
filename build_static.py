@@ -33,18 +33,17 @@ def build_static_site():
             shutil.rmtree(content_dest)
         shutil.copytree('content', content_dest)
     
-    # Routes to generate
+    # Routes to generate - UPDATED to match current app.py routes
     routes = [
         ('/', 'index.html'),
         ('/existing', 'existing.html'),
-        ('/interactive-fence-map', 'interactive-fence-map.html'),
-        ('/unreal-viewer', 'unreal-viewer.html'),
         ('/compare', 'compare.html'),
+        ('/urban-farming', 'urban-farming.html'),
         ('/solar-shades', 'solar-shades.html'),
         ('/murals', 'murals.html'),
-        ('/urban-farming', 'urban-farming.html'),
-        ('/visualization-studio', 'visualization-studio.html'),
-        ('/before-after', 'before-after.html'),
+        ('/unreal-viewer', 'unreal-viewer.html'),
+        ('/innovation-alleys-map', 'innovation-alleys-map.html'),
+        ('/puhc-puede', 'puhc-puede.html'),
     ]
     
     with app.test_client() as client:
@@ -63,17 +62,20 @@ def build_static_site():
                     html_content = html_content.replace('="/static/', '="static/')
                     html_content = html_content.replace('="/content/', '="content/')
                     
-                    # Fix navigation links
+                    # Fix navigation links for static site
+                    html_content = html_content.replace('href="/"', 'href="index.html"')
                     html_content = html_content.replace('href=""', 'href="index.html"')
-                    html_content = html_content.replace('href="existing"', 'href="existing.html"')
-                    html_content = html_content.replace('href="interactive-fence-map"', 'href="interactive-fence-map.html"')
-                    html_content = html_content.replace('href="unreal-viewer"', 'href="unreal-viewer.html"')
-                    html_content = html_content.replace('href="compare"', 'href="compare.html"')
-                    html_content = html_content.replace('href="solar-shades"', 'href="solar-shades.html"')
-                    html_content = html_content.replace('href="murals"', 'href="murals.html"')
-                    html_content = html_content.replace('href="urban-farming"', 'href="urban-farming.html"')
-                    html_content = html_content.replace('href="visualization-studio"', 'href="visualization-studio.html"')
-                    html_content = html_content.replace('href="before-after"', 'href="before-after.html"')
+                    html_content = html_content.replace('href="/existing"', 'href="existing.html"')
+                    html_content = html_content.replace('href="/compare"', 'href="compare.html"')
+                    html_content = html_content.replace('href="/urban-farming"', 'href="urban-farming.html"')
+                    html_content = html_content.replace('href="/solar-shades"', 'href="solar-shades.html"')
+                    html_content = html_content.replace('href="/murals"', 'href="murals.html"')
+                    html_content = html_content.replace('href="/unreal-viewer"', 'href="unreal-viewer.html"')
+                    html_content = html_content.replace('href="/digital-twin"', 'href="unreal-viewer.html"')
+                    html_content = html_content.replace('href="/innovation-alleys-map"', 'href="innovation-alleys-map.html"')
+                    html_content = html_content.replace('href="/puhc-puede"', 'href="puhc-puede.html"')
+                    html_content = html_content.replace('href="/fence-map"', 'href="fence-map.html"')
+                    html_content = html_content.replace('href="/interactive-fence-map"', 'href="fence-map.html"')
                     
                     output_path = os.path.join(output_dir, filename)
                     with open(output_path, 'w', encoding='utf-8') as f:
@@ -84,12 +86,16 @@ def build_static_site():
             except Exception as e:
                 print(f"✗ Error generating {filename}: {str(e)}")
     
-    # Copy standalone HTML files
-    standalone_files = ['interactive-fence-map.html', 'rhino-viewer.html']
-    for file in standalone_files:
-        if os.path.exists(file):
-            shutil.copy(file, os.path.join(output_dir, file))
-            print(f"✓ Copied {file}")
+    # Copy and rename standalone HTML files for GitHub Pages
+    # Fence map: rename interactive-fence-map.html to fence-map.html for cleaner URLs
+    if os.path.exists('interactive-fence-map.html'):
+        shutil.copy('interactive-fence-map.html', os.path.join(output_dir, 'fence-map.html'))
+        print(f"✓ Copied interactive-fence-map.html → fence-map.html")
+    
+    # Rhino viewer
+    if os.path.exists('rhino-viewer.html'):
+        shutil.copy('rhino-viewer.html', os.path.join(output_dir, 'rhino-viewer.html'))
+        print(f"✓ Copied rhino-viewer.html")
     
     print(f"\n✓ Static site built in '{output_dir}/' folder")
     print(f"✓ Ready for GitHub Pages deployment")

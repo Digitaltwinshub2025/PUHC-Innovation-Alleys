@@ -266,41 +266,6 @@ def index():
     }
     return render_template('index_unified.html', edit_mode=edit_mode, content=page_content, areas=areas)
 
-@app.route('/street-view-designer')
-def street_view_designer():
-    # Redirect to new visualization studio
-    return redirect('/visualization-studio')
-
-@app.route('/design-brief')
-def design_brief():
-    # Design Brief Generator - Data-driven recommendations for eco-cultural corridor transformation
-    return render_template('design_brief.html')
-
-@app.route('/design-workspace')
-def design_workspace():
-    # Co-Design Studio - Canvas-based design workspace with real-time collaboration
-    return render_template('design_workspace.html')
-
-@app.route('/scenarios')
-def scenarios():
-    # Scenario management dashboard
-    return render_template('scenarios.html')
-
-@app.route('/plant-library')
-def plant_library():
-    # Climate-appropriate plant library
-    return render_template('plant_library.html')
-
-@app.route('/visualization-studio')
-def visualization_studio():
-    # Street View visualization studio
-    return render_template('visualization_studio.html')
-
-@app.route('/before-after')
-def before_after():
-    # Before and after scenario comparison (legacy route)
-    return render_template('before_after.html')
-
 @app.route('/existing')
 def existing():
     # Existing conditions page with Figma-style layout
@@ -334,7 +299,7 @@ def murals():
 @app.route('/trellises')
 def trellises():
     # Redirect to solar-shades - trellises and medallions are part of the integrated shade structure system
-    return redirect(url_for('solar_shades'))
+    return redirect('/solar-shades')
 
 @app.route('/fence-map')
 def fence_map():
@@ -371,15 +336,6 @@ def api_cost_data():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-@app.route('/customize/<project_id>')
-def customize_project(project_id):
-    # Placeholder route for project customization page
-    return render_template('fence_map.html')
-
-@app.route('/design-library')
-def design_library():
-    # Searchable design element library for Alley 3
-    return render_template('design_library.html')
 
 @app.route('/api/nasa-temperature')
 def get_nasa_temperature():
@@ -558,6 +514,11 @@ def get_plants():
 def innovation_alleys_map():
     # 12 Innovation Alleys themed map
     return render_template('innovation_alleys_map.html')
+
+@app.route('/puhc-puede')
+def puhc_puede():
+    # PUHC PUEDE case study page - Research, Mapping, and Design
+    return render_template('puhc_puede.html')
 
 @app.route('/api/images/<query>', methods=['GET'])
 def get_images(query):

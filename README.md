@@ -1,38 +1,41 @@
 # PUHC Innovation Alleys
 
-**Design Your Space. Transform Your Neighborhood.**
+**Alley 3 - Water Alley: A Digital Twin for Environmental Justice**
 
-A collaborative web platform that empowers LA residents to co-design and visualize alley transformations in real-time. Drag and drop art, plants, and urban furniture to reimagine community spaces with the vibrant spirit of Los Angeles.
+An interactive web platform showcasing design interventions for Alley 3 in Pico-Union, Los Angeles. Features include before/after comparisons, a 3D Digital Twin, interactive fence customization, and comprehensive case studies demonstrating how urban design can address environmental justice, climate resilience, and community health.
 
 ## ✨ Features
 
-- **🎨 Interactive Design Canvas**: Drag and drop elements onto a visual alley representation
-- **👥 Real-Time Collaboration**: Multiple residents can design together simultaneously using WebSocket technology
-- **🌿 Rich Asset Library**: 
-  - Art & Murals (abstract art, geometric designs, sculptures, street art)
-  - Plants & Greenery (trees, flowers, vertical gardens, shrubs, vines)
-  - Lighting & Furniture (benches, string lights, bike racks)
-- **🖱️ Intuitive Controls**:
-  - Drag items to reposition
-  - Resize items with corner handles
-  - Right-click context menu for advanced options
-  - Layer management (bring forward/send backward)
-- **💾 Auto-Save**: All changes are automatically saved and synced across all users
-- **📐 Design Tools**: Grid toggle, zoom in/out for precise placement
-- **🎯 Multiple Alley Spaces**: Create and manage different alley design projects
+### Three Design Interventions
+- **Solar Shades & Water Medallions**: Integrated shade structures with decorative fence medallions
+- **Community Murals**: Cultural expression and community ownership
+- **Urban Farming**: Container gardens for food security and community building
+
+### Interactive Tools
+- **Fence Customization Tool**: Drag-and-drop medallion placement with cost estimation
+- **3D Digital Twin**: Unreal Engine-powered immersive visualization
+- **Before/After Comparison**: Interactive toggles showing transformation impact
+- **Innovation Alleys Map**: Interactive map of 12 alleys across Pico-Union
+
+### Technical Features
+- **Responsive Design**: Works on desktop, tablet, and mobile
+- **Static Site Compatible**: Deployable to GitHub Pages
+- **Real-time Interactions**: Client-side JavaScript for smooth UX
+- **Cost Tracking**: Automatic calculation of repair and fabrication costs
 
 ## 🚀 Quick Start
 
 ### Prerequisites
 
-- Python 3.7 or higher
+- Python 3.11 or higher
 - pip (Python package manager)
 
 ### Installation
 
-1. **Clone or navigate to the project directory**:
+1. **Clone the repository**:
    ```bash
-   cd c:\Users\MLee7\Desktop\101225windsurf\CascadeProjects\splitwise
+   git clone [repository-url]
+   cd "PUHC (ALLEY BLOOM)"
    ```
 
 2. **Install dependencies**:
@@ -40,7 +43,7 @@ A collaborative web platform that empowers LA residents to co-design and visuali
    pip install -r requirements.txt
    ```
 
-3. **Run the application**:
+3. **Run the Flask development server**:
    ```bash
    python app.py
    ```
@@ -52,131 +55,169 @@ A collaborative web platform that empowers LA residents to co-design and visuali
 
 ## 🎮 How to Use
 
-### Getting Started
+### Navigation
 
-1. **Select an Alley**: From the home page, choose an existing alley or create a new one
-2. **Browse Design Elements**: The left sidebar contains all available items organized by category
-3. **Add Items**: Drag items from the sidebar and drop them onto the canvas
-4. **Position & Resize**: 
-   - Click and drag items to move them
-   - Use the resize handle (bottom-right corner) to adjust size
-5. **Manage Layers**: Right-click on items to access options like delete, bring forward, or send backward
-6. **Collaborate**: Share the URL with other residents to design together in real-time
+1. **Home (Alley 3)**: Overview of the Water Alley prototype with three interventions
+2. **Before**: Existing conditions and site analysis
+3. **Fence Map**: Interactive medallion customization tool
+4. **Explore Dropdown**:
+   - Digital Twin: 3D Unreal Engine viewer
+   - Innovation Alleys Map: 12 alleys interactive map
+   - PUHC PUEDE: Comprehensive case study with AURA Engine research
+5. **Compare**: Before/after comparison with intervention toggles
 
-### Keyboard Shortcuts
+### Fence Customization Tool
 
-- **Delete**: Remove selected item
-- **Grid Toggle**: Show/hide alignment grid
-- **Zoom**: Use zoom buttons to get closer or see the full view
-
-### Controls
-
-- **🗑️ Clear All**: Remove all items from the canvas
-- **💾 Save Design**: Designs are auto-saved, but you can manually trigger a save
-- **📐 Toggle Grid**: Show/hide the alignment grid
-- **🔍 Zoom**: Adjust canvas zoom level
+1. **Select a Project**: Choose from Area A-D segments
+2. **Browse Medallions**: Right sidebar shows 30+ water-themed designs
+3. **Drag & Drop**: Drag medallions onto the fence elevation
+4. **Snap to Anchors**: Medallions automatically align to fence positions
+5. **View Modes**:
+   - **Full Elevation**: See the entire building context
+   - **Fence Detail View**: 2.5x zoom focused on fence placement area
+6. **Cost Tracking**: Real-time calculation of repair + fabrication costs
+7. **Controls**: Duplicate, remove, reset, or export your design
 
 ## 🏗️ Project Structure
 
 ```
-splitwise/
-├── app.py                  # Flask application with WebSocket server
-├── requirements.txt        # Python dependencies
-├── README.md              # This file
-├── static/
+PUHC (ALLEY BLOOM)/
+├── app.py                          # Flask application
+├── build_static.py                 # Static site generator
+├── requirements.txt                # Python dependencies
+├── templates/                      # Flask templates
+│   ├── index_unified.html          # Home page
+│   ├── existing_new.html           # Before/existing conditions
+│   ├── compare.html                # Before/after comparison
+│   ├── urban_farming.html          # Urban Farming intervention
+│   ├── solar_shades.html           # Solar Shades intervention
+│   ├── murals.html                 # Community Murals
+│   ├── unreal_viewer.html          # Digital Twin 3D viewer
+│   ├── innovation_alleys_map.html  # 12 Alleys map
+│   └── puhc_puede.html             # PUHC PUEDE case study
+├── static/                         # Static assets
 │   ├── css/
-│   │   └── style.css      # All styling and animations
-│   └── js/
-│       └── main.js        # Client-side logic and real-time sync
-└── templates/
-    ├── index.html         # Landing page
-    └── design.html        # Main design interface
+│   │   ├── global-theme.css        # Global design system
+│   │   └── fence-map-improvements.css
+│   ├── images/
+│   │   └── medallions/             # 30+ medallion designs
+│   └── documents/
+│       └── AURA_REPORT.pdf
+├── interactive-fence-map.html      # Standalone fence tool
+├── docs/                           # Generated static site
+└── PROJECT_STRUCTURE.md            # Detailed structure docs
 ```
+
+See `PROJECT_STRUCTURE.md` for complete documentation.
 
 ## 🔧 Technical Details
 
-### Backend (Flask + SocketIO)
+### Backend (Development)
 
 - **Framework**: Flask 3.0.0
-- **Real-Time Communication**: Flask-SocketIO for WebSocket support
-- **Data Storage**: In-memory storage (can be extended to database)
-- **Events**:
-  - `join_alley`: User joins a design space
-  - `add_item`: New item added to canvas
-  - `update_item`: Item moved or resized
-  - `remove_item`: Item deleted
-  - `clear_design`: All items removed
+- **Template Engine**: Jinja2
+- **Python**: 3.11
+- **Data Storage**: JSON files for scenarios and content
 
 ### Frontend
 
-- **Vanilla JavaScript**: No framework dependencies for maximum performance
-- **Socket.IO Client**: Real-time bidirectional communication
-- **Drag & Drop API**: Native HTML5 drag and drop
-- **Responsive Design**: Works on desktop and tablet devices
+- **Vanilla JavaScript**: No framework dependencies
+- **HTML5 Drag & Drop**: Native drag-and-drop for fence customization
+- **CSS Custom Properties**: Modern design system with CSS variables
+- **SVG Graphics**: Interactive overlays and fence guides
+- **Responsive**: Mobile-first design with breakpoints
 
-### Design Elements
+### Design System
 
-Each element has:
-- Unique emoji representation
-- Gradient background
-- Default size (customizable)
-- Type classification (art, plant, furniture)
+- **Typography**: Inter (body) + Space Grotesk (headings)
+- **Colors**: Dark blue gradient with cyan accents
+- **Spacing**: 8-level scale (xs to section)
+- **Shadows**: 6-level depth system with glow effects
+- **Border Radius**: Modern scale (6px to 24px)
+
+See `UX_UI_REDESIGN_SUMMARY.md` for complete design documentation.
 
 ## 🌐 Deployment
 
-### Local Network Access
+### GitHub Pages (Static Site)
 
-To allow other residents on your network to access the application:
+**Build the static site:**
+```bash
+python build_static.py
+```
 
-1. Find your local IP address:
+This generates a `docs/` folder with:
+- All HTML pages with `.html` extensions
+- Static assets (CSS, JS, images)
+- Relative paths for GitHub Pages compatibility
+
+**Deploy to GitHub Pages:**
+1. Commit the `docs/` folder:
    ```bash
-   # Windows
-   ipconfig
-   
-   # Look for IPv4 Address (e.g., 192.168.1.100)
+   git add docs/
+   git commit -m "Update static site"
+   git push origin main
    ```
 
-2. Share the URL with residents:
-   ```
-   http://YOUR_IP_ADDRESS:5000
-   ```
+2. Enable GitHub Pages in repository settings:
+   - Source: `main` branch
+   - Folder: `/docs`
 
-### Production Deployment
+3. Access at: `https://[username].github.io/[repo-name]/`
 
-For production deployment, consider:
+### Heroku (Dynamic Flask)
 
-1. **Use a production WSGI server** (e.g., Gunicorn)
-2. **Add a reverse proxy** (e.g., Nginx)
-3. **Enable HTTPS** for secure connections
-4. **Add database persistence** (e.g., PostgreSQL, MongoDB)
-5. **Implement user authentication** for access control
-6. **Add image upload** for custom art and photos
+**Deploy with Heroku CLI:**
+```bash
+heroku create puhc-innovation-alleys
+git push heroku main
+heroku open
+```
+
+The `Procfile`, `runtime.txt`, and `requirements.txt` are already configured.
+
+### Local Development
+
+```bash
+# Run Flask development server
+python app.py
+
+# Access at http://localhost:5000
+```
 
 ## 🎨 Customization
 
-### Adding New Design Elements
+### Adding New Pages
 
-Edit `static/js/main.js` and add to the `itemConfigs` object:
+1. Create template in `templates/`
+2. Add route in `app.py`:
+   ```python
+   @app.route('/your-page')
+   def your_page():
+       return render_template('your_page.html')
+   ```
+3. Add to `build_static.py` routes list
+4. Update navigation in templates
+5. Rebuild static site
 
-```javascript
-'your-type': {
-    'your-subtype': { 
-        emoji: '🎯', 
-        bg: 'linear-gradient(135deg, #color1 0%, #color2 100%)', 
-        size: { w: 100, h: 100 } 
-    }
-}
-```
+### Modifying Styles
 
-Then add the corresponding HTML in `templates/design.html` sidebar.
+**Global styles:**
+- Edit `static/css/global-theme.css`
+- Uses CSS custom properties (variables)
+- Changes apply site-wide
 
-### Styling
+**Page-specific styles:**
+- Add `<style>` block in template
+- Or create new CSS file in `static/css/`
 
-Modify `static/css/style.css` to customize:
-- Colors and gradients
-- Layout and spacing
-- Animations and transitions
-- Responsive breakpoints
+### Adding Medallions
+
+1. Add image to `static/images/medallions/`
+2. Update medallion data in `interactive-fence-map.html`:
+   ```javascript
+   { id:"m31", name:"New Design", cost:250, defaultScale:1, img:"static/images/medallions/new.webp" }
+   ```
 
 ## 🐛 Troubleshooting
 
@@ -184,61 +225,88 @@ Modify `static/css/style.css` to customize:
 
 If port 5000 is occupied, change it in `app.py`:
 ```python
-socketio.run(app, debug=True, host='0.0.0.0', port=8080)
+app.run(debug=True, host='0.0.0.0', port=8080)
 ```
 
-### WebSocket Connection Issues
+### Static Site Build Fails
 
-- Ensure firewall allows the port
-- Check that eventlet is properly installed
-- Verify browser supports WebSocket (all modern browsers do)
+- Ensure Flask app runs without errors first
+- Check that all routes in `build_static.py` exist in `app.py`
+- Verify templates render correctly
 
-### Items Not Syncing
+### Fence Map Drag-Drop Issues
 
-- Check browser console for errors
-- Verify Socket.IO connection status
-- Ensure multiple users are on the same alley URL
+- Clear browser cache
+- Check browser console for JavaScript errors
+- Ensure images in `static/images/medallions/` are accessible
+- Try toggling between Full Elevation and Fence Detail View
+
+### GitHub Pages 404 Errors
+
+- Verify `docs/` folder is committed and pushed
+- Check GitHub Pages settings (branch and folder)
+- Ensure navigation links use `.html` extensions
+- Wait 1-2 minutes for GitHub Pages to rebuild
+
+## 📝 Recent Improvements
+
+### Fence Map Enhancements (April 2026)
+- **Fence Detail View**: 2.5x zoom focused on placement area
+- **Improved Drag-Drop**: Fixed coordinate transform bugs
+- **Medallion Scaling**: Dynamic sizing (52px → 73px in detail view)
+- **Visual Feedback**: Fence region highlight in detail mode
+- **Ghost Preview**: Adaptive sizing based on view mode
+
+### UX/UI Redesign (April 2026)
+- **Typography**: Upgraded to Inter + Space Grotesk
+- **Navigation**: Enhanced dropdown with glassmorphism
+- **Spacing**: Refined 8-level scale for better hierarchy
+- **Shadows**: Premium depth system with glow effects
+- **Mobile**: Improved responsive breakpoints and touch targets
+
+See `UX_UI_REDESIGN_SUMMARY.md` for complete details.
 
 ## 📝 Future Enhancements
 
-- [ ] User authentication and profiles
-- [ ] Save/load multiple design versions
-- [ ] Export designs as images
-- [ ] Upload custom images for art
-- [ ] 3D view of the alley
-- [ ] Cost estimation for implementations
-- [ ] Community voting on designs
-- [ ] Integration with city planning tools
-- [ ] Mobile app version
-- [ ] AR preview using phone camera
+- [ ] Higher resolution building elevations
+- [ ] Export fence designs as PDF/image
+- [ ] Cost estimation export
+- [ ] Additional alley segments (Areas B, C, D)
+- [ ] Community feedback integration
+- [ ] AR preview for on-site visualization
 
-## 🤝 Contributing
+## 📚 Documentation
 
-This is a community-driven project! Suggestions for improvements:
+- **`README.md`** - This file (overview and quick start)
+- **`PROJECT_STRUCTURE.md`** - Detailed project structure and file organization
+- **`UX_UI_REDESIGN_SUMMARY.md`** - Recent design improvements documentation
+- **`PRODUCTION_AUDIT_REPORT.md`** - Production readiness audit
+- **`PRODUCTION_READY_FINAL_REPORT.md`** - Final production report
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test thoroughly
-5. Submit a pull request
+## � Acknowledgments
 
-## 📄 License
+### Research Partners
+- **AURA Engine** - Environmental justice research and analysis
+- **PUHC (Pico-Union Housing Corporation)** - Community partnership
 
-This project is open source and available for community use.
+### Project Context
+This project demonstrates how digital tools can support community-driven urban design for environmental justice, climate resilience, and public health in underserved Los Angeles neighborhoods.
 
-## 🙏 Acknowledgments
+**Alley 3 - Water Alley** is the primary prototype showcasing integrated interventions:
+- Stormwater management through bioswales and rain gardens
+- Solar shade structures with decorative water medallions
+- Community murals for cultural expression
+- Urban farming for food security
 
-Built to empower LA communities to transform their urban spaces through collaborative design. Inspired by the creative spirit of Los Angeles neighborhoods from Echo Park to Venice Beach.
-
-## 🎨 Design System
-
-See [DESIGN_GUIDE.md](DESIGN_GUIDE.md) for complete design specifications including:
-- LA-inspired color palette (Coral Red, Golden Amber, Sky Blue)
-- Typography system (Inter & Outfit fonts)
-- Component library and interaction patterns
-- Accessibility guidelines
+### Technology Stack
+- Flask (Python web framework)
+- Vanilla JavaScript (no framework dependencies)
+- CSS Custom Properties (modern design system)
+- Unreal Engine (Digital Twin visualization)
 
 ---
 
-**Made with ❤️ for LA's community-driven urban transformation**  
-🌸 Alley Bloom - Where neighborhoods bloom together
+**PUHC Innovation Alleys**  
+*Transforming Pico-Union through community-driven design*
+
+**Last Updated:** April 3, 2026
