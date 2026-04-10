@@ -619,10 +619,64 @@
             </p>
         </section>
 
+        <!-- AURA Report Viewer Section -->
+        <section class="case-study-section" id="aura-report">
+            <div class="section-header">
+                <span class="section-number">4</span>
+                <h2 class="section-title">AURA Report</h2>
+            </div>
+            
+            <p class="section-description">
+                The AURA Engine report provides comprehensive environmental justice research and analysis that forms the foundation for the PUHC PUEDE design interventions. This research documents community health impacts, environmental conditions, and evidence-based recommendations for transforming Alley 3.
+            </p>
+
+            <div style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: var(--radius-lg); padding: var(--spacing-md); margin-top: var(--spacing-lg);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-md); padding: var(--spacing-sm); background: rgba(0, 0, 0, 0.3); border-radius: var(--radius-md); flex-wrap: wrap; gap: var(--spacing-sm);">
+                    <div>
+                        <strong style="color: rgba(255, 255, 255, 0.9);">AURA Report PDF Viewer</strong>
+                    </div>
+                    <div style="display: flex; gap: var(--spacing-sm); flex-wrap: wrap;">
+                        <a href="/static/documents/AURA_REPORT.pdf" download>
+                            <button style="padding: var(--spacing-xs) var(--spacing-md); background: var(--accent); color: #fff; border: none; border-radius: var(--radius-sm); font-size: 0.9rem; font-weight: 600; cursor: pointer;">Download PDF</button>
+                        </a>
+                        <a href="/static/documents/AURA_REPORT.pdf" target="_blank">
+                            <button style="padding: var(--spacing-xs) var(--spacing-md); background: var(--accent); color: #fff; border: none; border-radius: var(--radius-sm); font-size: 0.9rem; font-weight: 600; cursor: pointer;">Open in New Tab</button>
+                        </a>
+                    </div>
+                </div>
+                
+                <iframe 
+                    src="/static/documents/AURA_REPORT.pdf"
+                    type="application/pdf"
+                    style="width: 100%; height: 70vh; min-height: 500px; border: none; border-radius: var(--radius-md); background: #fff;"
+                    title="AURA Report PDF Viewer">
+                    <p style="padding: var(--spacing-lg); text-align: center; color: rgba(255, 255, 255, 0.7);">
+                        Your browser does not support embedded PDFs. 
+                        <a href="/static/documents/AURA_REPORT.pdf" download style="color: var(--accent);">Download the PDF</a> 
+                        to view it.
+                    </p>
+                </iframe>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--spacing-md); margin-top: var(--spacing-lg);">
+                <div class="theme-item">
+                    <h4>Environmental Justice Context</h4>
+                    <p>Analysis of systemic inequities affecting the Pico-Union community</p>
+                </div>
+                <div class="theme-item">
+                    <h4>Community Health Impacts</h4>
+                    <p>Documentation of health vulnerabilities and climate risks</p>
+                </div>
+                <div class="theme-item">
+                    <h4>Design Recommendations</h4>
+                    <p>Evidence-based strategies for alley transformation</p>
+                </div>
+            </div>
+        </section>
+
         <!-- Resources Section -->
         <section class="resources-section">
-            <h2 style="color: var(--text-primary); font-size: 2rem; margin-bottom: var(--spacing-lg);">Supporting Documents</h2>
-            <a href="/static/documents/AURA_REPORT.pdf" class="btn-primary" target="_blank">View AURA Report (PDF)</a>
+            <h2 style="color: var(--text-primary); font-size: 2rem; margin-bottom: var(--spacing-lg);">Additional Resources</h2>
             <a href="/innovation-alleys-map" class="btn-secondary">Open ArcGIS Map</a>
         </section>
     </div>

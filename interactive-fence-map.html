@@ -47,6 +47,41 @@
         .page-header h1 { font-size: 1.7rem; font-weight: 700; color: var(--text-primary); }
         .page-header p { margin-top: 8px; font-size: .88rem; color: var(--text-secondary); max-width: 640px; margin-inline: auto; }
 
+        /* ── Medallion Showcase Video ── */
+        .medallion-showcase {
+            max-width: 960px;
+            margin: 0 auto 32px;
+            padding: 0 20px;
+        }
+        .medallion-showcase-wrapper {
+            position: relative;
+            border-radius: var(--radius);
+            overflow: hidden;
+            border: 1px solid var(--border);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+        }
+        .medallion-showcase video {
+            width: 100%;
+            display: block;
+            aspect-ratio: 16/9;
+            object-fit: cover;
+            background: #000;
+        }
+        .medallion-showcase-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 12px 16px;
+            background: linear-gradient(transparent, rgba(0,0,0,0.7));
+        }
+        .medallion-showcase-caption p {
+            margin: 0;
+            color: rgba(255,255,255,0.7);
+            font-size: 0.75rem;
+            text-align: center;
+        }
+
         /* ── Main Layout ── */
         .main-layout {
             display: grid;
@@ -295,13 +330,13 @@
         .fence-canvas {
             position: relative;
             width: 100%;
-            height: 700px;
+            height: 800px;
             overflow: visible;
             background: #f0f0f0;
         }
 
         #simulationView .fence-canvas {
-            min-height: clamp(520px, 70vh, 760px);
+            min-height: clamp(600px, 75vh, 850px);
         }
 
         /* Layered Canvas Architecture */
@@ -329,6 +364,13 @@
             width: 100%;
             height: 100%;
             object-fit: contain;
+            image-rendering: -webkit-optimize-contrast;
+            image-rendering: crisp-edges;
+            filter: contrast(1.05) saturate(1.1);
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            transform: translateZ(0);
+            -webkit-transform: translateZ(0);
             object-position: center;
             image-rendering: -webkit-optimize-contrast;
             display: block;
@@ -649,6 +691,18 @@
     <p>Click a fence segment to view existing conditions, repair estimates, and design intervention options.</p>
 </div>
 
+<!-- Medallion Art Showcase Video -->
+<div class="medallion-showcase">
+    <div class="medallion-showcase-wrapper">
+        <video autoplay muted loop playsinline controls>
+            <source src="static/videos/Medallion Art show piece.mp4" type="video/mp4">
+        </video>
+        <div class="medallion-showcase-caption">
+            <p>Water-themed medallion art designs for Alley 3 fence customization</p>
+        </div>
+    </div>
+</div>
+
 <div class="main-layout">
 
     <!-- LEFT: Segment Map -->
@@ -897,6 +951,8 @@ var maxHistory = 10;
 // Ghost preview
 var ghostPreview = null;
 var snapGuide = null;
+var zoomPanInitialized = false;
+var pendingDesignRestore = false;
 
 /* ═══════════════════════════════════════════
    BUILD SEGMENT MAP
@@ -970,6 +1026,155 @@ function buildMedallionLibrary() {
     });
 }
 
+function getCurrentMedallionSize() {
+    return viewMode === 'detail' ? Math.round(MED_SIZE * detailMedallionScale) : MED_SIZE;
+}
+
+function getCanvasRect() {
+    var activeCanvas = document.getElementById("fenceCanvas");
+    return activeCanvas ? activeCanvas.getBoundingClientRect() : { width: 0, height: 0 };
+}
+
+function getPlacedElement(uid) {
+    return canvas ? canvas.querySelector('[data-uid="' + uid + '"]') : null;
+}
+
+function syncPlacedItemPosition(item, el) {
+    var rect = getCanvasRect();
+    if (!item || !el || !rect.width || !rect.height) return;
+
+    item.x = parseFloat(el.style.left) || 0;
+    item.y = parseFloat(el.style.top) || 0;
+    item.normalizedX = item.x / rect.width;
+    item.normalizedY = item.y / rect.height;
+}
+
+function syncCurrentProjectDesign() {
+    if (!activeProjectId) return;
+
+    placedItems.forEach(function(item) {
+        var el = getPlacedElement(item.uid);
+        if (el) syncPlacedItemPosition(item, el);
+    });
+
+    projectDesigns[activeProjectId] = {
+        items: placedItems.map(function(item) {
+            return {
+                medId: item.medId,
+                cost: item.cost,
+                rotation: item.rotation || 0,
+                scale: item.scale || 1,
+                anchorIndex: item.anchorIndex !== undefined ? item.anchorIndex : -1,
+                normalizedX: item.normalizedX !== undefined ? item.normalizedX : 0,
+                normalizedY: item.normalizedY !== undefined ? item.normalizedY : 0
+            };
+        })
+    };
+}
+
+function updateProjectDetails() {
+    var proj = findProject(activeProjectId);
+    if (!proj) return;
+
+    var projectTitle = document.getElementById("projectTitle");
+    var tabDetails = document.getElementById("tabDetails");
+    var costLow = document.getElementById("costLow");
+    var costHigh = document.getElementById("costHigh");
+    var existingDesc = document.getElementById("existingDesc");
+    var photoPlaceholder = document.getElementById("photoPlaceholder");
+
+    if (projectTitle) projectTitle.textContent = proj.title;
+    if (tabDetails) tabDetails.textContent = proj.title;
+    if (costLow) costLow.textContent = "$" + proj.costLow.toLocaleString();
+    if (costHigh) costHigh.textContent = "$" + proj.costHigh.toLocaleString();
+    if (existingDesc) existingDesc.textContent = proj.desc;
+
+    if (photoPlaceholder) {
+        photoPlaceholder.innerHTML = '<img src="' + proj.fencePhoto + '" alt="' + proj.title + ' existing fence condition">' +
+            '<div class="photo-label">' + proj.title + ' Existing Condition</div>';
+    }
+}
+
+function clearCanvas(skipSync) {
+    canvas.querySelectorAll(".placed-medallion").forEach(function(el) { el.remove(); });
+    placedItems = [];
+    selectedUID = null;
+    document.getElementById("btnRemove").disabled = true;
+    document.getElementById("btnDuplicate").disabled = true;
+    if (!skipSync) syncCurrentProjectDesign();
+}
+
+function restoreProjectDesign() {
+    var stored = projectDesigns[activeProjectId];
+    if (!stored || !stored.items || !stored.items.length) {
+        clearCanvas(true);
+        updateCosts();
+        return;
+    }
+
+    clearCanvas(true);
+    var rect = getCanvasRect();
+    stored.items.forEach(function(item) {
+        placeMedallion(item.medId, (item.normalizedX || 0) * rect.width, (item.normalizedY || 0) * rect.height, true, {
+            rotation: item.rotation,
+            scale: item.scale,
+            anchorIndex: item.anchorIndex
+        });
+    });
+
+    syncCurrentProjectDesign();
+    updateCosts();
+}
+
+function refreshPlacedMedallionLayout() {
+    if (!placedItems.length) return;
+
+    var rect = getCanvasRect();
+    var medSize = getCurrentMedallionSize();
+
+    placedItems.forEach(function(item) {
+        var el = getPlacedElement(item.uid);
+        if (!el) return;
+
+        var x = item.normalizedX !== undefined ? item.normalizedX * rect.width : (parseFloat(el.style.left) || 0);
+        var y = item.normalizedY !== undefined ? item.normalizedY * rect.height : (parseFloat(el.style.top) || 0);
+
+        if (item.anchorIndex !== undefined && item.anchorIndex >= 0 && fenceAnchors[item.anchorIndex]) {
+            x = fenceAnchors[item.anchorIndex].x - medSize / 2;
+        }
+
+        x = Math.max(0, Math.min(x, rect.width - medSize));
+        y = clampToFenceHeight(y, medSize);
+
+        el.style.left = x + "px";
+        el.style.top = y + "px";
+        el.style.setProperty('--medallion-size', medSize + 'px');
+        syncPlacedItemPosition(item, el);
+    });
+
+    syncCurrentProjectDesign();
+}
+
+function setFenceViewMode(mode) {
+    var canvasEl = document.getElementById('fenceCanvas');
+    var btn = document.getElementById('fenceFocusBtn');
+
+    viewMode = mode === 'detail' ? 'detail' : 'full';
+    zoomLevel = viewMode === 'detail' ? detailZoomLevel : 1;
+    panX = 0;
+
+    if (canvasEl) canvasEl.classList.toggle('detail-mode', viewMode === 'detail');
+    if (btn) {
+        btn.textContent = viewMode === 'detail' ? 'Full Elevation' : 'Fence Detail View';
+        btn.style.background = viewMode === 'detail' ? 'rgba(15, 164, 175, 0.3)' : 'var(--accent)';
+    }
+
+    constrainPan();
+    applyTransform();
+    updateMedallionScales();
+    refreshPlacedMedallionLayout();
+}
+
 /* ═══════════════════════════════════════════
    SVG ELEVATION LOADER
    ═══════════════════════════════════════════ */
@@ -989,8 +1194,8 @@ var FENCE_CENTER_Y = 0.65;
 
 // Fence Detail View System
 var viewMode = 'full'; // 'full' or 'detail'
-var detailZoomLevel = 2.5; // Zoom level for detail view
-var detailMedallionScale = 1.4; // Medallion scale multiplier in detail view
+var detailZoomLevel = 1.8; // Zoom level for detail view (reduced from 2.5 to minimize blur)
+var detailMedallionScale = 1.25; // Medallion scale multiplier in detail view (adjusted to match zoom)
 
 // Structured Project Configuration System
 // Each project has its own building elevation, fence guides, and metadata
@@ -1143,6 +1348,13 @@ function load2DElevation() {
         
         elevationLoaded = true;
         initZoomPan();
+        refreshPlacedMedallionLayout();
+        if (pendingDesignRestore) {
+            restoreProjectDesign();
+            pendingDesignRestore = false;
+        } else {
+            updateCosts();
+        }
     };
     
     elevationImg.onerror = function() {
@@ -1194,7 +1406,8 @@ function generateFenceAnchors() {
     if (!canvas) return;
     
     var rect = canvas.getBoundingClientRect();
-    var numAnchors = 20;
+    var projectConfig = projectConfigs[activeProjectId] || {};
+    var numAnchors = projectConfig.snapPoints || 20;
     
     for (var i = 0; i < numAnchors; i++) {
         var normalizedX = region.x + (region.width / numAnchors) * (i + 0.5);
@@ -1287,44 +1500,11 @@ function screenToCanvasCoords(screenX, screenY) {
 
 // Update all placed medallion sizes based on current view mode
 function updateMedallionScales() {
-    var medSize = viewMode === 'detail' ? Math.round(52 * detailMedallionScale) : 52;
+    var medSize = getCurrentMedallionSize();
     var medallions = document.querySelectorAll('.placed-medallion');
     medallions.forEach(function(el) {
         el.style.setProperty('--medallion-size', medSize + 'px');
     });
-}
-
-function zoomToFence() {
-    var canvas = document.getElementById('fenceCanvas');
-    var btn = document.getElementById('fenceFocusBtn');
-    
-    if (viewMode === 'full') {
-        // Switch to detail view
-        viewMode = 'detail';
-        zoomLevel = detailZoomLevel;
-        panX = 0;
-        
-        if (canvas) canvas.classList.add('detail-mode');
-        if (btn) {
-            btn.textContent = 'Full Elevation';
-            btn.style.background = 'rgba(15, 164, 175, 0.3)';
-        }
-    } else {
-        // Switch back to full view
-        viewMode = 'full';
-        zoomLevel = 1;
-        panX = 0;
-        
-        if (canvas) canvas.classList.remove('detail-mode');
-        if (btn) {
-            btn.textContent = 'Fence Detail View';
-            btn.style.background = 'var(--accent)';
-        }
-    }
-    
-    constrainPan();
-    applyTransform();
-    updateMedallionScales();
 }
 
 // Update medallion scales when zoom changes
@@ -1335,7 +1515,8 @@ function handleZoomChange() {
 
 function initZoomPan() {
     var canvas = document.getElementById("fenceCanvas");
-    if (!canvas) return;
+    if (!canvas || zoomPanInitialized) return;
+    zoomPanInitialized = true;
 
     // Mouse wheel zoom (constrained 1x-3x) with smooth 60fps performance
     canvas.addEventListener("wheel", function(e) {
@@ -1351,13 +1532,14 @@ function initZoomPan() {
         
         constrainPan();
         applyTransform();
+        refreshPlacedMedallionLayout();
     }, { passive: false });
 
     // Horizontal-only panning with click + drag
     canvas.addEventListener("mousedown", function(e) {
         if (e.button !== 0) return;
         var target = e.target;
-        if (target.classList.contains("placed-medallion")) return;
+        if (target.classList.contains("placed-medallion") || target.closest(".placed-medallion")) return;
         isPanning = true;
         panStartX = e.clientX - panX;
         canvas.classList.add("panning");
@@ -1373,6 +1555,7 @@ function initZoomPan() {
             panX = e.clientX - panStartX;
             constrainPan();
             applyTransform();
+            refreshPlacedMedallionLayout();
             rafId = null;
         });
     });
@@ -1415,12 +1598,14 @@ function setMode(on) {
         if (tabSim) tabSim.classList.add("active");
         
         if (!elevationLoaded) {
+            pendingDesignRestore = true;
             load2DElevation();
         } else {
             setTimeout(function() {
                 drawFenceOverlay();
                 generateFenceAnchors();
-                zoomToFence();
+                setFenceViewMode('detail');
+                restoreProjectDesign();
             }, 150);
         }
     } else {
@@ -1430,9 +1615,7 @@ function setMode(on) {
         if (panel) panel.classList.remove("sim-active");
         if (tabDetails) tabDetails.classList.add("active");
         if (tabSim) tabSim.classList.remove("active");
-        zoomLevel = 1;
-        panX = 0;
-        applyTransform();
+        setFenceViewMode('full');
     }
 }
 
@@ -1446,8 +1629,11 @@ document.getElementById("btnLaunchSim").addEventListener("click", function() { s
 function selectProject(pid) {
     var proj = findProject(pid);
     if (!proj) return;
-    
+
+    syncCurrentProjectDesign();
     activeProjectId = pid;
+    updateProjectDetails();
+    deselectAll();
 
     elevationOverride = "auto";
     var elevationSelect = document.getElementById("elevationSelect");
@@ -1464,14 +1650,19 @@ function selectProject(pid) {
         selectedBlock.classList.add("active");
     }
     
+    if (simMode) {
+        pendingDesignRestore = true;
+    }
+
     if (simMode && elevationLoaded) {
         elevationLoaded = false;
         load2DElevation();
-    }
-    
-    if (elevationLoaded) {
+    } else if (elevationLoaded) {
         drawFenceOverlay();
         generateFenceAnchors();
+        restoreProjectDesign();
+    } else {
+        updateCosts();
     }
 }
 
@@ -1506,30 +1697,32 @@ function canvasToNormalized(px, py) {
 
 function snapToAnchor(pxX) {
     if (!elevationLoaded || fenceAnchors.length === 0) return { x: pxX, anchorIndex: -1 };
-    
+
+    var medSize = getCurrentMedallionSize();
     var bestIdx = -1, bestDist = 9999;
     for (var i = 0; i < fenceAnchors.length; i++) {
-        var d = Math.abs(pxX + MED_SIZE / 2 - fenceAnchors[i].x);
+        var d = Math.abs(pxX + medSize / 2 - fenceAnchors[i].x);
         if (d < bestDist) { bestDist = d; bestIdx = i; }
     }
-    
+
     if (bestDist < SNAP_RADIUS && bestIdx >= 0) {
-        return { x: fenceAnchors[bestIdx].x - MED_SIZE / 2, anchorIndex: bestIdx };
+        return { x: fenceAnchors[bestIdx].x - medSize / 2, anchorIndex: bestIdx };
     }
     return { x: pxX, anchorIndex: -1 };
 }
 
-function clampToFenceHeight(pxY) {
+function clampToFenceHeight(pxY, medSizeOverride) {
     if (!elevationLoaded || !activeProjectId || !fenceRegions[activeProjectId]) return pxY;
-    
+
     var region = fenceRegions[activeProjectId];
     var canvas = document.getElementById("fenceCanvas");
     if (!canvas) return pxY;
-    
+
     var rect = canvas.getBoundingClientRect();
-    var topPx = region.y * rect.height - MED_SIZE / 2;
-    var botPx = (region.y + region.height) * rect.height - MED_SIZE / 2;
-    
+    var medSize = medSizeOverride || getCurrentMedallionSize();
+    var topPx = region.y * rect.height - medSize / 2;
+    var botPx = (region.y + region.height) * rect.height - medSize / 2;
+
     pxY = Math.max(topPx, Math.min(pxY, botPx));
     return pxY;
 }
@@ -1580,20 +1773,21 @@ canvas.addEventListener("drop", function(e) {
     removeGhostPreview();
     var medId = e.dataTransfer.getData("text/plain");
     if (!medId) return;
-    
+
+    var medSize = getCurrentMedallionSize();
     // Convert screen coordinates to canvas coordinates (accounting for zoom/pan)
     var canvasCoords = screenToCanvasCoords(e.clientX, e.clientY);
-    var x = canvasCoords.x - MED_SIZE / 2;
-    var y = canvasCoords.y - MED_SIZE / 2;
-    
+    var x = canvasCoords.x - medSize / 2;
+    var y = canvasCoords.y - medSize / 2;
+
     var snap = snapToAnchor(x);
     x = snap.x;
-    y = clampToFenceHeight(y);
-    
+    y = clampToFenceHeight(y, medSize);
+
     var rect = canvas.getBoundingClientRect();
-    x = Math.max(0, Math.min(x, rect.width - MED_SIZE));
-    y = Math.max(0, Math.min(y, rect.height - MED_SIZE));
-    
+    x = Math.max(0, Math.min(x, rect.width - medSize));
+    y = Math.max(0, Math.min(y, rect.height - medSize));
+
     placeMedallion(medId, x, y, false, { anchorIndex: snap.anchorIndex });
     recordAction("place", { medId: medId, x: x, y: y, anchorIndex: snap.anchorIndex });
 });
@@ -1642,7 +1836,7 @@ function placeMedallion(medId, x, y, silent, extra) {
     el.className = "placed-medallion";
     el.setAttribute("data-uid", thisUID);
     el.setAttribute("data-med-id", medId);
-    var medSize = viewMode === 'detail' ? Math.round(52 * detailMedallionScale) : 52;
+    var medSize = getCurrentMedallionSize();
     el.style.setProperty('--medallion-size', medSize + 'px');
     el.innerHTML = '<img src="'+m.img+'" alt="'+m.name+'" style="display:block;">';
     el.style.left = x + "px";
@@ -1659,10 +1853,12 @@ function placeMedallion(medId, x, y, silent, extra) {
     var ox = 0, oy = 0;
     el.addEventListener("mousedown", function(e) {
         e.preventDefault();
+        e.stopPropagation();
         if (e.altKey) { duplicateSelectedMedallion(); return; }
         dragging = true;
-        var r = el.getBoundingClientRect();
-        ox = e.clientX - r.left; oy = e.clientY - r.top;
+        var canvasCoords = screenToCanvasCoords(e.clientX, e.clientY);
+        ox = canvasCoords.x - (parseFloat(el.style.left) || 0);
+        oy = canvasCoords.y - (parseFloat(el.style.top) || 0);
         el.style.zIndex = 20;
         selectPlaced(el);
     });
@@ -1670,14 +1866,16 @@ function placeMedallion(medId, x, y, silent, extra) {
     var moveHandler = function(e) {
         if (!dragging) return;
         var cr = canvas.getBoundingClientRect();
-        var nx = e.clientX - cr.left - ox;
-        var ny = e.clientY - cr.top - oy;
+        var canvasCoords = screenToCanvasCoords(e.clientX, e.clientY);
+        var nx = canvasCoords.x - ox;
+        var ny = canvasCoords.y - oy;
+        var liveMedSize = getCurrentMedallionSize();
         var snap = snapToAnchor(nx);
         nx = snap.x;
-        ny = clampToFenceHeight(ny);
+        ny = clampToFenceHeight(ny, liveMedSize);
         showSnapGuide(nx);
-        nx = Math.max(0, Math.min(nx, cr.width - MED_SIZE));
-        ny = Math.max(0, Math.min(ny, cr.height - MED_SIZE));
+        nx = Math.max(0, Math.min(nx, cr.width - liveMedSize));
+        ny = Math.max(0, Math.min(ny, cr.height - liveMedSize));
         el.style.left = nx + "px";
         el.style.top = ny + "px";
     };
@@ -1692,11 +1890,13 @@ function placeMedallion(medId, x, y, silent, extra) {
             var snap = snapToAnchor(endX);
             var pi = placedItems.find(function(p) { return p.uid === thisUID; });
             if (pi) pi.anchorIndex = snap.anchorIndex;
+            if (pi) syncPlacedItemPosition(pi, el);
             if (startX !== endX || startY !== endY) {
                 recordAction("move", { uid: thisUID, fromX: startX, fromY: startY, toX: endX, toY: endY });
             }
             startX = endX;
             startY = endY;
+            syncCurrentProjectDesign();
         }
     };
     document.addEventListener("mousemove", moveHandler);
@@ -1711,8 +1911,12 @@ function placeMedallion(medId, x, y, silent, extra) {
     
     placedItems.push({
         uid: thisUID, medId: medId, cost: m.cost,
-        rotation: rotation, scale: mScale, anchorIndex: anchorIdx
+        rotation: rotation, scale: mScale, anchorIndex: anchorIdx,
+        x: x, y: y,
+        normalizedX: 0,
+        normalizedY: 0
     });
+    syncPlacedItemPosition(placedItems[placedItems.length - 1], el);
 
     if (!silent) {
         updateCosts();
@@ -1777,19 +1981,13 @@ function updateCosts() {
         }
         bd.innerHTML = html;
     }
+
+    syncCurrentProjectDesign();
 }
 
 /* ═══════════════════════════════════════════
    CONTROLS
    ═══════════════════════════════════════════ */
-function clearCanvas() {
-    canvas.querySelectorAll(".placed-medallion").forEach(function(el) { el.remove(); });
-    placedItems = [];
-    selectedUID = null;
-    document.getElementById("btnRemove").disabled = true;
-    document.getElementById("btnDuplicate").disabled = true;
-}
-
 document.getElementById("btnRemove").addEventListener("click", function() {
     if (selectedUID === null) return;
     var el = canvas.querySelector('[data-uid="'+selectedUID+'"]');
@@ -1813,8 +2011,8 @@ document.getElementById("btnClearAll").addEventListener("click", function() {
 });
 
 document.getElementById("btnReset").addEventListener("click", function() {
-    clearCanvas();
-    delete projectDesigns[activeProjectId];
+    clearCanvas(true);
+    projectDesigns[activeProjectId] = { items: [] };
     updateCosts();
 });
 
@@ -1890,8 +2088,9 @@ function duplicateSelectedMedallion() {
     var x = parseFloat(el.style.left) + 20;
     var y = parseFloat(el.style.top) + 20;
     var rect = canvas.getBoundingClientRect();
-    x = Math.max(0, Math.min(x, rect.width - MED_SIZE));
-    y = Math.max(0, Math.min(y, rect.height - MED_SIZE));
+    var medSize = getCurrentMedallionSize();
+    x = Math.max(0, Math.min(x, rect.width - medSize));
+    y = Math.max(0, Math.min(y, rect.height - medSize));
 
     placeMedallion(item.medId, x, y, false, { rotation: item.rotation, scale: item.scale });
     recordAction("duplicate", { medId: item.medId, x: x, y: y });
@@ -1926,16 +2125,24 @@ document.addEventListener("keydown", function(e) {
 
         var snap = snapToAnchor(x);
         x = snap.x;
-        y = clampToFenceHeight(y);
+        var medSize = getCurrentMedallionSize();
+        y = clampToFenceHeight(y, medSize);
         var rect = canvas.getBoundingClientRect();
-        x = Math.max(0, Math.min(x, rect.width - MED_SIZE));
-        y = Math.max(0, Math.min(y, rect.height - MED_SIZE));
+        x = Math.max(0, Math.min(x, rect.width - medSize));
+        y = Math.max(0, Math.min(y, rect.height - medSize));
         el.style.left = x + "px";
         el.style.top = y + "px";
+
+        var item = placedItems.find(function(p) { return p.uid === selectedUID; });
+        if (item) {
+            item.anchorIndex = snap.anchorIndex;
+            syncPlacedItemPosition(item, el);
+        }
 
         if (sX !== x || sY !== y) {
             recordAction("move", { uid: selectedUID, fromX: sX, fromY: sY, toX: x, toY: y });
         }
+        syncCurrentProjectDesign();
     }
 });
 
@@ -1995,12 +2202,21 @@ function initializeFenceMap() {
     var fenceFocusBtn = document.getElementById("fenceFocusBtn");
     if (fenceFocusBtn) {
         fenceFocusBtn.addEventListener("click", function() {
-            zoomToFence();
+            setFenceViewMode(viewMode === 'detail' ? 'full' : 'detail');
         });
     }
-    
+
+    updateProjectDetails();
+    updateCosts();
     load2DElevation();
 }
+
+window.addEventListener("resize", function() {
+    if (!elevationLoaded) return;
+    drawFenceOverlay();
+    generateFenceAnchors();
+    refreshPlacedMedallionLayout();
+});
 </script>
 
 </body>
