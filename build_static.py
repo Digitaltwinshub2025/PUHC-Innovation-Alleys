@@ -44,6 +44,7 @@ def build_static_site():
         ('/unreal-viewer', 'unreal-viewer.html'),
         ('/innovation-alleys-map', 'innovation-alleys-map.html'),
         ('/puhc-puede', 'puhc-puede.html'),
+        ('/aura-report', 'aura-report.html'),
     ]
     
     with app.test_client() as client:
@@ -74,6 +75,7 @@ def build_static_site():
                     html_content = html_content.replace('href="/digital-twin"', 'href="unreal-viewer.html"')
                     html_content = html_content.replace('href="/innovation-alleys-map"', 'href="innovation-alleys-map.html"')
                     html_content = html_content.replace('href="/puhc-puede"', 'href="puhc-puede.html"')
+                    html_content = html_content.replace('href="/aura-report"', 'href="aura-report.html"')
                     html_content = html_content.replace('href="/fence-map"', 'href="fence-map.html"')
                     html_content = html_content.replace('href="/interactive-fence-map"', 'href="fence-map.html"')
                     

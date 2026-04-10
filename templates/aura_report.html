@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AURA Report - PUHC Innovation Alleys</title>
+    <link rel="stylesheet" href="/static/css/global-theme.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #0a1628 0%, #1a2332 100%);
+            min-height: 100vh;
+        }
+
+        .report-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: var(--spacing-section) var(--spacing-lg);
+        }
+
+        .report-header {
+            text-align: center;
+            margin-bottom: var(--spacing-xl);
+            padding-top: 80px;
+        }
+
+        .report-header h1 {
+            font-family: var(--font-heading);
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .report-header p {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.7);
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .report-meta {
+            display: flex;
+            justify-content: center;
+            gap: var(--spacing-lg);
+            margin-top: var(--spacing-md);
+            flex-wrap: wrap;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            padding: var(--spacing-xs) var(--spacing-md);
+            background: rgba(15, 164, 175, 0.1);
+            border: 1px solid rgba(15, 164, 175, 0.3);
+            border-radius: var(--radius-md);
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .meta-item strong {
+            color: var(--accent);
+        }
+
+        .pdf-viewer-wrapper {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-md);
+            box-shadow: var(--shadow-lg);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .viewer-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-md);
+            padding: var(--spacing-sm);
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: var(--radius-md);
+            flex-wrap: wrap;
+            gap: var(--spacing-sm);
+        }
+
+        .viewer-controls button {
+            padding: var(--spacing-xs) var(--spacing-md);
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .viewer-controls button:hover {
+            background: rgba(15, 164, 175, 0.8);
+            transform: translateY(-1px);
+        }
+
+        .viewer-controls a {
+            text-decoration: none;
+        }
+
+        #pdf-viewer {
+            width: 100%;
+            height: 80vh;
+            min-height: 600px;
+            border: none;
+            border-radius: var(--radius-md);
+            background: #fff;
+        }
+
+        .report-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--spacing-lg);
+            margin-top: var(--spacing-xl);
+        }
+
+        .info-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+        }
+
+        .info-card h3 {
+            font-family: var(--font-heading);
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .info-card p {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .info-card ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .info-card li {
+            padding: var(--spacing-xs) 0;
+            color: rgba(255, 255, 255, 0.7);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .info-card li:last-child {
+            border-bottom: none;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            padding: var(--spacing-sm) var(--spacing-md);
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: var(--radius-md);
+            color: #fff;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.2s;
+            margin-bottom: var(--spacing-lg);
+            display: inline-block;
+        }
+
+        .back-link:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateX(-4px);
+        }
+
+        @media (max-width: 768px) {
+            .report-header h1 {
+                font-size: 2rem;
+            }
+
+            .report-meta {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            #pdf-viewer {
+                height: 60vh;
+                min-height: 400px;
+            }
+
+            .viewer-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .viewer-controls button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="report-container">
+        <a href="/" class="back-link">← Back to Home</a>
+
+        <div class="report-header">
+            <h1>AURA Report</h1>
+            <p>Comprehensive environmental justice research and analysis for the PUHC Innovation Alleys project</p>
+            
+            <div class="report-meta">
+                <div class="meta-item">
+                    <strong>Research Partner:</strong> AURA Engine
+                </div>
+                <div class="meta-item">
+                    <strong>Project:</strong> Alley 3 - Water Alley
+                </div>
+                <div class="meta-item">
+                    <strong>Location:</strong> Pico-Union, Los Angeles
+                </div>
+            </div>
+        </div>
+
+        <div class="pdf-viewer-wrapper">
+            <div class="viewer-controls">
+                <div>
+                    <strong style="color: rgba(255, 255, 255, 0.9);">AURA Report PDF Viewer</strong>
+                </div>
+                <div style="display: flex; gap: var(--spacing-sm); flex-wrap: wrap;">
+                    <a href="/static/documents/AURA_REPORT.pdf" download>
+                        <button>Download PDF</button>
+                    </a>
+                    <a href="/static/documents/AURA_REPORT.pdf" target="_blank">
+                        <button>Open in New Tab</button>
+                    </a>
+                </div>
+            </div>
+            
+            <iframe 
+                id="pdf-viewer"
+                src="/static/documents/AURA_REPORT.pdf"
+                type="application/pdf"
+                title="AURA Report PDF Viewer">
+                <p style="padding: var(--spacing-lg); text-align: center; color: rgba(255, 255, 255, 0.7);">
+                    Your browser does not support embedded PDFs. 
+                    <a href="/static/documents/AURA_REPORT.pdf" download style="color: var(--accent);">Download the PDF</a> 
+                    to view it.
+                </p>
+            </iframe>
+        </div>
+
+        <div class="report-info">
+            <div class="info-card">
+                <h3>About AURA Engine</h3>
+                <p>AURA Engine provides comprehensive environmental justice research and analysis, combining data science, community engagement, and urban planning expertise.</p>
+                <p>This report analyzes environmental conditions, health impacts, and design interventions for Alley 3 in the Pico-Union neighborhood.</p>
+            </div>
+
+            <div class="info-card">
+                <h3>Report Sections</h3>
+                <ul>
+                    <li>Environmental Justice Context</li>
+                    <li>Site Analysis & Conditions</li>
+                    <li>Community Health Impacts</li>
+                    <li>Design Intervention Framework</li>
+                    <li>Performance Metrics</li>
+                    <li>Implementation Strategy</li>
+                </ul>
+            </div>
+
+            <div class="info-card">
+                <h3>Key Findings</h3>
+                <p>The AURA Report provides evidence-based recommendations for transforming Alley 3 into a climate-resilient, community-centered public space.</p>
+                <p>Research demonstrates how integrated design interventions can address stormwater management, urban heat, air quality, and social cohesion simultaneously.</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -53,3 +53,7 @@ exports/
 *.db
 *.sqlite
 *.sqlite3
+
+# Large media files (use Git LFS or external hosting)
+static/videos/Puede Center flythrough.mp4
+static/videos/*.mp4

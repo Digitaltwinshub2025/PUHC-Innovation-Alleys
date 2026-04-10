@@ -520,6 +520,11 @@ def puhc_puede():
     # PUHC PUEDE case study page - Research, Mapping, and Design
     return render_template('puhc_puede.html')
 
+@app.route('/aura-report')
+def aura_report():
+    # AURA Report viewer page - Environmental justice research
+    return render_template('aura_report.html')
+
 @app.route('/api/images/<query>', methods=['GET'])
 def get_images(query):
     """Search for images from Unsplash API"""
