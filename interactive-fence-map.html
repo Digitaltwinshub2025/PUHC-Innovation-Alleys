@@ -287,6 +287,174 @@
         
         .sim-workspace { display: flex; flex-direction: column; gap: 12px; margin-bottom: 16px; }
 
+        /* ── Before/After Toggle & Undo/Redo Toolbar ── */
+        .design-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            margin-bottom: 16px;
+        }
+        .toolbar-left {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        .toolbar-btn {
+            padding: 8px 14px;
+            background: var(--bg-panel);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .toolbar-btn:hover:not(:disabled) {
+            border-color: var(--accent);
+            color: var(--text-primary);
+            background: rgba(15,164,175,0.1);
+        }
+        .toolbar-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+        .toolbar-btn.active {
+            background: var(--accent);
+            color: #fff;
+            border-color: var(--accent);
+        }
+        .toolbar-divider {
+            width: 1px;
+            height: 24px;
+            background: var(--border);
+            margin: 0 4px;
+        }
+
+        /* ── Enhanced Cost Breakdown Panel ── */
+        .cost-breakdown-panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 18px;
+            margin-bottom: 16px;
+        }
+        .cost-breakdown-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border);
+        }
+        .cost-breakdown-title {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+        .cost-breakdown-total {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+        .cost-breakdown-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .cost-breakdown-row:last-child {
+            border-bottom: none;
+            padding-top: 12px;
+            margin-top: 4px;
+            border-top: 2px solid var(--border);
+        }
+        .cost-breakdown-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .cost-breakdown-value {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .cost-breakdown-value.repair { color: var(--warning); }
+        .cost-breakdown-value.medallion { color: var(--accent); }
+        .cost-breakdown-value.total { font-size: 1.2rem; color: var(--accent); }
+
+        /* ── Medallion Search & Filter ── */
+        .medallion-search-filter {
+            margin-bottom: 16px;
+        }
+        .search-box {
+            position: relative;
+            margin-bottom: 12px;
+        }
+        .search-input {
+            width: 100%;
+            padding: 10px 12px 10px 36px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-size: 0.85rem;
+            transition: all 0.2s ease;
+        }
+        .search-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            background: rgba(15,164,175,0.05);
+        }
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            pointer-events: none;
+        }
+        .filter-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .filter-chip {
+            padding: 6px 12px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .filter-chip:hover {
+            border-color: var(--accent);
+            color: var(--text-primary);
+        }
+        .filter-chip.active {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: #fff;
+        }
+
         /* Medallion Library */
         .medallion-library {
             width: 100%; display: flex; flex-direction: column; gap: 10px;
@@ -856,6 +1024,25 @@
 
         <!-- Intervention Simulation View -->
         <div class="simulation-view" id="simulationView">
+            <!-- Design Toolbar: Before/After + Undo/Redo -->
+            <div class="design-toolbar">
+                <div class="toolbar-left">
+                    <button class="toolbar-btn" id="btnUndo" disabled title="Undo last action">
+                        <span>↶</span> Undo
+                    </button>
+                    <button class="toolbar-btn" id="btnRedo" disabled title="Redo last action">
+                        <span>↷</span> Redo
+                    </button>
+                    <div class="toolbar-divider"></div>
+                    <button class="toolbar-btn active" id="btnShowAfter" title="Toggle medallion visibility">
+                        <span>👁</span> Show Medallions
+                    </button>
+                </div>
+                <div class="toolbar-right">
+                    <span style="font-size: 0.75rem; color: var(--text-muted);" id="historyStatus">Ready to design</span>
+                </div>
+            </div>
+
             <div class="sim-workspace">
                 <!-- Layered Elevation Canvas -->
                 <div class="fence-canvas" id="fenceCanvas">
@@ -954,6 +1141,44 @@
     <!-- RIGHT: Medallion Gallery Panel -->
     <div class="medallion-gallery-panel">
         <div class="panel-label">Medallion Gallery</div>
+        
+        <!-- Cost Breakdown Panel -->
+        <div class="cost-breakdown-panel" id="costBreakdownPanel">
+            <div class="cost-breakdown-header">
+                <div class="cost-breakdown-title">Cost Breakdown</div>
+                <div class="cost-breakdown-total" id="totalCostDisplay">$10,215</div>
+            </div>
+            <div class="cost-breakdown-row">
+                <div class="cost-breakdown-label">Base Repair</div>
+                <div class="cost-breakdown-value repair" id="baseRepairCost">$10,215</div>
+            </div>
+            <div class="cost-breakdown-row">
+                <div class="cost-breakdown-label">
+                    Medallions
+                    <span style="font-size: 0.7rem; color: var(--text-muted);" id="medallionCount">(0)</span>
+                </div>
+                <div class="cost-breakdown-value medallion" id="medallionCost">$0</div>
+            </div>
+            <div class="cost-breakdown-row">
+                <div class="cost-breakdown-label" style="font-weight: 700;">Project Total</div>
+                <div class="cost-breakdown-value total" id="projectTotalCost">$10,215</div>
+            </div>
+        </div>
+
+        <!-- Search & Filter -->
+        <div class="medallion-search-filter">
+            <div class="search-box">
+                <span class="search-icon">🔍</span>
+                <input type="text" class="search-input" id="medallionSearch" placeholder="Search medallions...">
+            </div>
+            <div class="filter-chips">
+                <button class="filter-chip active" data-filter="all">All</button>
+                <button class="filter-chip" data-filter="ocean">Ocean</button>
+                <button class="filter-chip" data-filter="water">Water</button>
+                <button class="filter-chip" data-filter="marine">Marine</button>
+            </div>
+        </div>
+
         <div class="medallion-library" id="medallionLibrary">
             <div class="med-lib-title">Medallions</div>
         </div>
@@ -1046,6 +1271,18 @@ var placedItems = [];
 var placedUID = 0;
 var elevationOverride = "auto";
 var selectedUID = null;
+
+// Undo/Redo System
+var undoStack = [];
+var redoStack = [];
+var MAX_HISTORY = 50;
+
+// Before/After Toggle
+var showMedallions = true;
+
+// Search & Filter
+var currentFilter = 'all';
+var searchQuery = '';
 var projectDesigns = {};
 
 // Undo/Redo system
@@ -1963,6 +2200,8 @@ canvas.addEventListener("drop", function(e) {
 
     placeMedallion(medId, x, y, false, { anchorIndex: snap.anchorIndex });
     recordAction("place", { medId: medId, x: x, y: y, anchorIndex: snap.anchorIndex });
+    saveToHistory("place medallion");
+    updateCostBreakdown();
 });
 
 canvas.addEventListener("click", function(e) {
@@ -2171,22 +2410,30 @@ document.getElementById("btnRemove").addEventListener("click", function() {
         placedItems = placedItems.filter(function(p) { return p.uid !== selectedUID; });
         deselectAll();
         updateCosts();
+        saveToHistory("remove medallion");
+        updateCostBreakdown();
     }
 });
 
 document.getElementById("btnDuplicate").addEventListener("click", function() {
     duplicateSelectedMedallion();
+    saveToHistory("duplicate medallion");
+    updateCostBreakdown();
 });
 
 document.getElementById("btnClearAll").addEventListener("click", function() {
     clearCanvas();
     updateCosts();
+    saveToHistory("clear all");
+    updateCostBreakdown();
 });
 
 document.getElementById("btnReset").addEventListener("click", function() {
     clearCanvas(true);
     projectDesigns[activeProjectId] = { items: [] };
     updateCosts();
+    saveToHistory("reset design");
+    updateCostBreakdown();
 });
 
 /* ═══════════════════════════════════════════
@@ -2321,6 +2568,283 @@ document.addEventListener("keydown", function(e) {
 
 
 /* ═══════════════════════════════════════════
+   UNDO/REDO SYSTEM
+   ═══════════════════════════════════════════ */
+function saveToHistory(action) {
+    // Clear redo stack when new action is performed
+    redoStack = [];
+    
+    // Add to undo stack
+    undoStack.push(JSON.parse(JSON.stringify({
+        action: action,
+        placedItems: placedItems,
+        timestamp: Date.now()
+    })));
+    
+    // Limit history size
+    if (undoStack.length > MAX_HISTORY) {
+        undoStack.shift();
+    }
+    
+    updateHistoryButtons();
+}
+
+function undo() {
+    if (undoStack.length === 0) return;
+    
+    // Save current state to redo stack
+    redoStack.push(JSON.parse(JSON.stringify({
+        placedItems: placedItems,
+        timestamp: Date.now()
+    })));
+    
+    // Restore previous state
+    var prevState = undoStack.pop();
+    placedItems = JSON.parse(JSON.stringify(prevState.placedItems));
+    
+    // Redraw canvas
+    redrawAllMedallions();
+    updateCostBreakdown();
+    updateHistoryButtons();
+    
+    document.getElementById('historyStatus').textContent = 'Undo: ' + (prevState.action || 'action');
+}
+
+function redo() {
+    if (redoStack.length === 0) return;
+    
+    // Save current state to undo stack
+    undoStack.push(JSON.parse(JSON.stringify({
+        placedItems: placedItems,
+        timestamp: Date.now()
+    })));
+    
+    // Restore next state
+    var nextState = redoStack.pop();
+    placedItems = JSON.parse(JSON.stringify(nextState.placedItems));
+    
+    // Redraw canvas
+    redrawAllMedallions();
+    updateCostBreakdown();
+    updateHistoryButtons();
+    
+    document.getElementById('historyStatus').textContent = 'Redo applied';
+}
+
+function updateHistoryButtons() {
+    var btnUndo = document.getElementById('btnUndo');
+    var btnRedo = document.getElementById('btnRedo');
+    
+    if (btnUndo) btnUndo.disabled = undoStack.length === 0;
+    if (btnRedo) btnRedo.disabled = redoStack.length === 0;
+    
+    var status = document.getElementById('historyStatus');
+    if (status && undoStack.length === 0 && redoStack.length === 0) {
+        status.textContent = 'Ready to design';
+    }
+}
+
+function redrawAllMedallions() {
+    var container = document.getElementById('medallionContainer');
+    if (!container) return;
+    
+    container.innerHTML = '';
+    
+    placedItems.forEach(function(item) {
+        var el = createMedallionElement(item);
+        container.appendChild(el);
+    });
+    
+    updateCosts();
+}
+
+function createMedallionElement(item) {
+    var el = document.createElement('div');
+    el.className = 'placed-medallion';
+    el.setAttribute('data-uid', item.uid);
+    el.setAttribute('data-med-id', item.medId);
+    
+    var medallion = medallions.find(function(m) { return m.id === item.medId; });
+    if (medallion) {
+        el.innerHTML = '<img src="' + medallion.img + '" alt="' + medallion.name + '" draggable="false">';
+    }
+    
+    var size = getCurrentMedallionSize();
+    el.style.width = size + 'px';
+    el.style.height = size + 'px';
+    el.style.left = item.x + 'px';
+    el.style.top = item.y + 'px';
+    
+    el.addEventListener('click', function() {
+        selectMedallion(item.uid);
+    });
+    
+    return el;
+}
+
+/* ═══════════════════════════════════════════
+   BEFORE/AFTER TOGGLE
+   ═══════════════════════════════════════════ */
+function toggleMedallionVisibility() {
+    showMedallions = !showMedallions;
+    
+    var container = document.getElementById('medallionContainer');
+    var btn = document.getElementById('btnShowAfter');
+    
+    if (container) {
+        container.style.opacity = showMedallions ? '1' : '0';
+        container.style.pointerEvents = showMedallions ? 'auto' : 'none';
+    }
+    
+    if (btn) {
+        btn.classList.toggle('active', showMedallions);
+        btn.innerHTML = showMedallions ? '<span>👁</span> Show Medallions' : '<span>👁</span> Hide Medallions';
+    }
+}
+
+/* ═══════════════════════════════════════════
+   COST BREAKDOWN PANEL
+   ═══════════════════════════════════════════ */
+function updateCostBreakdown() {
+    var proj = findProject(activeProjectId);
+    if (!proj) return;
+    
+    var baseRepair = proj.costHigh || 0;
+    var medallionTotal = 0;
+    var medallionCountVal = 0;
+    
+    placedItems.forEach(function(item) {
+        var med = medallions.find(function(m) { return m.id === item.medId; });
+        if (med) {
+            medallionTotal += med.cost;
+            medallionCountVal++;
+        }
+    });
+    
+    var projectTotal = baseRepair + medallionTotal;
+    
+    // Update Cost Breakdown Panel (right side)
+    var baseRepairEl = document.getElementById('baseRepairCost');
+    var medallionCostEl = document.getElementById('medallionCost');
+    var medallionCountEl = document.getElementById('medallionCount');
+    var projectTotalEl = document.getElementById('projectTotalCost');
+    var totalDisplayEl = document.getElementById('totalCostDisplay');
+    
+    if (baseRepairEl) baseRepairEl.textContent = '$' + baseRepair.toLocaleString();
+    if (medallionCostEl) medallionCostEl.textContent = '$' + medallionTotal.toLocaleString();
+    if (medallionCountEl) medallionCountEl.textContent = '(' + medallionCountVal + ')';
+    if (projectTotalEl) projectTotalEl.textContent = '$' + projectTotal.toLocaleString();
+    if (totalDisplayEl) totalDisplayEl.textContent = '$' + projectTotal.toLocaleString();
+}
+
+/* ═══════════════════════════════════════════
+   SEARCH & FILTER
+   ═══════════════════════════════════════════ */
+function filterMedallions() {
+    var items = document.querySelectorAll('.med-lib-item');
+    var visibleCount = 0;
+    
+    items.forEach(function(item) {
+        var medId = item.getAttribute('data-med-id');
+        var medallion = medallions.find(function(m) { return m.id === medId; });
+        
+        if (!medallion) {
+            item.style.display = 'none';
+            return;
+        }
+        
+        var matchesFilter = currentFilter === 'all' || 
+                           medallion.name.toLowerCase().includes(currentFilter.toLowerCase());
+        
+        var matchesSearch = searchQuery === '' || 
+                           medallion.name.toLowerCase().includes(searchQuery.toLowerCase());
+        
+        if (matchesFilter && matchesSearch) {
+            item.style.display = 'flex';
+            visibleCount++;
+        } else {
+            item.style.display = 'none';
+        }
+    });
+    
+    // Update count
+    var countEl = document.querySelector('.med-lib-count');
+    if (countEl) {
+        countEl.textContent = visibleCount + ' designs';
+    }
+}
+
+function setFilter(filter) {
+    currentFilter = filter;
+    
+    // Update filter chip states
+    document.querySelectorAll('.filter-chip').forEach(function(chip) {
+        chip.classList.toggle('active', chip.getAttribute('data-filter') === filter);
+    });
+    
+    filterMedallions();
+}
+
+function setSearch(query) {
+    searchQuery = query;
+    filterMedallions();
+}
+
+/* ═══════════════════════════════════════════
+   EVENT LISTENERS FOR NEW FEATURES
+   ═══════════════════════════════════════════ */
+function initializeNewFeatures() {
+    // Undo/Redo buttons
+    var btnUndo = document.getElementById('btnUndo');
+    var btnRedo = document.getElementById('btnRedo');
+    
+    if (btnUndo) {
+        btnUndo.addEventListener('click', undo);
+    }
+    
+    if (btnRedo) {
+        btnRedo.addEventListener('click', redo);
+    }
+    
+    // Before/After toggle
+    var btnShowAfter = document.getElementById('btnShowAfter');
+    if (btnShowAfter) {
+        btnShowAfter.addEventListener('click', toggleMedallionVisibility);
+    }
+    
+    // Search input
+    var searchInput = document.getElementById('medallionSearch');
+    if (searchInput) {
+        searchInput.addEventListener('input', function(e) {
+            setSearch(e.target.value);
+        });
+    }
+    
+    // Filter chips
+    document.querySelectorAll('.filter-chip').forEach(function(chip) {
+        chip.addEventListener('click', function() {
+            setFilter(this.getAttribute('data-filter'));
+        });
+    });
+    
+    // Keyboard shortcuts
+    document.addEventListener('keydown', function(e) {
+        if (e.ctrlKey || e.metaKey) {
+            if (e.key === 'z' && !e.shiftKey) {
+                e.preventDefault();
+                undo();
+            } else if (e.key === 'z' && e.shiftKey || e.key === 'y') {
+                e.preventDefault();
+                redo();
+            }
+        }
+    });
+    
+    updateHistoryButtons();
+    updateCostBreakdown();
+}
+
+/* ═══════════════════════════════════════════
    INITIALIZATION
    ═══════════════════════════════════════════ */
 // Wait for DOM to be fully loaded
@@ -2348,6 +2872,7 @@ function initializeFenceMap() {
     buildSegmentMap();
     buildMedallionLibrary();
     selectProject("P2");
+    initializeNewFeatures();
     
     // Dropdown menu functionality
     var exploreDropdown = document.getElementById('exploreDropdown');
