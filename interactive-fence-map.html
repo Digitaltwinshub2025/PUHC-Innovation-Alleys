@@ -43,9 +43,9 @@
         /* Navigation handled by global-theme.css */
 
         /* ── Page Header ── */
-        .page-header { text-align: center; padding: 32px 20px 24px; margin-top: 70px; }
-        .page-header h1 { font-size: 1.7rem; font-weight: 700; color: var(--text-primary); }
-        .page-header p { margin-top: 8px; font-size: .88rem; color: var(--text-secondary); max-width: 640px; margin-inline: auto; }
+        .page-header { text-align: left; }
+        .page-header h1 { font-size: 2.2rem; font-weight: 700; color: var(--text-primary); }
+        .page-header p { margin-top: 12px; font-size: 1rem; color: var(--text-secondary); max-width: 720px; line-height: 1.6; }
 
         /* ── Medallion Showcase Video ── */
         .medallion-showcase {
@@ -82,16 +82,14 @@
             text-align: center;
         }
 
-        /* ── Main Layout ── */
+        /* ── Main 3-Column Layout ── */
         .main-layout {
             display: grid;
-            grid-template-columns: minmax(280px, 320px) 1fr minmax(240px, 280px);
+            grid-template-columns: 300px 1fr 360px;
             gap: 24px;
-            padding: 0 32px 40px;
             max-width: 1800px;
-            margin: 0 auto;
-            min-height: calc(100vh - 200px);
-            align-items: start;
+            margin: 32px auto 60px;
+            padding: 0 20px;
         }
 
         /* ── Left: Segment Map ── */
@@ -744,185 +742,16 @@
     </div>
 </nav>
 
-<div class="page-header">
-    <h1>Interactive Fence Map -- Alley 3</h1>
-    <p>Click a fence segment to view existing conditions, repair estimates, and design intervention options.</p>
-</div>
-
-<!-- Comparison Header with Scenario Selector -->
-<div style="background: #132f4c; border-bottom: 1px solid rgba(15,164,175,0.2); padding: 28px 0; margin-bottom: 24px;">
-    <div style="max-width: 1400px; margin: 0 auto; padding: 0 20px;">
-        <div style="display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 20px; margin-bottom: 16px;">
-            <div>
-                <div style="display: inline-block; padding: 4px 12px; background: rgba(15,164,175,0.15); color: var(--accent); border-radius: 4px; font-size: 0.72rem; font-weight: 700; letter-spacing: 1px; margin-bottom: 12px;">FENCE CONDITION COMPARISON</div>
-                <h2 style="color: #fff; font-size: 1.6rem; font-weight: 700; margin-bottom: 8px;">Before & After Visualization</h2>
-                <p style="color: #b0bec5; font-size: 0.9rem; margin: 0;">
-                    Select a transformation scenario to compare existing fence conditions with proposed interventions.
-                </p>
-            </div>
-
-            <!-- Scenario Selector Buttons -->
-            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                <button class="scenario-btn" data-scenario="existing" style="padding: 8px 16px; border-radius: 8px; cursor: pointer; background: #e74c3c; color: #fff; font-weight: 600; font-size: 0.82rem; border: 1px solid #e74c3c; transition: all 0.2s ease;">
-                    Existing Condition
-                </button>
-                <button class="scenario-btn" data-scenario="repair" style="padding: 8px 16px; border-radius: 8px; cursor: pointer; background: rgba(19,47,76,0.8); color: #b0bec5; font-weight: 600; font-size: 0.82rem; border: 1px solid rgba(15,164,175,0.2); transition: all 0.2s ease;">
-                    Structural Repair
-                </button>
-                <button class="scenario-btn" data-scenario="full" style="padding: 8px 16px; border-radius: 8px; cursor: pointer; background: rgba(19,47,76,0.8); color: #b0bec5; font-weight: 600; font-size: 0.82rem; border: 1px solid rgba(15,164,175,0.2); transition: all 0.2s ease;">
-                    Full Intervention
-                </button>
-            </div>
-        </div>
-
-        <!-- Scenario Description -->
-        <div id="scenarioDesc" style="padding: 10px 16px; background: rgba(15,164,175,0.06); border: 1px solid rgba(15,164,175,0.15); border-radius: 8px;">
-            <span style="color: #78909c; font-size: 0.8rem;">Current deteriorated state — rust, damage, missing panels, safety concerns</span>
-        </div>
-
-        <!-- Comparison Slider -->
-        <div id="comparisonSlider" style="height: 480px; margin-top: 32px; border-radius: 16px; overflow: hidden; position: relative; border: 1px solid rgba(15,164,175,0.2); cursor: ew-resize;">
-            <!-- BEFORE Image (left side - always shows) -->
-            <img id="beforeImage" src="" alt="Before" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; filter: grayscale(40%) brightness(0.65);">
-            
-            <!-- BEFORE Label -->
-            <div style="position: absolute; top: 20px; left: 20px; z-index: 5;">
-                <div style="padding: 6px 14px; background: rgba(231,76,60,0.85); border-radius: 6px; color: #fff; font-size: 0.8rem; font-weight: 700;">
-                    BEFORE - 2023
-                </div>
-            </div>
-
-            <!-- AFTER Image (right side - clipped by slider) -->
-            <div id="afterClip" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; clip-path: inset(0 0 0 50%);">
-                <img id="afterImage" src="" alt="After" style="width: 100%; height: 100%; object-fit: cover; filter: brightness(0.9) saturate(1.2);">
-                <!-- Color overlay for scenario -->
-                <div id="afterOverlay" style="position: absolute; inset: 0; background: rgba(231,76,60,0.03);"></div>
-            </div>
-
-            <!-- AFTER Label -->
-            <div style="position: absolute; top: 20px; right: 20px; z-index: 5;">
-                <div id="afterLabel" style="padding: 6px 14px; border-radius: 6px; color: #fff; font-size: 0.8rem; font-weight: 700; background: rgba(231,76,60,0.85);">
-                    EXISTING CONDITION
-                </div>
-            </div>
-
-            <!-- SLIDER HANDLE -->
-            <div id="sliderHandle" style="position: absolute; top: 0; bottom: 0; left: 50%; width: 3px; background: #0FA4AF; cursor: ew-resize; z-index: 10; transform: translateX(-50%);">
-                <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 44px; height: 44px; background: #0FA4AF; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 16px rgba(0,0,0,0.4), 0 0 20px rgba(15,164,175,0.4); cursor: ew-resize;">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0a1929" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <polyline points="17 11 21 7 17 3"></polyline>
-                        <polyline points="7 3 3 7 7 11"></polyline>
-                        <line x1="21" y1="7" x2="3" y2="7"></line>
-                        <polyline points="17 21 21 17 17 13"></polyline>
-                        <polyline points="7 13 3 17 7 21"></polyline>
-                        <line x1="21" y1="17" x2="3" y2="17"></line>
-                    </svg>
-                </div>
-            </div>
-
-            <!-- Instruction overlay at bottom -->
-            <div style="position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 5;">
-                <div style="padding: 6px 14px; background: rgba(10,25,41,0.8); border-radius: 20px; color: #b0bec5; font-size: 0.72rem; backdrop-filter: blur(8px); border: 1px solid rgba(15,164,175,0.2);">
-                    ← Drag to compare →
-                </div>
-            </div>
-        </div>
-
-        <!-- Metrics Cards -->
-        <div style="margin-top: 48px;">
-            <h3 style="color: #0FA4AF; font-size: 1.3rem; font-weight: 700; margin-bottom: 8px;">Impact Metrics</h3>
-            <p style="color: #78909c; font-size: 0.85rem; margin-bottom: 24px;">Comparing key cost and condition indicators across transformation scenarios.</p>
-
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px;">
-                <!-- Repair Cost Card -->
-                <div style="padding: 20px 24px; background: #1a3a54; border: 1px solid rgba(15,164,175,0.2); border-radius: 8px;">
-                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 16px;">
-                        <div style="width: 36px; height: 36px; border-radius: 8px; background: rgba(232,168,56,0.15); display: flex; align-items: center; justify-content: center;">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#e8a838" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
-                            </svg>
-                        </div>
-                        <span style="color: #b0bec5; font-size: 0.82rem; font-weight: 500;">Repair Cost</span>
-                    </div>
-                    <div style="margin-bottom: 12px;">
-                        <div id="metricRepairCost" style="color: #fff; font-size: 1.6rem; font-weight: 700; line-height: 1;">$8,200</div>
-                        <div style="color: #78909c; font-size: 0.72rem; margin-top: 2px;">estimated range</div>
-                    </div>
-                    <div style="display: flex; gap: 4px;">
-                        <div style="flex: 1; height: 4px; border-radius: 2px; background: rgba(231,76,60,0.3);"></div>
-                        <div style="flex: 1; height: 4px; border-radius: 2px; background: rgba(232,168,56,0.3);"></div>
-                        <div style="flex: 3; height: 4px; border-radius: 2px; background: rgba(15,164,175,0.3);"></div>
-                    </div>
-                </div>
-
-                <!-- Fabrication Cost Card -->
-                <div style="padding: 20px 24px; background: #1a3a54; border: 1px solid rgba(15,164,175,0.2); border-radius: 8px;">
-                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 16px;">
-                        <div style="width: 36px; height: 36px; border-radius: 8px; background: rgba(15,164,175,0.15); display: flex; align-items: center; justify-content: center;">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0FA4AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <circle cx="12" cy="12" r="10"></circle>
-                                <circle cx="12" cy="12" r="6"></circle>
-                                <circle cx="12" cy="12" r="2"></circle>
-                            </svg>
-                        </div>
-                        <span style="color: #b0bec5; font-size: 0.82rem; font-weight: 500;">Medallion Fabrication</span>
-                    </div>
-                    <div style="margin-bottom: 12px;">
-                        <div id="metricFabCost" style="color: #fff; font-size: 1.6rem; font-weight: 700; line-height: 1;">$0</div>
-                        <div style="color: #78909c; font-size: 0.72rem; margin-top: 2px;">custom designs</div>
-                    </div>
-                    <div style="display: flex; gap: 4px;">
-                        <div style="flex: 1; height: 4px; border-radius: 2px; background: rgba(231,76,60,0.3);"></div>
-                        <div style="flex: 1; height: 4px; border-radius: 2px; background: rgba(232,168,56,0.3);"></div>
-                        <div style="flex: 3; height: 4px; border-radius: 2px; background: #0FA4AF;"></div>
-                    </div>
-                </div>
-
-                <!-- Total Investment Card -->
-                <div style="padding: 20px 24px; background: #1a3a54; border: 1px solid rgba(15,164,175,0.2); border-radius: 8px;">
-                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 16px;">
-                        <div style="width: 36px; height: 36px; border-radius: 8px; background: rgba(52,211,153,0.15); display: flex; align-items: center; justify-content: center;">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <line x1="12" y1="1" x2="12" y2="23"></line>
-                                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-                            </svg>
-                        </div>
-                        <span style="color: #b0bec5; font-size: 0.82rem; font-weight: 500;">Total Investment</span>
-                    </div>
-                    <div style="margin-bottom: 12px;">
-                        <div id="metricTotalCost" style="color: #fff; font-size: 1.6rem; font-weight: 700; line-height: 1;">$8,200</div>
-                        <div style="color: #78909c; font-size: 0.72rem; margin-top: 2px;">repair + fabrication</div>
-                    </div>
-                    <div style="margin-top: 10px; display: flex; align-items: center; gap: 6px;">
-                        <span id="metricImprovement" style="color: #34d399; font-size: 0.8rem; font-weight: 700;">
-                            Base repair only
-                        </span>
-                    </div>
-                </div>
-
-                <!-- Condition Score Card -->
-                <div style="padding: 20px 24px; background: #1a3a54; border: 1px solid rgba(15,164,175,0.2); border-radius: 8px;">
-                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 16px;">
-                        <div style="width: 36px; height: 36px; border-radius: 8px; background: rgba(231,76,60,0.15); display: flex; align-items: center; justify-content: center;">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#e74c3c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                                <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                            </svg>
-                        </div>
-                        <span style="color: #b0bec5; font-size: 0.82rem; font-weight: 500;">Condition Score</span>
-                    </div>
-                    <div style="margin-bottom: 12px;">
-                        <div id="metricCondition" style="color: #e74c3c; font-size: 1.6rem; font-weight: 700; line-height: 1;">Poor</div>
-                        <div style="color: #78909c; font-size: 0.72rem; margin-top: 2px;">current state</div>
-                    </div>
-                    <div style="margin-top: 10px;">
-                        <span style="color: #78909c; font-size: 0.75rem;">Rust, damage, safety concerns</span>
-                    </div>
-                </div>
-            </div>
-        </div>
+<div class="page-header" style="background: linear-gradient(135deg, #0a1929 0%, #132f4c 100%); padding: 48px 20px; margin-top: 70px; border-bottom: 1px solid rgba(15,164,175,0.2);">
+    <div style="max-width: 1400px; margin: 0 auto;">
+        <div style="display: inline-block; padding: 4px 12px; background: rgba(15,164,175,0.15); color: var(--accent); border-radius: 4px; font-size: 0.72rem; font-weight: 700; letter-spacing: 1px; margin-bottom: 16px;">FENCE DESIGN STUDIO</div>
+        <h1 style="font-size: 2.2rem; font-weight: 700; color: #fff; margin-bottom: 12px; line-height: 1.2;">Interactive Fence Map</h1>
+        <p style="font-size: 1rem; color: #b0bec5; max-width: 720px; line-height: 1.6; margin: 0;">
+            Select a fence segment from the map to view existing conditions, explore repair estimates, and design custom medallion interventions for Alley 3.
+        </p>
     </div>
 </div>
+
 
 <!-- Medallion Art Showcase Video -->
 <div class="medallion-showcase">
@@ -1958,10 +1787,6 @@ function selectProject(pid) {
     } else {
         updateCosts();
     }
-    
-    // Update comparison slider and metrics
-    updateComparisonImages();
-    updateMetricsDisplay();
 }
 
 /* ═══════════════════════════════════════════
@@ -2281,7 +2106,6 @@ function updateCosts() {
     }
 
     syncCurrentProjectDesign();
-    updateMetricsDisplay();
 }
 
 /* ═══════════════════════════════════════════
@@ -2445,204 +2269,6 @@ document.addEventListener("keydown", function(e) {
     }
 });
 
-/* ═══════════════════════════════════════════
-   SCENARIO SWITCHING
-   ═══════════════════════════════════════════ */
-var currentScenario = 'existing';
-var scenarioData = {
-    existing: {
-        label: 'Existing Condition',
-        desc: 'Current deteriorated state — rust, damage, missing panels, safety concerns',
-        color: '#e74c3c',
-        afterLabel: 'EXISTING CONDITION'
-    },
-    repair: {
-        label: 'Structural Repair',
-        desc: 'Fence repaired and reinforced — structural integrity restored, no decorative elements',
-        color: '#e8a838',
-        afterLabel: 'STRUCTURAL REPAIR'
-    },
-    full: {
-        label: 'Full Intervention',
-        desc: 'Complete transformation — structural repair + decorative medallions + community engagement',
-        color: '#0FA4AF',
-        afterLabel: 'FULL INTERVENTION'
-    }
-};
-
-function setScenario(scenario) {
-    currentScenario = scenario;
-    var data = scenarioData[scenario];
-    
-    // Update button states
-    var buttons = document.querySelectorAll('.scenario-btn');
-    buttons.forEach(function(btn) {
-        var btnScenario = btn.getAttribute('data-scenario');
-        if (btnScenario === scenario) {
-            btn.style.background = data.color;
-            btn.style.color = scenario === 'existing' ? '#fff' : '#0a1929';
-            btn.style.borderColor = data.color;
-        } else {
-            btn.style.background = 'rgba(19,47,76,0.8)';
-            btn.style.color = '#b0bec5';
-            btn.style.borderColor = 'rgba(15,164,175,0.2)';
-        }
-    });
-    
-    // Update description
-    var descEl = document.getElementById('scenarioDesc');
-    if (descEl) {
-        descEl.querySelector('span').textContent = data.desc;
-    }
-    
-    // Update after label and overlay color
-    var afterLabel = document.getElementById('afterLabel');
-    var afterOverlay = document.getElementById('afterOverlay');
-    if (afterLabel) {
-        afterLabel.textContent = data.afterLabel;
-        afterLabel.style.background = 'rgba(' + (scenario === 'existing' ? '231,76,60' : scenario === 'repair' ? '232,168,56' : '15,164,175') + ',0.85)';
-    }
-    if (afterOverlay) {
-        afterOverlay.style.background = data.color + '08';
-    }
-    
-    // Update metrics
-    updateMetricsDisplay();
-    
-    console.log('Scenario changed to:', scenario);
-}
-
-function updateMetricsDisplay() {
-    var proj = findProject(activeProjectId);
-    if (!proj) return;
-    
-    var repairCost = proj.costHigh || 8200;
-    var fabCost = 0;
-    
-    // Calculate fabrication cost based on scenario
-    if (currentScenario === 'full') {
-        placedItems.forEach(function(item) {
-            fabCost += item.cost;
-        });
-    }
-    
-    var totalCost = repairCost + fabCost;
-    
-    // Update repair cost
-    var repairEl = document.getElementById('metricRepairCost');
-    if (repairEl) repairEl.textContent = '$' + repairCost.toLocaleString();
-    
-    // Update fabrication cost
-    var fabEl = document.getElementById('metricFabCost');
-    if (fabEl) fabEl.textContent = '$' + fabCost.toLocaleString();
-    
-    // Update total cost
-    var totalEl = document.getElementById('metricTotalCost');
-    if (totalEl) totalEl.textContent = '$' + totalCost.toLocaleString();
-    
-    // Update improvement text
-    var improvementEl = document.getElementById('metricImprovement');
-    if (improvementEl) {
-        if (currentScenario === 'existing') {
-            improvementEl.textContent = 'Base repair only';
-            improvementEl.style.color = '#78909c';
-        } else if (currentScenario === 'repair') {
-            improvementEl.textContent = 'Structural integrity restored';
-            improvementEl.style.color = '#e8a838';
-        } else {
-            improvementEl.textContent = '+$' + fabCost.toLocaleString() + ' for medallions';
-            improvementEl.style.color = '#0FA4AF';
-        }
-    }
-    
-    // Update condition score
-    var conditionEl = document.getElementById('metricCondition');
-    if (conditionEl) {
-        if (currentScenario === 'existing') {
-            conditionEl.textContent = 'Poor';
-            conditionEl.style.color = '#e74c3c';
-        } else if (currentScenario === 'repair') {
-            conditionEl.textContent = 'Good';
-            conditionEl.style.color = '#e8a838';
-        } else {
-            conditionEl.textContent = 'Excellent';
-            conditionEl.style.color = '#0FA4AF';
-        }
-    }
-}
-
-function updateComparisonImages() {
-    var proj = findProject(activeProjectId);
-    if (!proj) return;
-    
-    var beforeImg = document.getElementById('beforeImage');
-    var afterImg = document.getElementById('afterImage');
-    
-    if (beforeImg && proj.fencePhoto) {
-        beforeImg.src = proj.fencePhoto;
-    }
-    
-    // For now, use the same image for after (will be replaced with renders later)
-    if (afterImg && proj.fencePhoto) {
-        afterImg.src = proj.fencePhoto;
-    }
-}
-
-/* ═══════════════════════════════════════════
-   COMPARISON SLIDER
-   ═══════════════════════════════════════════ */
-var sliderPos = 50; // percentage
-var isDragging = false;
-
-function initComparisonSlider() {
-    var slider = document.getElementById('comparisonSlider');
-    var handle = document.getElementById('sliderHandle');
-    var afterClip = document.getElementById('afterClip');
-    
-    if (!slider || !handle || !afterClip) return;
-    
-    function updateSlider(clientX) {
-        var rect = slider.getBoundingClientRect();
-        var x = Math.max(0, Math.min(clientX - rect.left, rect.width));
-        sliderPos = (x / rect.width) * 100;
-        
-        handle.style.left = sliderPos + '%';
-        afterClip.style.clipPath = 'inset(0 0 0 ' + sliderPos + '%)';
-    }
-    
-    // Mouse events
-    slider.addEventListener('mousedown', function(e) {
-        isDragging = true;
-        updateSlider(e.clientX);
-    });
-    
-    document.addEventListener('mousemove', function(e) {
-        if (isDragging) {
-            updateSlider(e.clientX);
-        }
-    });
-    
-    document.addEventListener('mouseup', function() {
-        isDragging = false;
-    });
-    
-    // Touch events
-    slider.addEventListener('touchstart', function(e) {
-        isDragging = true;
-        updateSlider(e.touches[0].clientX);
-    });
-    
-    document.addEventListener('touchmove', function(e) {
-        if (isDragging) {
-            e.preventDefault();
-            updateSlider(e.touches[0].clientX);
-        }
-    }, { passive: false });
-    
-    document.addEventListener('touchend', function() {
-        isDragging = false;
-    });
-}
 
 /* ═══════════════════════════════════════════
    INITIALIZATION
@@ -2654,25 +2280,6 @@ if (document.readyState === "loading") {
     initializeFenceMap();
 }
 
-// Initialize scenario buttons and comparison slider
-document.addEventListener('DOMContentLoaded', function() {
-    var scenarioBtns = document.querySelectorAll('.scenario-btn');
-    scenarioBtns.forEach(function(btn) {
-        btn.addEventListener('click', function() {
-            var scenario = this.getAttribute('data-scenario');
-            setScenario(scenario);
-        });
-    });
-    
-    // Initialize comparison slider
-    initComparisonSlider();
-    
-    // Set placeholder images (will be replaced with actual fence photos)
-    var beforeImg = document.getElementById('beforeImage');
-    var afterImg = document.getElementById('afterImage');
-    if (beforeImg) beforeImg.src = 'static/images/fence-photos/placeholder-before.jpg';
-    if (afterImg) afterImg.src = 'static/images/fence-photos/placeholder-after.jpg';
-});
 
 function preloadImages() {
     var imagesToPreload = [
