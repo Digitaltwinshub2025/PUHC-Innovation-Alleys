@@ -1259,15 +1259,17 @@ function setFenceViewMode(mode) {
     var targetZoom, targetPanX, targetPanY;
     
     if (viewMode === 'detail') {
-        // Fence Detail preset: zoom to 3.5x, center on fence focal point
+        // Fence Detail preset: zoom to 3.5x, center on fence focal point vertically
         targetZoom = detailZoomLevel;
         
         // Calculate where fence focal point is in image coordinates
-        var fenceXInImage = img.naturalWidth * focalPoint.x;
         var fenceYInImage = img.naturalHeight * focalPoint.y;
         
-        // Pan camera to center fence in viewport
-        targetPanX = fenceXInImage * targetZoom - (canvasRect.width / 2);
+        // Pan camera to center fence vertically in viewport
+        // Keep current horizontal pan (or center if first time)
+        targetPanX = (panX === 0 && zoomLevel === 1) ? 
+            (img.naturalWidth * focalPoint.x * targetZoom - canvasRect.width / 2) : 
+            panX * (targetZoom / zoomLevel);
         targetPanY = fenceYInImage * targetZoom - (canvasRect.height / 2);
     } else {
         // Full Elevation preset: zoom to 1x, center image
