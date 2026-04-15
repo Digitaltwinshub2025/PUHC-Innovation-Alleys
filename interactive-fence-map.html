@@ -773,8 +773,8 @@
                                     <option value="auto" selected>Auto (Project Default)</option>
                                     <option value="static/images/Building 2.JPG">Building 2</option>
                                     <option value="static/images/Building 3.JPG">Building 3</option>
-                                    <option value="static/images/Building 4 Snip.JPG">Building 4 (Snip)</option>
-                                    <option value="static/images/Building 5 Snip.JPG">Building 5 (Snip)</option>
+                                    <option value="static/images/Building_4_Section_HighRes.png">Building 4 (High Res)</option>
+                                    <option value="static/images/Building_5_Section_HighRes.png">Building 5 (High Res)</option>
                                     <option value="static/images/Building 6.JPG">Building 6</option>
                                     <option value="static/images/Building 7.JPG">Building 7</option>
                                     <option value="static/images/Building 8.JPG">Building 8</option>
@@ -1224,28 +1224,28 @@ var projectConfigs = {
     },
     // Area B - Building 4
     "P4": {
-        buildingImage: "static/images/Building 4 Snip.JPG",
+        buildingImage: "static/images/Building_4_Section_HighRes.png",
         alleySegment: "Area B",
         projectName: "Project 4",
         fenceRegion: { x: 0.15, width: 0.20, y: 0.50, height: 0.50 },
         snapPoints: 20
     },
     "P5": {
-        buildingImage: "static/images/Building 5 Snip.JPG",
+        buildingImage: "static/images/Building_5_Section_HighRes.png",
         alleySegment: "Area B",
         projectName: "Project 5",
         fenceRegion: { x: 0.37, width: 0.25, y: 0.50, height: 0.50 },
         snapPoints: 20
     },
     "P4c": {
-        buildingImage: "static/images/Building 4 Snip.JPG",
+        buildingImage: "static/images/Building_4_Section_HighRes.png",
         alleySegment: "Area B",
         projectName: "Project 4 (cont.)",
         fenceRegion: { x: 0.63, width: 0.15, y: 0.50, height: 0.50 },
         snapPoints: 20
     },
     "P5c": {
-        buildingImage: "static/images/Building 5 Snip.JPG",
+        buildingImage: "static/images/Building_5_Section_HighRes.png",
         alleySegment: "Area B",
         projectName: "Project 5 (cont.)",
         fenceRegion: { x: 0.80, width: 0.15, y: 0.50, height: 0.50 },
@@ -1311,7 +1311,7 @@ function load2DElevation() {
     if (!elevationImg || !elevationBg) return;
     
     var projectConfig = projectConfigs[activeProjectId];
-    var defaultPath = projectConfig ? projectConfig.buildingImage : "static/images/Building 5 Snip.JPG";
+    var defaultPath = projectConfig ? projectConfig.buildingImage : "static/images/Building_5_Section_HighRes.png";
     var imagePath = (elevationOverride && elevationOverride !== "auto") ? elevationOverride : defaultPath;
 
     if (elevationLabel) {
@@ -2158,8 +2158,8 @@ if (document.readyState === "loading") {
 
 function preloadImages() {
     var imagesToPreload = [
-        "static/images/Building 4 Snip.JPG",
-        "static/images/Building 5 Snip.JPG"
+        "static/images/Building_4_Section_HighRes.png",
+        "static/images/Building_5_Section_HighRes.png"
     ];
     
     imagesToPreload.forEach(function(src) {
