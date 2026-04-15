@@ -827,6 +827,100 @@
                 </div>
             </div>
         </div>
+
+        <!-- Metrics Cards -->
+        <div style="margin-top: 48px;">
+            <h3 style="color: #0FA4AF; font-size: 1.3rem; font-weight: 700; margin-bottom: 8px;">Impact Metrics</h3>
+            <p style="color: #78909c; font-size: 0.85rem; margin-bottom: 24px;">Comparing key cost and condition indicators across transformation scenarios.</p>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px;">
+                <!-- Repair Cost Card -->
+                <div style="padding: 20px 24px; background: #1a3a54; border: 1px solid rgba(15,164,175,0.2); border-radius: 8px;">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 16px;">
+                        <div style="width: 36px; height: 36px; border-radius: 8px; background: rgba(232,168,56,0.15); display: flex; align-items: center; justify-content: center;">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#e8a838" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
+                            </svg>
+                        </div>
+                        <span style="color: #b0bec5; font-size: 0.82rem; font-weight: 500;">Repair Cost</span>
+                    </div>
+                    <div style="margin-bottom: 12px;">
+                        <div id="metricRepairCost" style="color: #fff; font-size: 1.6rem; font-weight: 700; line-height: 1;">$8,200</div>
+                        <div style="color: #78909c; font-size: 0.72rem; margin-top: 2px;">estimated range</div>
+                    </div>
+                    <div style="display: flex; gap: 4px;">
+                        <div style="flex: 1; height: 4px; border-radius: 2px; background: rgba(231,76,60,0.3);"></div>
+                        <div style="flex: 1; height: 4px; border-radius: 2px; background: rgba(232,168,56,0.3);"></div>
+                        <div style="flex: 3; height: 4px; border-radius: 2px; background: rgba(15,164,175,0.3);"></div>
+                    </div>
+                </div>
+
+                <!-- Fabrication Cost Card -->
+                <div style="padding: 20px 24px; background: #1a3a54; border: 1px solid rgba(15,164,175,0.2); border-radius: 8px;">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 16px;">
+                        <div style="width: 36px; height: 36px; border-radius: 8px; background: rgba(15,164,175,0.15); display: flex; align-items: center; justify-content: center;">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0FA4AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <circle cx="12" cy="12" r="6"></circle>
+                                <circle cx="12" cy="12" r="2"></circle>
+                            </svg>
+                        </div>
+                        <span style="color: #b0bec5; font-size: 0.82rem; font-weight: 500;">Medallion Fabrication</span>
+                    </div>
+                    <div style="margin-bottom: 12px;">
+                        <div id="metricFabCost" style="color: #fff; font-size: 1.6rem; font-weight: 700; line-height: 1;">$0</div>
+                        <div style="color: #78909c; font-size: 0.72rem; margin-top: 2px;">custom designs</div>
+                    </div>
+                    <div style="display: flex; gap: 4px;">
+                        <div style="flex: 1; height: 4px; border-radius: 2px; background: rgba(231,76,60,0.3);"></div>
+                        <div style="flex: 1; height: 4px; border-radius: 2px; background: rgba(232,168,56,0.3);"></div>
+                        <div style="flex: 3; height: 4px; border-radius: 2px; background: #0FA4AF;"></div>
+                    </div>
+                </div>
+
+                <!-- Total Investment Card -->
+                <div style="padding: 20px 24px; background: #1a3a54; border: 1px solid rgba(15,164,175,0.2); border-radius: 8px;">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 16px;">
+                        <div style="width: 36px; height: 36px; border-radius: 8px; background: rgba(52,211,153,0.15); display: flex; align-items: center; justify-content: center;">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="12" y1="1" x2="12" y2="23"></line>
+                                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                            </svg>
+                        </div>
+                        <span style="color: #b0bec5; font-size: 0.82rem; font-weight: 500;">Total Investment</span>
+                    </div>
+                    <div style="margin-bottom: 12px;">
+                        <div id="metricTotalCost" style="color: #fff; font-size: 1.6rem; font-weight: 700; line-height: 1;">$8,200</div>
+                        <div style="color: #78909c; font-size: 0.72rem; margin-top: 2px;">repair + fabrication</div>
+                    </div>
+                    <div style="margin-top: 10px; display: flex; align-items: center; gap: 6px;">
+                        <span id="metricImprovement" style="color: #34d399; font-size: 0.8rem; font-weight: 700;">
+                            Base repair only
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Condition Score Card -->
+                <div style="padding: 20px 24px; background: #1a3a54; border: 1px solid rgba(15,164,175,0.2); border-radius: 8px;">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 16px;">
+                        <div style="width: 36px; height: 36px; border-radius: 8px; background: rgba(231,76,60,0.15); display: flex; align-items: center; justify-content: center;">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#e74c3c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                            </svg>
+                        </div>
+                        <span style="color: #b0bec5; font-size: 0.82rem; font-weight: 500;">Condition Score</span>
+                    </div>
+                    <div style="margin-bottom: 12px;">
+                        <div id="metricCondition" style="color: #e74c3c; font-size: 1.6rem; font-weight: 700; line-height: 1;">Poor</div>
+                        <div style="color: #78909c; font-size: 0.72rem; margin-top: 2px;">current state</div>
+                    </div>
+                    <div style="margin-top: 10px;">
+                        <span style="color: #78909c; font-size: 0.75rem;">Rust, damage, safety concerns</span>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -1173,7 +1267,8 @@ function buildMedallionLibrary() {
 }
 
 function getCurrentMedallionSize() {
-    return viewMode === 'detail' ? Math.round(MED_SIZE * detailMedallionScale) : MED_SIZE;
+    // Fix: Don't scale medallions larger in detail view, keep them same size
+    return MED_SIZE;
 }
 
 function getCanvasRect() {
@@ -1863,6 +1958,10 @@ function selectProject(pid) {
     } else {
         updateCosts();
     }
+    
+    // Update comparison slider and metrics
+    updateComparisonImages();
+    updateMetricsDisplay();
 }
 
 /* ═══════════════════════════════════════════
@@ -2182,6 +2281,7 @@ function updateCosts() {
     }
 
     syncCurrentProjectDesign();
+    updateMetricsDisplay();
 }
 
 /* ═══════════════════════════════════════════
@@ -2406,7 +2506,86 @@ function setScenario(scenario) {
         afterOverlay.style.background = data.color + '08';
     }
     
+    // Update metrics
+    updateMetricsDisplay();
+    
     console.log('Scenario changed to:', scenario);
+}
+
+function updateMetricsDisplay() {
+    var proj = findProject(activeProjectId);
+    if (!proj) return;
+    
+    var repairCost = proj.costHigh || 8200;
+    var fabCost = 0;
+    
+    // Calculate fabrication cost based on scenario
+    if (currentScenario === 'full') {
+        placedItems.forEach(function(item) {
+            fabCost += item.cost;
+        });
+    }
+    
+    var totalCost = repairCost + fabCost;
+    
+    // Update repair cost
+    var repairEl = document.getElementById('metricRepairCost');
+    if (repairEl) repairEl.textContent = '$' + repairCost.toLocaleString();
+    
+    // Update fabrication cost
+    var fabEl = document.getElementById('metricFabCost');
+    if (fabEl) fabEl.textContent = '$' + fabCost.toLocaleString();
+    
+    // Update total cost
+    var totalEl = document.getElementById('metricTotalCost');
+    if (totalEl) totalEl.textContent = '$' + totalCost.toLocaleString();
+    
+    // Update improvement text
+    var improvementEl = document.getElementById('metricImprovement');
+    if (improvementEl) {
+        if (currentScenario === 'existing') {
+            improvementEl.textContent = 'Base repair only';
+            improvementEl.style.color = '#78909c';
+        } else if (currentScenario === 'repair') {
+            improvementEl.textContent = 'Structural integrity restored';
+            improvementEl.style.color = '#e8a838';
+        } else {
+            improvementEl.textContent = '+$' + fabCost.toLocaleString() + ' for medallions';
+            improvementEl.style.color = '#0FA4AF';
+        }
+    }
+    
+    // Update condition score
+    var conditionEl = document.getElementById('metricCondition');
+    if (conditionEl) {
+        if (currentScenario === 'existing') {
+            conditionEl.textContent = 'Poor';
+            conditionEl.style.color = '#e74c3c';
+        } else if (currentScenario === 'repair') {
+            conditionEl.textContent = 'Good';
+            conditionEl.style.color = '#e8a838';
+        } else {
+            conditionEl.textContent = 'Excellent';
+            conditionEl.style.color = '#0FA4AF';
+        }
+    }
+}
+
+function updateComparisonImages() {
+    var proj = findProject(activeProjectId);
+    if (!proj) return;
+    
+    var beforeImg = document.getElementById('beforeImage');
+    var afterImg = document.getElementById('afterImage');
+    
+    if (beforeImg && proj.fencePhoto) {
+        beforeImg.src = proj.fencePhoto;
+    }
+    
+    // For now, use the same image for after (will be replaced with renders later)
+    if (afterImg && proj.fencePhoto) {
+        afterImg.src = proj.fencePhoto;
+    }
 }
 
 /* ═══════════════════════════════════════════
