@@ -374,6 +374,7 @@
             image-rendering: crisp-edges;
             filter: contrast(1.05) saturate(1.1);
             transition: transform 0.5s ease;
+            transform-origin: center 68%;
         }
         
         .fence-overlay {
@@ -1544,9 +1545,25 @@ function applyTransform() {
             return;
         }
         
-        // Simple zoom system
+        // Figma-style zoom: scale from fence Y position, pan horizontally
+        var projectConfig = projectConfigs[activeProjectId];
+        var focalPoint = projectConfig && projectConfig.fenceFocalPoint ? projectConfig.fenceFocalPoint : { x: 0.5, y: 0.68 };
+        
+        // Set transform origin to fence position
+        var transformOrigin = "center " + (focalPoint.y * 100) + "%";
+        
         var transform = "scale(" + zoomLevel + ") translateX(" + (panX / zoomLevel) + "px)";
-        console.log("Zoom:", zoomLevel, "PanX:", panX);
+        console.log("Zoom:", zoomLevel, "PanX:", panX, "Origin:", transformOrigin);
+        
+        if (img) {
+            img.style.transformOrigin = transformOrigin;
+        }
+        if (fenceOverlay) {
+            fenceOverlay.style.transformOrigin = transformOrigin;
+        }
+        if (medallionContainer) {
+            medallionContainer.style.transformOrigin = transformOrigin;
+        }
         
         if (img) {
             img.style.transform = transform;
