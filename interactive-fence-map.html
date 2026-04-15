@@ -749,6 +749,39 @@
     <p>Click a fence segment to view existing conditions, repair estimates, and design intervention options.</p>
 </div>
 
+<!-- Comparison Header with Scenario Selector -->
+<div style="background: #132f4c; border-bottom: 1px solid rgba(15,164,175,0.2); padding: 28px 0; margin-bottom: 24px;">
+    <div style="max-width: 1400px; margin: 0 auto; padding: 0 20px;">
+        <div style="display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 20px; margin-bottom: 16px;">
+            <div>
+                <div style="display: inline-block; padding: 4px 12px; background: rgba(15,164,175,0.15); color: var(--accent); border-radius: 4px; font-size: 0.72rem; font-weight: 700; letter-spacing: 1px; margin-bottom: 12px;">FENCE CONDITION COMPARISON</div>
+                <h2 style="color: #fff; font-size: 1.6rem; font-weight: 700; margin-bottom: 8px;">Before & After Visualization</h2>
+                <p style="color: #b0bec5; font-size: 0.9rem; margin: 0;">
+                    Select a transformation scenario to compare existing fence conditions with proposed interventions.
+                </p>
+            </div>
+
+            <!-- Scenario Selector Buttons -->
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                <button class="scenario-btn" data-scenario="existing" style="padding: 8px 16px; border-radius: 8px; cursor: pointer; background: #e74c3c; color: #fff; font-weight: 600; font-size: 0.82rem; border: 1px solid #e74c3c; transition: all 0.2s ease;">
+                    Existing Condition
+                </button>
+                <button class="scenario-btn" data-scenario="repair" style="padding: 8px 16px; border-radius: 8px; cursor: pointer; background: rgba(19,47,76,0.8); color: #b0bec5; font-weight: 600; font-size: 0.82rem; border: 1px solid rgba(15,164,175,0.2); transition: all 0.2s ease;">
+                    Structural Repair
+                </button>
+                <button class="scenario-btn" data-scenario="full" style="padding: 8px 16px; border-radius: 8px; cursor: pointer; background: rgba(19,47,76,0.8); color: #b0bec5; font-weight: 600; font-size: 0.82rem; border: 1px solid rgba(15,164,175,0.2); transition: all 0.2s ease;">
+                    Full Intervention
+                </button>
+            </div>
+        </div>
+
+        <!-- Scenario Description -->
+        <div id="scenarioDesc" style="padding: 10px 16px; background: rgba(15,164,175,0.06); border: 1px solid rgba(15,164,175,0.15); border-radius: 8px;">
+            <span style="color: #78909c; font-size: 0.8rem;">Current deteriorated state — rust, damage, missing panels, safety concerns</span>
+        </div>
+    </div>
+</div>
+
 <!-- Medallion Art Showcase Video -->
 <div class="medallion-showcase">
     <div class="medallion-showcase-wrapper">
@@ -2265,7 +2298,58 @@ document.addEventListener("keydown", function(e) {
 });
 
 /* ═══════════════════════════════════════════
-   INIT
+   SCENARIO SWITCHING
+   ═══════════════════════════════════════════ */
+var currentScenario = 'existing';
+var scenarioData = {
+    existing: {
+        label: 'Existing Condition',
+        desc: 'Current deteriorated state — rust, damage, missing panels, safety concerns',
+        color: '#e74c3c'
+    },
+    repair: {
+        label: 'Structural Repair',
+        desc: 'Fence repaired and reinforced — structural integrity restored, no decorative elements',
+        color: '#e8a838'
+    },
+    full: {
+        label: 'Full Intervention',
+        desc: 'Complete transformation — structural repair + decorative medallions + community engagement',
+        color: '#0FA4AF'
+    }
+};
+
+function setScenario(scenario) {
+    currentScenario = scenario;
+    var data = scenarioData[scenario];
+    
+    // Update button states
+    var buttons = document.querySelectorAll('.scenario-btn');
+    buttons.forEach(function(btn) {
+        var btnScenario = btn.getAttribute('data-scenario');
+        if (btnScenario === scenario) {
+            btn.style.background = data.color;
+            btn.style.color = scenario === 'existing' ? '#fff' : '#0a1929';
+            btn.style.borderColor = data.color;
+        } else {
+            btn.style.background = 'rgba(19,47,76,0.8)';
+            btn.style.color = '#b0bec5';
+            btn.style.borderColor = 'rgba(15,164,175,0.2)';
+        }
+    });
+    
+    // Update description
+    var descEl = document.getElementById('scenarioDesc');
+    if (descEl) {
+        descEl.querySelector('span').textContent = data.desc;
+    }
+    
+    // TODO: Update comparison images based on scenario
+    console.log('Scenario changed to:', scenario);
+}
+
+/* ═══════════════════════════════════════════
+   INITIALIZATION
    ═══════════════════════════════════════════ */
 // Wait for DOM to be fully loaded
 if (document.readyState === "loading") {
@@ -2273,6 +2357,17 @@ if (document.readyState === "loading") {
 } else {
     initializeFenceMap();
 }
+
+// Initialize scenario buttons
+document.addEventListener('DOMContentLoaded', function() {
+    var scenarioBtns = document.querySelectorAll('.scenario-btn');
+    scenarioBtns.forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            var scenario = this.getAttribute('data-scenario');
+            setScenario(scenario);
+        });
+    });
+});
 
 function preloadImages() {
     var imagesToPreload = [
