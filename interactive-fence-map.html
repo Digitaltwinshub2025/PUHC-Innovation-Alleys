@@ -1222,7 +1222,6 @@ function refreshPlacedMedallionLayout() {
 function setFenceViewMode(mode) {
     var canvas = document.getElementById('fenceCanvas');
     var btn = document.getElementById('fenceFocusBtn');
-    var img = document.querySelector("#elevationBackground img");
 
     viewMode = mode === 'detail' ? 'detail' : 'full';
     
@@ -1234,54 +1233,23 @@ function setFenceViewMode(mode) {
         btn.textContent = viewMode === 'detail' ? 'Full Elevation' : 'Fence Detail View';
         btn.style.background = viewMode === 'detail' ? 'rgba(15, 164, 175, 0.3)' : 'var(--accent)';
     }
-
-    if (!img) return;
     
-    // Get image dimensions and fence focal point
-    var imgRect = img.getBoundingClientRect();
-    var canvasRect = canvas.getBoundingClientRect();
-    var projectConfig = projectConfigs[activeProjectId];
-    var focalPoint = projectConfig && projectConfig.fenceFocalPoint ? projectConfig.fenceFocalPoint : { x: 0.5, y: 0.68 };
-    
-    // Calculate viewport presets
+    // Smooth zoom transition
     var startZoom = zoomLevel;
     var startPanX = panX;
-    var startPanY = panY;
+    var targetZoom = viewMode === 'detail' ? detailZoomLevel : 1;
+    var targetPanX = viewMode === 'detail' ? panX : 0;
     
-    var targetZoom, targetPanX, targetPanY;
-    
-    if (viewMode === 'detail') {
-        // Fence Detail preset: zoom to 3.5x, center on fence focal point vertically
-        targetZoom = detailZoomLevel;
-        
-        // Calculate where fence focal point is in image coordinates
-        var fenceYInImage = img.naturalHeight * focalPoint.y;
-        
-        // Pan camera to center fence vertically in viewport
-        // Keep current horizontal pan (or center if first time)
-        targetPanX = (panX === 0 && zoomLevel === 1) ? 
-            (img.naturalWidth * focalPoint.x * targetZoom - canvasRect.width / 2) : 
-            panX * (targetZoom / zoomLevel);
-        targetPanY = fenceYInImage * targetZoom - (canvasRect.height / 2);
-    } else {
-        // Full Elevation preset: zoom to 1x, center image
-        targetZoom = 1;
-        targetPanX = 0;
-        targetPanY = 0;
-    }
-    
-    // Smooth camera transition
     var duration = 500;
     var startTime = Date.now();
     
-    function animateCamera() {
+    function animateZoom() {
         var elapsed = Date.now() - startTime;
         var progress = Math.min(elapsed / duration, 1);
         var eased = progress < 0.5 ? 2 * progress * progress : 1 - Math.pow(-2 * progress + 2, 2) / 2;
         
         zoomLevel = startZoom + (targetZoom - startZoom) * eased;
         panX = startPanX + (targetPanX - startPanX) * eased;
-        panY = startPanY + (targetPanY - startPanY) * eased;
         
         constrainPan();
         applyTransform();
@@ -1289,11 +1257,11 @@ function setFenceViewMode(mode) {
         refreshPlacedMedallionLayout();
         
         if (progress < 1) {
-            requestAnimationFrame(animateCamera);
+            requestAnimationFrame(animateZoom);
         }
     }
 
-    animateCamera();
+    animateZoom();
 }
 
 /* ═══════════════════════════════════════════
@@ -1595,22 +1563,19 @@ function applyTransform() {
 }
 
 function constrainPan() {
+    if (zoomLevel <= 1) {
+        panX = 0;
+        return;
+    }
+    
     var canvas = document.getElementById("fenceCanvas");
-    var img = document.querySelector("#elevationBackground img");
-    if (!canvas || !img) return;
+    if (!canvas) return;
     
     var canvasRect = canvas.getBoundingClientRect();
     
-    // Calculate scaled image dimensions
-    var scaledWidth = img.naturalWidth * zoomLevel;
-    var scaledHeight = img.naturalHeight * zoomLevel;
-    
-    // Constrain pan to keep image within viewport
-    var maxPanX = Math.max(0, scaledWidth - canvasRect.width);
-    var maxPanY = Math.max(0, scaledHeight - canvasRect.height);
-    
-    panX = Math.max(0, Math.min(panX, maxPanX));
-    panY = Math.max(0, Math.min(panY, maxPanY));
+    // Constrain horizontal pan based on zoom level
+    var maxPan = (canvasRect.width * (zoomLevel - 1)) / 2;
+    panX = Math.max(-maxPan, Math.min(panX, maxPan));
 }
 
 // Convert screen coordinates to canvas coordinates (inverse transform)
