@@ -332,7 +332,7 @@
             position: relative;
             width: 100%;
             height: 800px;
-            overflow: visible;
+            overflow: hidden;
             background: linear-gradient(135deg, #0d1f2d 0%, #1a2f3f 100%);
             border-radius: var(--radius);
             border: 1px solid rgba(15, 164, 175, 0.25);
@@ -354,12 +354,8 @@
             height: 100%;
             z-index: 1;
             pointer-events: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             background: transparent;
             overflow: hidden;
-            /* Viewport container - clips the view */
         }
         
         .elevation-background.loading::before {
@@ -370,20 +366,14 @@
         }
         
         .elevation-background img {
-            position: absolute;
-            top: 0;
-            left: 0;
-            max-width: none;
-            max-height: none;
-            width: auto;
+            width: 100%;
             height: 100%;
+            object-fit: contain;
+            object-position: center;
             image-rendering: -webkit-optimize-contrast;
             image-rendering: crisp-edges;
             filter: contrast(1.05) saturate(1.1);
-            backface-visibility: hidden;
-            -webkit-backface-visibility: hidden;
-            transform-origin: 0 0;
-            /* Stationary high-res image - viewport moves over it */
+            transition: transform 0.5s ease;
         }
         
         .fence-overlay {
@@ -1586,41 +1576,18 @@ function applyTransform() {
             return;
         }
         
-        // Camera/viewport system: move viewport over stationary image
-        // Image stays in place, we just change what part we're looking at
-        
-        // Get canvas and image dimensions
-        var canvas = document.getElementById("fenceCanvas");
-        if (!canvas) {
-            transformPending = false;
-            return;
-        }
-        var canvasRect = canvas.getBoundingClientRect();
-        
-        // Center image in viewport initially
-        var imgWidth = img.naturalWidth || img.width;
-        var imgHeight = img.naturalHeight || img.height;
-        var canvasHeight = canvasRect.height;
-        
-        // Scale image to fit canvas height
-        var scale = canvasHeight / imgHeight;
-        var scaledWidth = imgWidth * scale;
-        
-        // Center horizontally
-        var centerOffsetX = (canvasRect.width - scaledWidth) / 2;
-        
-        // Apply camera transform on top of centering
-        var finalTransform = "translate(" + (centerOffsetX - panX) + "px, " + (-panY) + "px) scale(" + (scale * zoomLevel) + ")";
-        console.log("CAMERA SYSTEM ACTIVE - panX:", panX, "panY:", panY, "zoom:", zoomLevel);
+        // Simple zoom system
+        var transform = "scale(" + zoomLevel + ") translateX(" + (panX / zoomLevel) + "px)";
+        console.log("Zoom:", zoomLevel, "PanX:", panX);
         
         if (img) {
-            img.style.transform = finalTransform;
+            img.style.transform = transform;
         }
         if (fenceOverlay) {
-            fenceOverlay.style.transform = finalTransform;
+            fenceOverlay.style.transform = transform;
         }
         if (medallionContainer) {
-            medallionContainer.style.transform = finalTransform;
+            medallionContainer.style.transform = transform;
         }
         
         transformPending = false;
