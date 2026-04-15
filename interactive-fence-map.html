@@ -354,10 +354,12 @@
             height: 100%;
             z-index: 1;
             pointer-events: none;
-            display: block;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             background: transparent;
             overflow: hidden;
-            /* Fixed base layer - no transform */
+            /* Viewport container - clips the view */
         }
         
         .elevation-background.loading::before {
@@ -368,19 +370,18 @@
         }
         
         .elevation-background img {
-            width: 100%;
+            position: absolute;
+            max-width: none;
+            max-height: none;
+            width: auto;
             height: 100%;
-            object-fit: contain;
             image-rendering: -webkit-optimize-contrast;
             image-rendering: crisp-edges;
             filter: contrast(1.05) saturate(1.1);
             backface-visibility: hidden;
             -webkit-backface-visibility: hidden;
-            transform: translateZ(0);
-            -webkit-transform: translateZ(0);
-            object-position: center;
-            image-rendering: -webkit-optimize-contrast;
-            display: block;
+            transform-origin: 0 0;
+            /* Stationary high-res image - viewport moves over it */
         }
         
         .fence-overlay {
@@ -1229,10 +1230,9 @@ function refreshPlacedMedallionLayout() {
 function setFenceViewMode(mode) {
     var canvas = document.getElementById('fenceCanvas');
     var btn = document.getElementById('fenceFocusBtn');
+    var img = document.querySelector("#elevationBackground img");
 
     viewMode = mode === 'detail' ? 'detail' : 'full';
-    var targetZoom = viewMode === 'detail' ? detailZoomLevel : 1;
-    panX = 0;
     
     if (canvas) {
         canvas.classList.toggle('detail-mode', viewMode === 'detail');
@@ -1243,17 +1243,51 @@ function setFenceViewMode(mode) {
         btn.style.background = viewMode === 'detail' ? 'rgba(15, 164, 175, 0.3)' : 'var(--accent)';
     }
 
-    // Smooth zoom transition
+    if (!img) return;
+    
+    // Get image dimensions and fence focal point
+    var imgRect = img.getBoundingClientRect();
+    var canvasRect = canvas.getBoundingClientRect();
+    var projectConfig = projectConfigs[activeProjectId];
+    var focalPoint = projectConfig && projectConfig.fenceFocalPoint ? projectConfig.fenceFocalPoint : { x: 0.5, y: 0.68 };
+    
+    // Calculate viewport presets
     var startZoom = zoomLevel;
+    var startPanX = panX;
+    var startPanY = panY;
+    
+    var targetZoom, targetPanX, targetPanY;
+    
+    if (viewMode === 'detail') {
+        // Fence Detail preset: zoom to 3.5x, center on fence focal point
+        targetZoom = detailZoomLevel;
+        
+        // Calculate where fence focal point is in image coordinates
+        var fenceXInImage = img.naturalWidth * focalPoint.x;
+        var fenceYInImage = img.naturalHeight * focalPoint.y;
+        
+        // Pan camera to center fence in viewport
+        targetPanX = fenceXInImage * targetZoom - (canvasRect.width / 2);
+        targetPanY = fenceYInImage * targetZoom - (canvasRect.height / 2);
+    } else {
+        // Full Elevation preset: zoom to 1x, center image
+        targetZoom = 1;
+        targetPanX = 0;
+        targetPanY = 0;
+    }
+    
+    // Smooth camera transition
     var duration = 500;
     var startTime = Date.now();
     
-    function animateZoom() {
+    function animateCamera() {
         var elapsed = Date.now() - startTime;
         var progress = Math.min(elapsed / duration, 1);
         var eased = progress < 0.5 ? 2 * progress * progress : 1 - Math.pow(-2 * progress + 2, 2) / 2;
         
         zoomLevel = startZoom + (targetZoom - startZoom) * eased;
+        panX = startPanX + (targetPanX - startPanX) * eased;
+        panY = startPanY + (targetPanY - startPanY) * eased;
         
         constrainPan();
         applyTransform();
@@ -1261,11 +1295,11 @@ function setFenceViewMode(mode) {
         refreshPlacedMedallionLayout();
         
         if (progress < 1) {
-            requestAnimationFrame(animateZoom);
+            requestAnimationFrame(animateCamera);
         }
     }
 
-    animateZoom();
+    animateCamera();
 }
 
 /* ═══════════════════════════════════════════
@@ -1532,52 +1566,34 @@ function generateFenceAnchors() {
    ZOOM & PAN SYSTEM
    ═══════════════════════════════════════════ */
 var transformPending = false;
+var panY = 0; // Add vertical pan for camera system
+
 function applyTransform() {
     if (transformPending) return;
     transformPending = true;
     
     requestAnimationFrame(function() {
-        var elevationBg = document.getElementById("elevationBackground");
+        var img = document.querySelector("#elevationBackground img");
         var fenceOverlay = document.getElementById("fenceOverlay");
         var medallionContainer = document.getElementById("medallionContainer");
-        var canvas = document.getElementById("fenceCanvas");
         
-        if (!canvas) {
+        if (!img) {
             transformPending = false;
             return;
         }
         
-        var rect = canvas.getBoundingClientRect();
-        var projectConfig = projectConfigs[activeProjectId];
-        var focalPoint = projectConfig && projectConfig.fenceFocalPoint ? projectConfig.fenceFocalPoint : { x: 0.5, y: 0.68 };
+        // Camera/viewport system: move viewport over stationary image
+        // Image stays in place, we just change what part we're looking at
+        var transform = "translate(" + (-panX) + "px, " + (-panY) + "px) scale(" + zoomLevel + ")";
         
-        // Calculate fence position
-        var fenceY = rect.height * focalPoint.y;
-        var fenceX = rect.width * focalPoint.x;
-        
-        // Calculate transform to zoom into fence while keeping it centered in viewer
-        var scaledFenceY = fenceY * zoomLevel;
-        var scaledFenceX = fenceX * zoomLevel;
-        
-        // Offset to keep fence centered in viewer
-        var offsetY = (rect.height / 2) - scaledFenceY;
-        var offsetX = (rect.width / 2) - scaledFenceX + panX;
-        
-        var transform = "translate(" + offsetX + "px, " + offsetY + "px) scale(" + zoomLevel + ")";
-        var transformOrigin = (focalPoint.x * 100) + "% " + (focalPoint.y * 100) + "%";
-        
-        // Apply transform to building and overlays for fence inspection
-        if (elevationBg) {
-            elevationBg.style.transform = transform;
-            elevationBg.style.transformOrigin = transformOrigin;
+        if (img) {
+            img.style.transform = transform;
         }
         if (fenceOverlay) {
             fenceOverlay.style.transform = transform;
-            fenceOverlay.style.transformOrigin = transformOrigin;
         }
         if (medallionContainer) {
             medallionContainer.style.transform = transform;
-            medallionContainer.style.transformOrigin = transformOrigin;
         }
         
         transformPending = false;
@@ -1586,13 +1602,21 @@ function applyTransform() {
 
 function constrainPan() {
     var canvas = document.getElementById("fenceCanvas");
-    if (!canvas) return;
-    var rect = canvas.getBoundingClientRect();
+    var img = document.querySelector("#elevationBackground img");
+    if (!canvas || !img) return;
     
-    // Constrain horizontal panning
-    var scaledWidth = rect.width * zoomLevel;
-    var maxPanX = Math.max(0, (scaledWidth - rect.width) / 2);
-    panX = Math.max(-maxPanX, Math.min(panX, maxPanX));
+    var canvasRect = canvas.getBoundingClientRect();
+    
+    // Calculate scaled image dimensions
+    var scaledWidth = img.naturalWidth * zoomLevel;
+    var scaledHeight = img.naturalHeight * zoomLevel;
+    
+    // Constrain pan to keep image within viewport
+    var maxPanX = Math.max(0, scaledWidth - canvasRect.width);
+    var maxPanY = Math.max(0, scaledHeight - canvasRect.height);
+    
+    panX = Math.max(0, Math.min(panX, maxPanX));
+    panY = Math.max(0, Math.min(panY, maxPanY));
 }
 
 // Convert screen coordinates to canvas coordinates (inverse transform)
