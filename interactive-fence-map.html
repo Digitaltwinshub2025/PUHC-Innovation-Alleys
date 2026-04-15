@@ -210,7 +210,8 @@
         }
         .fence-photo-placeholder img {
             position: absolute; inset: 0; width: 100%; height: 100%;
-            object-fit: cover; filter: brightness(0.9);
+            object-fit: contain; filter: brightness(0.9);
+            object-position: center;
         }
         .fence-photo-placeholder .photo-label {
             position: absolute; bottom: 8px; left: 10px; font-size: .6rem;
@@ -1160,19 +1161,38 @@ function setFenceViewMode(mode) {
     var btn = document.getElementById('fenceFocusBtn');
 
     viewMode = mode === 'detail' ? 'detail' : 'full';
-    zoomLevel = viewMode === 'detail' ? detailZoomLevel : 1;
+    var targetZoom = viewMode === 'detail' ? detailZoomLevel : 1;
     panX = 0;
 
+    // Smooth zoom transition
+    var startZoom = zoomLevel;
+    var duration = 400;
+    var startTime = Date.now();
+    
+    function animateZoom() {
+        var elapsed = Date.now() - startTime;
+        var progress = Math.min(elapsed / duration, 1);
+        var eased = progress < 0.5 ? 2 * progress * progress : 1 - Math.pow(-2 * progress + 2, 2) / 2;
+        
+        zoomLevel = startZoom + (targetZoom - startZoom) * eased;
+        
+        constrainPan();
+        applyTransform();
+        updateMedallionScales();
+        refreshPlacedMedallionLayout();
+        
+        if (progress < 1) {
+            requestAnimationFrame(animateZoom);
+        }
+    }
+    
     if (canvasEl) canvasEl.classList.toggle('detail-mode', viewMode === 'detail');
     if (btn) {
         btn.textContent = viewMode === 'detail' ? 'Full Elevation' : 'Fence Detail View';
         btn.style.background = viewMode === 'detail' ? 'rgba(15, 164, 175, 0.3)' : 'var(--accent)';
     }
 
-    constrainPan();
-    applyTransform();
-    updateMedallionScales();
-    refreshPlacedMedallionLayout();
+    animateZoom();
 }
 
 /* ═══════════════════════════════════════════
@@ -1194,8 +1214,8 @@ var FENCE_CENTER_Y = 0.65;
 
 // Fence Detail View System
 var viewMode = 'full'; // 'full' or 'detail'
-var detailZoomLevel = 1.8; // Zoom level for detail view (reduced from 2.5 to minimize blur)
-var detailMedallionScale = 1.25; // Medallion scale multiplier in detail view (adjusted to match zoom)
+var detailZoomLevel = 2.2; // Zoom level for fence-focused detail view
+var detailMedallionScale = 1.35; // Medallion scale multiplier in detail view
 
 // Structured Project Configuration System
 // Each project has its own building elevation, fence guides, and metadata
@@ -1206,6 +1226,7 @@ var projectConfigs = {
         alleySegment: "Area A",
         projectName: "Project 2",
         fenceRegion: { x: 0.15, width: 0.25, y: 0.50, height: 0.50 },
+        fenceFocalPoint: { x: 0.275, y: 0.68 },
         snapPoints: 20
     },
     "P3": {
@@ -1213,6 +1234,7 @@ var projectConfigs = {
         alleySegment: "Area A",
         projectName: "Project 3",
         fenceRegion: { x: 0.42, width: 0.30, y: 0.50, height: 0.50 },
+        fenceFocalPoint: { x: 0.57, y: 0.68 },
         snapPoints: 20
     },
     "P3c": {
@@ -1220,6 +1242,7 @@ var projectConfigs = {
         alleySegment: "Area A",
         projectName: "Project 3 (cont.)",
         fenceRegion: { x: 0.73, width: 0.12, y: 0.50, height: 0.50 },
+        fenceFocalPoint: { x: 0.79, y: 0.68 },
         snapPoints: 20
     },
     // Area B - Building 4
@@ -1228,6 +1251,7 @@ var projectConfigs = {
         alleySegment: "Area B",
         projectName: "Project 4",
         fenceRegion: { x: 0.15, width: 0.20, y: 0.50, height: 0.50 },
+        fenceFocalPoint: { x: 0.25, y: 0.70 },
         snapPoints: 20
     },
     "P5": {
@@ -1235,6 +1259,7 @@ var projectConfigs = {
         alleySegment: "Area B",
         projectName: "Project 5",
         fenceRegion: { x: 0.37, width: 0.25, y: 0.50, height: 0.50 },
+        fenceFocalPoint: { x: 0.495, y: 0.70 },
         snapPoints: 20
     },
     "P4c": {
@@ -1242,6 +1267,7 @@ var projectConfigs = {
         alleySegment: "Area B",
         projectName: "Project 4 (cont.)",
         fenceRegion: { x: 0.63, width: 0.15, y: 0.50, height: 0.50 },
+        fenceFocalPoint: { x: 0.705, y: 0.70 },
         snapPoints: 20
     },
     "P5c": {
@@ -1249,6 +1275,7 @@ var projectConfigs = {
         alleySegment: "Area B",
         projectName: "Project 5 (cont.)",
         fenceRegion: { x: 0.80, width: 0.15, y: 0.50, height: 0.50 },
+        fenceFocalPoint: { x: 0.875, y: 0.70 },
         snapPoints: 20
     },
     // Area C - Building 5
@@ -1257,6 +1284,7 @@ var projectConfigs = {
         alleySegment: "Area C",
         projectName: "Project 7",
         fenceRegion: { x: 0.15, width: 0.35, y: 0.50, height: 0.50 },
+        fenceFocalPoint: { x: 0.325, y: 0.68 },
         snapPoints: 20
     },
     "P8": {
@@ -1264,6 +1292,7 @@ var projectConfigs = {
         alleySegment: "Area C",
         projectName: "Project 8",
         fenceRegion: { x: 0.52, width: 0.35, y: 0.50, height: 0.50 },
+        fenceFocalPoint: { x: 0.695, y: 0.68 },
         snapPoints: 20
     },
     // Area D - Building 4
@@ -1272,6 +1301,7 @@ var projectConfigs = {
         alleySegment: "Area D",
         projectName: "Project 9",
         fenceRegion: { x: 0.10, width: 0.40, y: 0.50, height: 0.50 },
+        fenceFocalPoint: { x: 0.30, y: 0.65 },
         snapPoints: 20
     },
     "P10": {
@@ -1279,6 +1309,7 @@ var projectConfigs = {
         alleySegment: "Area D",
         projectName: "Project 10",
         fenceRegion: { x: 0.52, width: 0.40, y: 0.50, height: 0.50 },
+        fenceFocalPoint: { x: 0.72, y: 0.65 },
         snapPoints: 20
     },
     "P9c": {
@@ -1286,6 +1317,7 @@ var projectConfigs = {
         alleySegment: "Area D",
         projectName: "Project 9 (cont.)",
         fenceRegion: { x: 0.10, width: 0.20, y: 0.50, height: 0.50 },
+        fenceFocalPoint: { x: 0.20, y: 0.65 },
         snapPoints: 20
     },
     "P10c": {
@@ -1293,6 +1325,7 @@ var projectConfigs = {
         alleySegment: "Area D",
         projectName: "Project 10 (cont.)",
         fenceRegion: { x: 0.32, width: 0.20, y: 0.50, height: 0.50 },
+        fenceFocalPoint: { x: 0.42, y: 0.65 },
         snapPoints: 20
     }
 };
@@ -1442,12 +1475,29 @@ function applyTransform() {
         }
         
         var rect = canvas.getBoundingClientRect();
-        var fenceY = rect.height * FENCE_CENTER_Y;
-        var scaledFenceY = fenceY * zoomLevel;
-        var verticalOffset = fenceY - scaledFenceY;
         
-        var transform = "translate(" + panX + "px, " + verticalOffset + "px) scale(" + zoomLevel + ")";
-        var transformOrigin = "50% " + (FENCE_CENTER_Y * 100) + "%";
+        // Get fence focal point for current project
+        var projectConfig = projectConfigs[activeProjectId];
+        var focalPoint = projectConfig && projectConfig.fenceFocalPoint ? projectConfig.fenceFocalPoint : { x: 0.5, y: 0.68 };
+        
+        // Calculate transform to zoom into fence region
+        var fenceY = rect.height * focalPoint.y;
+        var fenceX = rect.width * focalPoint.x;
+        
+        // In detail mode, zoom into the fence focal point
+        // In full mode, show entire elevation
+        var scaledFenceY = fenceY * zoomLevel;
+        var scaledFenceX = fenceX * zoomLevel;
+        
+        // Calculate offset to keep fence centered
+        var verticalOffset = fenceY - scaledFenceY;
+        var horizontalOffset = (rect.width / 2) - scaledFenceX;
+        
+        // Combine manual pan with auto-centering
+        var finalPanX = viewMode === 'detail' ? horizontalOffset : panX;
+        
+        var transform = "translate(" + finalPanX + "px, " + verticalOffset + "px) scale(" + zoomLevel + ")";
+        var transformOrigin = (focalPoint.x * 100) + "% " + (focalPoint.y * 100) + "%";
         
         if (elevationBg) {
             elevationBg.style.transform = transform;
