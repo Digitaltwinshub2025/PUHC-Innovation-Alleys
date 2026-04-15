@@ -352,6 +352,7 @@
             display: block;
             background: #f0f0f0;
             overflow: hidden;
+            /* Fixed base layer - no transform */
         }
         
         .elevation-background.loading::before {
@@ -386,6 +387,38 @@
             z-index: 2;
             pointer-events: none;
             shape-rendering: crispEdges;
+            /* Fixed overlay - no transform */
+        }
+        
+        /* Interactive Fence Workspace */
+        .fence-workspace {
+            position: absolute;
+            left: 0;
+            width: 100%;
+            height: 150px;
+            z-index: 5;
+            pointer-events: auto;
+            overflow: hidden;
+            cursor: grab;
+            transition: height 0.4s ease, top 0.4s ease;
+        }
+        
+        .fence-workspace.detail-mode {
+            height: 280px;
+        }
+        
+        .fence-workspace-inner {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            transform-origin: center center;
+            transition: transform 0.4s ease;
+        }
+        
+        .fence-workspace.panning {
+            cursor: grabbing;
         }
         
         /* Fence Region Highlight */
@@ -410,8 +443,14 @@
         }
         
         .medallion-container {
-            z-index: 3;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 6;
             pointer-events: none;
+            /* Medallions positioned relative to fence workspace */
         }
         
         .medallion-container > * {
@@ -797,12 +836,19 @@
                         <!-- Fence line and segment markers will be drawn here -->
                     </svg>
                     
-                    <!-- Layer 3: Medallion Container (positioned absolutely) -->
+                    <!-- Layer 3: Interactive Fence Workspace (zooms/pans independently) -->
+                    <div class="fence-workspace" id="fenceWorkspace">
+                        <div class="fence-workspace-inner" id="fenceWorkspaceInner">
+                            <!-- This layer handles fence-region zoom and pan -->
+                        </div>
+                    </div>
+                    
+                    <!-- Layer 4: Medallion Container (positioned absolutely) -->
                     <div class="medallion-container" id="medallionContainer" style="position:absolute; top:0; left:0; width:100%; height:100%;">
                         <!-- Placed medallions will be added here -->
                     </div>
                     
-                    <!-- Layer 4: Snap Guide -->
+                    <!-- Layer 5: Snap Guide -->
                     <div class="snap-guide" id="snapGuide"></div>
                 </div>
             </div>
@@ -1157,12 +1203,35 @@ function refreshPlacedMedallionLayout() {
 }
 
 function setFenceViewMode(mode) {
-    var canvasEl = document.getElementById('fenceCanvas');
+    var workspace = document.getElementById('fenceWorkspace');
     var btn = document.getElementById('fenceFocusBtn');
 
     viewMode = mode === 'detail' ? 'detail' : 'full';
     var targetZoom = viewMode === 'detail' ? detailZoomLevel : 1;
     panX = 0;
+
+    // Update workspace height and zoom
+    if (workspace) {
+        workspace.classList.toggle('detail-mode', viewMode === 'detail');
+        
+        // Position workspace at fence region
+        var canvas = document.getElementById('fenceCanvas');
+        if (canvas) {
+            var rect = canvas.getBoundingClientRect();
+            var projectConfig = projectConfigs[activeProjectId];
+            var focalPoint = projectConfig && projectConfig.fenceFocalPoint ? projectConfig.fenceFocalPoint : { x: 0.5, y: 0.68 };
+            
+            // Position workspace at fence Y position
+            var fenceY = rect.height * focalPoint.y;
+            var workspaceHeight = viewMode === 'detail' ? 280 : 150;
+            workspace.style.top = (fenceY - workspaceHeight / 2) + 'px';
+        }
+    }
+    
+    if (btn) {
+        btn.textContent = viewMode === 'detail' ? 'Full Elevation' : 'Fence Detail View';
+        btn.style.background = viewMode === 'detail' ? 'rgba(15, 164, 175, 0.3)' : 'var(--accent)';
+    }
 
     // Smooth zoom transition
     var startZoom = zoomLevel;
@@ -1184,12 +1253,6 @@ function setFenceViewMode(mode) {
         if (progress < 1) {
             requestAnimationFrame(animateZoom);
         }
-    }
-    
-    if (canvasEl) canvasEl.classList.toggle('detail-mode', viewMode === 'detail');
-    if (btn) {
-        btn.textContent = viewMode === 'detail' ? 'Full Elevation' : 'Fence Detail View';
-        btn.style.background = viewMode === 'detail' ? 'rgba(15, 164, 175, 0.3)' : 'var(--accent)';
     }
 
     animateZoom();
@@ -1464,52 +1527,22 @@ function applyTransform() {
     transformPending = true;
     
     requestAnimationFrame(function() {
-        var elevationBg = document.getElementById("elevationBackground");
-        var fenceOverlay = document.getElementById("fenceOverlay");
+        var workspace = document.getElementById("fenceWorkspace");
+        var workspaceInner = document.getElementById("fenceWorkspaceInner");
         var medallionContainer = document.getElementById("medallionContainer");
         
-        var canvas = document.getElementById("fenceCanvas");
-        if (!canvas) {
+        if (!workspace || !workspaceInner) {
             transformPending = false;
             return;
         }
         
-        var rect = canvas.getBoundingClientRect();
+        // Apply horizontal pan and zoom to fence workspace only
+        var transform = "translateX(" + panX + "px) scale(" + zoomLevel + ")";
+        workspaceInner.style.transform = transform;
         
-        // Get fence focal point for current project
-        var projectConfig = projectConfigs[activeProjectId];
-        var focalPoint = projectConfig && projectConfig.fenceFocalPoint ? projectConfig.fenceFocalPoint : { x: 0.5, y: 0.68 };
-        
-        // Calculate transform to zoom into fence region
-        var fenceY = rect.height * focalPoint.y;
-        var fenceX = rect.width * focalPoint.x;
-        
-        // In detail mode, zoom into the fence focal point
-        // In full mode, show entire elevation
-        var scaledFenceY = fenceY * zoomLevel;
-        var scaledFenceX = fenceX * zoomLevel;
-        
-        // Calculate offset to keep fence centered
-        var verticalOffset = fenceY - scaledFenceY;
-        var horizontalOffset = (rect.width / 2) - scaledFenceX;
-        
-        // Combine manual pan with auto-centering
-        var finalPanX = viewMode === 'detail' ? horizontalOffset : panX;
-        
-        var transform = "translate(" + finalPanX + "px, " + verticalOffset + "px) scale(" + zoomLevel + ")";
-        var transformOrigin = (focalPoint.x * 100) + "% " + (focalPoint.y * 100) + "%";
-        
-        if (elevationBg) {
-            elevationBg.style.transform = transform;
-            elevationBg.style.transformOrigin = transformOrigin;
-        }
-        if (fenceOverlay) {
-            fenceOverlay.style.transform = transform;
-            fenceOverlay.style.transformOrigin = transformOrigin;
-        }
+        // Medallions follow workspace transform
         if (medallionContainer) {
             medallionContainer.style.transform = transform;
-            medallionContainer.style.transformOrigin = transformOrigin;
         }
         
         transformPending = false;
@@ -1517,9 +1550,9 @@ function applyTransform() {
 }
 
 function constrainPan() {
-    var canvas = document.getElementById("fenceCanvas");
-    if (!canvas) return;
-    var rect = canvas.getBoundingClientRect();
+    var workspace = document.getElementById("fenceWorkspace");
+    if (!workspace) return;
+    var rect = workspace.getBoundingClientRect();
     
     // Constrain horizontal panning only
     var scaledWidth = rect.width * zoomLevel;
@@ -1564,18 +1597,18 @@ function handleZoomChange() {
 }
 
 function initZoomPan() {
-    var canvas = document.getElementById("fenceCanvas");
-    if (!canvas || zoomPanInitialized) return;
+    var workspace = document.getElementById("fenceWorkspace");
+    if (!workspace || zoomPanInitialized) return;
     zoomPanInitialized = true;
 
     // Mouse wheel zoom (constrained 1x-3x) with smooth 60fps performance
-    canvas.addEventListener("wheel", function(e) {
+    workspace.addEventListener("wheel", function(e) {
         e.preventDefault();
         var delta = e.deltaY > 0 ? -0.15 : 0.15;
         var oldZoom = zoomLevel;
         zoomLevel = Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, zoomLevel + delta));
         
-        var rect = canvas.getBoundingClientRect();
+        var rect = workspace.getBoundingClientRect();
         var mouseX = e.clientX - rect.left;
         var zoomRatio = zoomLevel / oldZoom;
         panX = mouseX - (mouseX - panX) * zoomRatio;
@@ -1586,14 +1619,13 @@ function initZoomPan() {
     }, { passive: false });
 
     // Horizontal-only panning with click + drag
-    canvas.addEventListener("mousedown", function(e) {
+    workspace.addEventListener("mousedown", function(e) {
         if (e.button !== 0) return;
         var target = e.target;
         if (target.classList.contains("placed-medallion") || target.closest(".placed-medallion")) return;
         isPanning = true;
         panStartX = e.clientX - panX;
-        canvas.classList.add("panning");
-        canvas.style.cursor = "grabbing";
+        workspace.classList.add("panning");
     });
 
     var rafId = null;
@@ -1617,12 +1649,9 @@ function initZoomPan() {
                 cancelAnimationFrame(rafId);
                 rafId = null;
             }
-            canvas.classList.remove("panning");
-            canvas.style.cursor = "grab";
+            workspace.classList.remove("panning");
         }
     });
-    
-    canvas.style.cursor = "grab";
 }
 
 /* ═══════════════════════════════════════════
