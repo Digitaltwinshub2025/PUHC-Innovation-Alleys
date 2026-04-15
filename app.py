@@ -510,10 +510,7 @@ def get_plants():
             'message': 'Using cached plant data'
         }), 200
 
-@app.route('/innovation-alleys-map')
-def innovation_alleys_map():
-    # 12 Innovation Alleys themed map
-    return render_template('innovation_alleys_map.html')
+# Route removed - Innovation Alleys Map deprecated
 
 @app.route('/puhc-puede')
 def puhc_puede():

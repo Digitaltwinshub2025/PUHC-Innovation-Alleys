@@ -409,7 +409,6 @@
                     </button>
                     <ul class="nav-dropdown-menu" id="exploreMenu">
                         <li><a href="/unreal-viewer">Digital Twin</a></li>
-                        <li><a href="/innovation-alleys-map">Innovation Alleys Map</a></li>
                         <li><a href="/puhc-puede">PUHC PUEDE</a></li>
                     </ul>
                 </li>
@@ -691,7 +690,7 @@
         });
         
         // Highlight dropdown if on dropdown page
-        if (currentPath === '/unreal-viewer' || currentPath === '/innovation-alleys-map') {
+        if (currentPath === '/unreal-viewer' || currentPath === '/puhc-puede') {
             const dropdown = document.querySelector('.nav-dropdown');
             if (dropdown) dropdown.classList.add('active');
             if (exploreDropdown) exploreDropdown.classList.add('active');
