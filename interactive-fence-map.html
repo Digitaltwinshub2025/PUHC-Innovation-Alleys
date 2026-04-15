@@ -108,19 +108,50 @@
             font-size: .7rem; text-transform: uppercase; letter-spacing: 1.5px;
             color: var(--accent); margin-bottom: 16px; font-weight: 600;
         }
-        .map-columns-header { display: flex; justify-content: space-between; margin-bottom: 10px; }
-        .map-col-label { font-size: .65rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); font-weight: 600; }
-        .area-group { margin-bottom: 18px; position: relative; }
-        .area-group-label {
-            position: absolute; left: 50%; transform: translateX(-50%); top: 4px;
-            font-size: .85rem; font-weight: 700; color: rgba(10,189,198,.2);
-            letter-spacing: 3px; text-transform: uppercase; pointer-events: none; z-index: 0;
+        .area-group { margin-bottom: 24px; }
+        .area-group-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(15,164,175,0.2);
         }
-        .area-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; position: relative; z-index: 1; }
+        .area-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            background: rgba(15,164,175,0.15);
+            border: 1px solid rgba(15,164,175,0.3);
+            border-radius: 4px;
+            font-size: .7rem;
+            font-weight: 700;
+            color: var(--accent);
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+        .area-description {
+            font-size: .7rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+        .area-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
         .segment-block {
-            background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px;
-            padding: 14px 10px; text-align: center; cursor: pointer;
-            transition: border-color .2s ease-out, background-color .2s ease-out, box-shadow .2s ease-out, transform .15s ease-out;
+            background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px;
+            padding: 16px 12px; text-align: center; cursor: pointer;
+            transition: all .2s ease-out;
+            position: relative;
+            overflow: hidden;
+        }
+        .segment-block::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(15,164,175,0.05) 0%, transparent 60%);
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+        .segment-block:hover::before {
+            opacity: 1;
         }
         .segment-block:hover {
             border-color: var(--accent);
@@ -129,8 +160,8 @@
             transform: translateY(-1px);
         }
         .segment-block.active { border-color: var(--accent); background: rgba(10,189,198,.08); box-shadow: 0 0 16px var(--accent-glow), inset 0 0 20px rgba(10,189,198,.05); }
-        .segment-block .seg-id { font-size: 1rem; font-weight: 700; color: var(--text-primary); }
-        .segment-block .seg-sections { font-size: .7rem; color: var(--text-muted); margin-top: 2px; }
+        .segment-block .seg-id { font-size: 1.1rem; font-weight: 700; color: var(--text-primary); position: relative; z-index: 1; }
+        .segment-block .seg-sections { font-size: .72rem; color: var(--text-muted); margin-top: 4px; position: relative; z-index: 1; font-weight: 500; }
         .segment-block.empty { visibility: hidden; }
         .map-legend { display: flex; gap: 16px; margin-top: 14px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,.05); }
         .legend-item { display: flex; align-items: center; gap: 6px; font-size: .68rem; color: var(--text-muted); }
@@ -780,15 +811,10 @@
     <!-- LEFT: Segment Map -->
     <div class="segment-map-panel">
         <div class="panel-label">Alley 3 Segment Map</div>
-        <div class="map-columns-header">
-            <span class="map-col-label">Project Side</span>
-            <span class="map-col-label">East Side</span>
-        </div>
         <div id="segmentMap"></div>
         <div class="map-legend">
-            <div class="legend-item"><span class="legend-dot repair"></span> Fence Segment</div>
+            <div class="legend-item"><span class="legend-dot repair"></span> Fence Project</div>
             <div class="legend-item"><span class="legend-dot material"></span> Selected</div>
-            <div class="legend-item"><span class="legend-dot alley"></span> Alley Context</div>
         </div>
         <div class="map-footer">ALLEY 3 (N-S)</div>
     </div>
@@ -1039,10 +1065,24 @@ var pendingDesignRestore = false;
 function buildSegmentMap() {
     var c = document.getElementById("segmentMap");
     c.innerHTML = "";
+    
+    var areaDescriptions = {
+        'A': 'Residential Fencing',
+        'B': 'Mixed Commercial',
+        'C': 'Wall Rehabilitation',
+        'D': 'Gate Systems'
+    };
+    
     areaLayout.forEach(function(ag) {
         var g = document.createElement("div");
         g.className = "area-group";
-        g.innerHTML = '<div class="area-group-label">Area '+ag.area+'</div>';
+        
+        var header = document.createElement("div");
+        header.className = "area-group-header";
+        header.innerHTML = '<div class="area-badge">Area ' + ag.area + '</div>' +
+                          '<div class="area-description">' + (areaDescriptions[ag.area] || '') + '</div>';
+        g.appendChild(header);
+        
         ag.rows.forEach(function(row) {
             var rd = document.createElement("div");
             rd.className = "area-row";
