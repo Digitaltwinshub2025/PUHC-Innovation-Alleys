@@ -1383,8 +1383,22 @@ function buildMedallionLibrary() {
 }
 
 function getCurrentMedallionSize() {
-    // Fix: Don't scale medallions larger in detail view, keep them same size
-    return MED_SIZE;
+    // Calculate realistic medallion size based on fence height
+    var rect = getCanvasRect();
+    var projectConfig = projectConfigs[activeProjectId];
+    
+    if (!projectConfig || !rect.height) {
+        return 40; // Fallback size
+    }
+    
+    // Get fence region height in pixels
+    var fenceHeight = rect.height * projectConfig.fenceRegion.height;
+    
+    // Medallion size is a percentage of fence height (architectural scale)
+    var medallionSize = fenceHeight * MEDALLION_SCALE_FACTOR;
+    
+    // Clamp to reasonable bounds
+    return Math.max(30, Math.min(medallionSize, 80));
 }
 
 function getCanvasRect() {
@@ -1483,6 +1497,22 @@ function restoreProjectDesign() {
     updateCosts();
 }
 
+// Validate if coordinates are within fence region
+function isWithinFenceBounds(x, y) {
+    var rect = getCanvasRect();
+    var projectConfig = projectConfigs[activeProjectId];
+    
+    if (!projectConfig || !rect.width || !rect.height) return true; // Allow if no config
+    
+    var fenceRegion = projectConfig.fenceRegion;
+    var fenceLeft = rect.width * fenceRegion.x;
+    var fenceRight = rect.width * (fenceRegion.x + fenceRegion.width);
+    var fenceTop = rect.height * fenceRegion.y;
+    var fenceBottom = rect.height * (fenceRegion.y + fenceRegion.height);
+    
+    return x >= fenceLeft && x <= fenceRight && y >= fenceTop && y <= fenceBottom;
+}
+
 function refreshPlacedMedallionLayout() {
     if (!placedItems.length) return;
 
@@ -1495,6 +1525,10 @@ function refreshPlacedMedallionLayout() {
 
         var x = item.normalizedX !== undefined ? item.normalizedX * rect.width : (parseFloat(el.style.left) || 0);
         var y = item.normalizedY !== undefined ? item.normalizedY * rect.height : (parseFloat(el.style.top) || 0);
+        
+        // Update medallion size to maintain fence-proportional scaling
+        el.style.width = medSize + 'px';
+        el.style.height = medSize + 'px';
 
         if (item.anchorIndex !== undefined && item.anchorIndex >= 0 && fenceAnchors[item.anchorIndex]) {
             x = fenceAnchors[item.anchorIndex].x - medSize / 2;
@@ -1888,12 +1922,19 @@ function constrainPan() {
 }
 
 // Convert screen coordinates to canvas coordinates (inverse transform)
+// This properly handles zoom and pan to place medallions exactly under cursor
 function screenToCanvasCoords(screenX, screenY) {
     var canvas = document.getElementById("fenceCanvas");
     if (!canvas) return { x: 0, y: 0 };
     
     var rect = canvas.getBoundingClientRect();
-    var fenceY = rect.height * FENCE_CENTER_Y;
+    var projectConfig = projectConfigs[activeProjectId];
+    
+    // Get fence focal point for this project
+    var focalPoint = projectConfig && projectConfig.fenceFocalPoint ? 
+                     projectConfig.fenceFocalPoint : { x: 0.5, y: 0.68 };
+    
+    var fenceY = rect.height * focalPoint.y;
     var scaledFenceY = fenceY * zoomLevel;
     var verticalOffset = fenceY - scaledFenceY;
     
@@ -1901,7 +1942,8 @@ function screenToCanvasCoords(screenX, screenY) {
     var canvasX = screenX - rect.left;
     var canvasY = screenY - rect.top;
     
-    // Apply inverse transform
+    // Apply inverse transform to get actual canvas coordinates
+    // Account for both zoom and pan
     var transformedX = (canvasX - panX) / zoomLevel;
     var transformedY = (canvasY - verticalOffset) / zoomLevel;
     
@@ -2081,7 +2123,12 @@ function selectProject(pid) {
    ═══════════════════════════════════════════ */
 var canvas = document.getElementById("fenceCanvas");
 var SNAP_RADIUS = 12;  // pixels in screen space
-var MED_SIZE = 52;     // medallion diameter in px
+
+// Realistic medallion sizing system
+// Medallions are scaled as a percentage of fence height for architectural realism
+var MEDALLION_SCALE_FACTOR = 0.12;  // 12% of fence height (realistic decorative size)
+var MIN_MEDALLION_SCALE = 0.08;     // 8% minimum (small decorative piece)
+var MAX_MEDALLION_SCALE = 0.18;     // 18% maximum (large feature piece)
 
 // Convert normalized elevation coordinates (0-1) to canvas pixels
 function normalizedToCanvas(normalizedX, normalizedY) {
@@ -2163,14 +2210,18 @@ canvas.addEventListener("dragover", function(e) {
     e.preventDefault();
     e.dataTransfer.dropEffect = "copy";
     canvas.classList.add("drag-over");
+    
+    var medSize = getCurrentMedallionSize();
+    
     if (ghostPreview) {
-        var ghostSize = viewMode === 'detail' ? 90 : 70;
-        ghostPreview.style.left = e.clientX - (ghostSize / 2) + "px";
-        ghostPreview.style.top = e.clientY - (ghostSize / 2) + "px";
+        ghostPreview.style.left = e.clientX - (medSize / 2) + "px";
+        ghostPreview.style.top = e.clientY - (medSize / 2) + "px";
+        ghostPreview.style.width = medSize + "px";
+        ghostPreview.style.height = medSize + "px";
     }
-    var rect = canvas.getBoundingClientRect();
+    
     var canvasCoords = screenToCanvasCoords(e.clientX, e.clientY);
-    showSnapGuide(canvasCoords.x - MED_SIZE / 2);
+    showSnapGuide(canvasCoords.x - medSize / 2);
 });
 canvas.addEventListener("dragleave", function() {
     canvas.classList.remove("drag-over");
@@ -2185,10 +2236,19 @@ canvas.addEventListener("drop", function(e) {
     if (!medId) return;
 
     var medSize = getCurrentMedallionSize();
+    
     // Convert screen coordinates to canvas coordinates (accounting for zoom/pan)
     var canvasCoords = screenToCanvasCoords(e.clientX, e.clientY);
     var x = canvasCoords.x - medSize / 2;
     var y = canvasCoords.y - medSize / 2;
+    
+    // Validate drop is within fence bounds
+    var centerX = x + medSize / 2;
+    var centerY = y + medSize / 2;
+    if (!isWithinFenceBounds(centerX, centerY)) {
+        console.log("Drop outside fence bounds - medallion not placed");
+        return; // Don't place if outside fence region
+    }
 
     var snap = snapToAnchor(x);
     x = snap.x;
@@ -2216,7 +2276,7 @@ canvas.addEventListener("click", function(e) {
    ═══════════════════════════════════════════ */
 function createGhostPreview(medallion) {
     removeGhostPreview();
-    var ghostSize = viewMode === 'detail' ? 90 : 70;
+    var ghostSize = getCurrentMedallionSize();
     ghostPreview = document.createElement("div");
     ghostPreview.className = "ghost-preview";
     ghostPreview.innerHTML = '<img src="'+medallion.img+'" alt="'+medallion.name+'" style="width:'+ghostSize+'px;height:'+ghostSize+'px;display:block;opacity:0.7;filter:drop-shadow(0 0 12px var(--accent));">';
