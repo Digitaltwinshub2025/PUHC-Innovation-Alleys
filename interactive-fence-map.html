@@ -779,6 +779,54 @@
         <div id="scenarioDesc" style="padding: 10px 16px; background: rgba(15,164,175,0.06); border: 1px solid rgba(15,164,175,0.15); border-radius: 8px;">
             <span style="color: #78909c; font-size: 0.8rem;">Current deteriorated state — rust, damage, missing panels, safety concerns</span>
         </div>
+
+        <!-- Comparison Slider -->
+        <div id="comparisonSlider" style="height: 480px; margin-top: 32px; border-radius: 16px; overflow: hidden; position: relative; border: 1px solid rgba(15,164,175,0.2); cursor: ew-resize;">
+            <!-- BEFORE Image (left side - always shows) -->
+            <img id="beforeImage" src="" alt="Before" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; filter: grayscale(40%) brightness(0.65);">
+            
+            <!-- BEFORE Label -->
+            <div style="position: absolute; top: 20px; left: 20px; z-index: 5;">
+                <div style="padding: 6px 14px; background: rgba(231,76,60,0.85); border-radius: 6px; color: #fff; font-size: 0.8rem; font-weight: 700;">
+                    BEFORE - 2023
+                </div>
+            </div>
+
+            <!-- AFTER Image (right side - clipped by slider) -->
+            <div id="afterClip" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; clip-path: inset(0 0 0 50%);">
+                <img id="afterImage" src="" alt="After" style="width: 100%; height: 100%; object-fit: cover; filter: brightness(0.9) saturate(1.2);">
+                <!-- Color overlay for scenario -->
+                <div id="afterOverlay" style="position: absolute; inset: 0; background: rgba(231,76,60,0.03);"></div>
+            </div>
+
+            <!-- AFTER Label -->
+            <div style="position: absolute; top: 20px; right: 20px; z-index: 5;">
+                <div id="afterLabel" style="padding: 6px 14px; border-radius: 6px; color: #fff; font-size: 0.8rem; font-weight: 700; background: rgba(231,76,60,0.85);">
+                    EXISTING CONDITION
+                </div>
+            </div>
+
+            <!-- SLIDER HANDLE -->
+            <div id="sliderHandle" style="position: absolute; top: 0; bottom: 0; left: 50%; width: 3px; background: #0FA4AF; cursor: ew-resize; z-index: 10; transform: translateX(-50%);">
+                <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 44px; height: 44px; background: #0FA4AF; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 16px rgba(0,0,0,0.4), 0 0 20px rgba(15,164,175,0.4); cursor: ew-resize;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0a1929" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="17 11 21 7 17 3"></polyline>
+                        <polyline points="7 3 3 7 7 11"></polyline>
+                        <line x1="21" y1="7" x2="3" y2="7"></line>
+                        <polyline points="17 21 21 17 17 13"></polyline>
+                        <polyline points="7 13 3 17 7 21"></polyline>
+                        <line x1="21" y1="17" x2="3" y2="17"></line>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Instruction overlay at bottom -->
+            <div style="position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 5;">
+                <div style="padding: 6px 14px; background: rgba(10,25,41,0.8); border-radius: 20px; color: #b0bec5; font-size: 0.72rem; backdrop-filter: blur(8px); border: 1px solid rgba(15,164,175,0.2);">
+                    ← Drag to compare →
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -2305,17 +2353,20 @@ var scenarioData = {
     existing: {
         label: 'Existing Condition',
         desc: 'Current deteriorated state — rust, damage, missing panels, safety concerns',
-        color: '#e74c3c'
+        color: '#e74c3c',
+        afterLabel: 'EXISTING CONDITION'
     },
     repair: {
         label: 'Structural Repair',
         desc: 'Fence repaired and reinforced — structural integrity restored, no decorative elements',
-        color: '#e8a838'
+        color: '#e8a838',
+        afterLabel: 'STRUCTURAL REPAIR'
     },
     full: {
         label: 'Full Intervention',
         desc: 'Complete transformation — structural repair + decorative medallions + community engagement',
-        color: '#0FA4AF'
+        color: '#0FA4AF',
+        afterLabel: 'FULL INTERVENTION'
     }
 };
 
@@ -2344,8 +2395,74 @@ function setScenario(scenario) {
         descEl.querySelector('span').textContent = data.desc;
     }
     
-    // TODO: Update comparison images based on scenario
+    // Update after label and overlay color
+    var afterLabel = document.getElementById('afterLabel');
+    var afterOverlay = document.getElementById('afterOverlay');
+    if (afterLabel) {
+        afterLabel.textContent = data.afterLabel;
+        afterLabel.style.background = 'rgba(' + (scenario === 'existing' ? '231,76,60' : scenario === 'repair' ? '232,168,56' : '15,164,175') + ',0.85)';
+    }
+    if (afterOverlay) {
+        afterOverlay.style.background = data.color + '08';
+    }
+    
     console.log('Scenario changed to:', scenario);
+}
+
+/* ═══════════════════════════════════════════
+   COMPARISON SLIDER
+   ═══════════════════════════════════════════ */
+var sliderPos = 50; // percentage
+var isDragging = false;
+
+function initComparisonSlider() {
+    var slider = document.getElementById('comparisonSlider');
+    var handle = document.getElementById('sliderHandle');
+    var afterClip = document.getElementById('afterClip');
+    
+    if (!slider || !handle || !afterClip) return;
+    
+    function updateSlider(clientX) {
+        var rect = slider.getBoundingClientRect();
+        var x = Math.max(0, Math.min(clientX - rect.left, rect.width));
+        sliderPos = (x / rect.width) * 100;
+        
+        handle.style.left = sliderPos + '%';
+        afterClip.style.clipPath = 'inset(0 0 0 ' + sliderPos + '%)';
+    }
+    
+    // Mouse events
+    slider.addEventListener('mousedown', function(e) {
+        isDragging = true;
+        updateSlider(e.clientX);
+    });
+    
+    document.addEventListener('mousemove', function(e) {
+        if (isDragging) {
+            updateSlider(e.clientX);
+        }
+    });
+    
+    document.addEventListener('mouseup', function() {
+        isDragging = false;
+    });
+    
+    // Touch events
+    slider.addEventListener('touchstart', function(e) {
+        isDragging = true;
+        updateSlider(e.touches[0].clientX);
+    });
+    
+    document.addEventListener('touchmove', function(e) {
+        if (isDragging) {
+            e.preventDefault();
+            updateSlider(e.touches[0].clientX);
+        }
+    }, { passive: false });
+    
+    document.addEventListener('touchend', function() {
+        isDragging = false;
+    });
 }
 
 /* ═══════════════════════════════════════════
@@ -2358,7 +2475,7 @@ if (document.readyState === "loading") {
     initializeFenceMap();
 }
 
-// Initialize scenario buttons
+// Initialize scenario buttons and comparison slider
 document.addEventListener('DOMContentLoaded', function() {
     var scenarioBtns = document.querySelectorAll('.scenario-btn');
     scenarioBtns.forEach(function(btn) {
@@ -2367,6 +2484,15 @@ document.addEventListener('DOMContentLoaded', function() {
             setScenario(scenario);
         });
     });
+    
+    // Initialize comparison slider
+    initComparisonSlider();
+    
+    // Set placeholder images (will be replaced with actual fence photos)
+    var beforeImg = document.getElementById('beforeImage');
+    var afterImg = document.getElementById('afterImage');
+    if (beforeImg) beforeImg.src = 'static/images/fence-photos/placeholder-before.jpg';
+    if (afterImg) afterImg.src = 'static/images/fence-photos/placeholder-after.jpg';
 });
 
 function preloadImages() {
