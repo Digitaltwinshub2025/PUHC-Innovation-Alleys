@@ -1585,6 +1585,7 @@ function applyTransform() {
         // Camera/viewport system: move viewport over stationary image
         // Image stays in place, we just change what part we're looking at
         var transform = "translate(" + (-panX) + "px, " + (-panY) + "px) scale(" + zoomLevel + ")";
+        console.log("CAMERA SYSTEM ACTIVE - panX:", panX, "panY:", panY, "zoom:", zoomLevel);
         
         if (img) {
             img.style.transform = transform;
