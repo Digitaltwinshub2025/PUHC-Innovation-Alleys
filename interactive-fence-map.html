@@ -371,6 +371,8 @@
         
         .elevation-background img {
             position: absolute;
+            top: 0;
+            left: 0;
             max-width: none;
             max-height: none;
             width: auto;
@@ -1586,17 +1588,39 @@ function applyTransform() {
         
         // Camera/viewport system: move viewport over stationary image
         // Image stays in place, we just change what part we're looking at
-        var transform = "translate(" + (-panX) + "px, " + (-panY) + "px) scale(" + zoomLevel + ")";
+        
+        // Get canvas and image dimensions
+        var canvas = document.getElementById("fenceCanvas");
+        if (!canvas) {
+            transformPending = false;
+            return;
+        }
+        var canvasRect = canvas.getBoundingClientRect();
+        
+        // Center image in viewport initially
+        var imgWidth = img.naturalWidth || img.width;
+        var imgHeight = img.naturalHeight || img.height;
+        var canvasHeight = canvasRect.height;
+        
+        // Scale image to fit canvas height
+        var scale = canvasHeight / imgHeight;
+        var scaledWidth = imgWidth * scale;
+        
+        // Center horizontally
+        var centerOffsetX = (canvasRect.width - scaledWidth) / 2;
+        
+        // Apply camera transform on top of centering
+        var finalTransform = "translate(" + (centerOffsetX - panX) + "px, " + (-panY) + "px) scale(" + (scale * zoomLevel) + ")";
         console.log("CAMERA SYSTEM ACTIVE - panX:", panX, "panY:", panY, "zoom:", zoomLevel);
         
         if (img) {
-            img.style.transform = transform;
+            img.style.transform = finalTransform;
         }
         if (fenceOverlay) {
-            fenceOverlay.style.transform = transform;
+            fenceOverlay.style.transform = finalTransform;
         }
         if (medallionContainer) {
-            medallionContainer.style.transform = transform;
+            medallionContainer.style.transform = finalTransform;
         }
         
         transformPending = false;
