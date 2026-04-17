@@ -120,8 +120,8 @@
 
         .btn-digital-twin:hover {
             background: #0cb5c2;
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(15, 164, 175, 0.5);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(15, 164, 175, 0.4);
         }
 
         .btn-secondary-outline {
@@ -143,7 +143,7 @@
             background: rgba(255, 255, 255, 0.15);
             border-color: var(--highlight);
             color: var(--highlight);
-            transform: translateY(-2px);
+            transform: translateY(-1px);
         }
 
         /* Interventions Section */
@@ -199,11 +199,11 @@
             height: 200px;
             object-fit: cover;
             display: block;
-            transition: transform 0.4s ease;
+            transition: transform 0.3s ease;
         }
 
         .intervention-card:hover .intervention-card-image {
-            transform: scale(1.05);
+            transform: scale(1.03);
         }
 
         .intervention-card-content {
@@ -223,9 +223,9 @@
         }
 
         .intervention-card:hover {
-            transform: translateY(-10px);
+            transform: translateY(-4px);
             border-color: var(--accent);
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25), 0 0 40px rgba(15, 164, 175, 0.2);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25), 0 0 20px rgba(15, 164, 175, 0.15);
         }
 
         .intervention-card:hover::before {
@@ -272,6 +272,21 @@
 
         .intervention-card:hover .intervention-cta {
             gap: 10px;
+        }
+
+        /* Zone Cards */
+        .zone-card {
+            background: var(--secondary);
+            border: 1px solid rgba(15, 164, 175, 0.2);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            transition: all 0.25s ease;
+        }
+
+        .zone-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
         }
 
         /* Digital Twin Preview Section */
@@ -481,7 +496,7 @@
             
             <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--spacing-lg); margin-bottom: var(--spacing-lg);">
                 <!-- Area A -->
-                <div style="background: var(--secondary); border: 1px solid rgba(15, 164, 175, 0.2); border-radius: var(--radius-lg); overflow: hidden; transition: all 0.3s ease;" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='rgba(15, 164, 175, 0.2)'">
+                <div class="zone-card">
                     <div style="height: 200px; overflow: hidden; background: rgba(0,0,0,0.3);">
                         <img src="/static/images/alley_zones/area_a/existing/White Wooden Fence (Graffiti Removal + Repaint + Ground Detailing) 1.png" alt="Area A - North Entrance" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
                     </div>
@@ -494,7 +509,7 @@
                 </div>
 
                 <!-- Area B -->
-                <div style="background: var(--secondary); border: 1px solid rgba(15, 164, 175, 0.2); border-radius: var(--radius-lg); overflow: hidden; transition: all 0.3s ease;" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='rgba(15, 164, 175, 0.2)'">
+                <div class="zone-card">
                     <div style="height: 200px; overflow: hidden; background: rgba(0,0,0,0.3);">
                         <img src="/static/images/alley_zones/area_b/existing/Red Fence Gate 1.png" alt="Area B - Red Trellis Zone" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
                     </div>
@@ -507,7 +522,7 @@
                 </div>
 
                 <!-- Area C -->
-                <div style="background: var(--secondary); border: 1px solid rgba(15, 164, 175, 0.2); border-radius: var(--radius-lg); overflow: hidden; transition: all 0.3s ease;" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='rgba(15, 164, 175, 0.2)'">
+                <div class="zone-card">
                     <div style="height: 200px; overflow: hidden; background: rgba(0,0,0,0.3);">
                         <img src="/static/images/alley_zones/area_c/murals/Large Mural Wall with Pipe Detail 1.png" alt="Area C - Mural Zone" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
                     </div>
@@ -520,7 +535,7 @@
                 </div>
 
                 <!-- Area D -->
-                <div style="background: var(--secondary); border: 1px solid rgba(15, 164, 175, 0.2); border-radius: var(--radius-lg); overflow: hidden; transition: all 0.3s ease;" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='rgba(15, 164, 175, 0.2)'">
+                <div class="zone-card">
                     <div style="height: 200px; overflow: hidden; background: rgba(0,0,0,0.3);">
                         <img src="/static/images/alley_zones/area_d/existing/Garage Doors + Wall Sections (Excludes Roof) 1.png" alt="Area D - South Exit" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
                     </div>
