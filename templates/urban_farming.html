@@ -29,9 +29,27 @@
             text-align: center;
             padding: var(--spacing-xl) 0;
             margin-bottom: var(--spacing-xl);
-            background: linear-gradient(135deg, rgba(15, 164, 175, 0.1), rgba(2, 73, 80, 0.2));
+            background: linear-gradient(135deg, rgba(15, 164, 175, 0.03), rgba(2, 73, 80, 0.08));
             border-radius: var(--radius-lg);
-            border: 1px solid rgba(15, 164, 175, 0.3);
+            border: 1px solid rgba(15, 164, 175, 0.15);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(15, 164, 175, 0.05), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
         }
 
         .hero-tagline {
@@ -65,9 +83,9 @@
             max-width: 600px;
             margin: 0 auto var(--spacing-lg);
             padding: 12px 20px;
-            background: rgba(15, 164, 175, 0.1);
+            background: rgba(15, 164, 175, 0.05);
             border-radius: 8px;
-            border: 1px solid rgba(15, 164, 175, 0.3);
+            border: 1px solid rgba(15, 164, 175, 0.2);
         }
 
         .hero-buttons {
@@ -96,7 +114,11 @@
         .btn-primary:hover {
             background: var(--accent);
             transform: translateY(-2px);
-            box-shadow: var(--shadow-lg);
+            box-shadow: 0 8px 24px rgba(15, 164, 175, 0.4);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
         }
 
         .btn-secondary {
@@ -170,7 +192,63 @@
         .edu-card:hover {
             border-color: var(--highlight);
             transform: translateY(-4px);
-            box-shadow: var(--shadow-xl);
+            box-shadow: 0 12px 40px rgba(15, 164, 175, 0.3);
+        }
+
+        /* ============================================
+           IMAGE ENHANCEMENTS
+           ============================================ */
+        img {
+            transition: transform 0.4s ease, filter 0.4s ease;
+        }
+
+        img:hover {
+            transform: scale(1.02);
+            filter: brightness(1.1);
+        }
+
+        /* Smooth scroll */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Loading animation for images */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section {
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        /* Interactive cards */
+        [style*="background: rgba(0,0,0,0.3)"] {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        [style*="background: rgba(0,0,0,0.3)"]:hover {
+            background: rgba(15, 164, 175, 0.15) !important;
+            border-color: var(--accent) !important;
+        }
+
+        /* Better focus states */
+        a:focus, button:focus {
+            outline: 2px solid var(--highlight);
+            outline-offset: 4px;
+        }
+
+        /* Tooltip enhancement */
+        [title] {
+            position: relative;
+            cursor: help;
         }
 
         .edu-icon {
@@ -762,7 +840,7 @@
             <!-- Primary Garden Transformation Image -->
             <div style="margin: 0 auto var(--spacing-lg); max-width: 80%;">
                 <div style="background: rgba(0,0,0,0.3); border-radius: var(--radius-lg); overflow: hidden; border: 1px solid rgba(15, 164, 175, 0.2);">
-                    <img src="/static/images/unreal/photo-2.jpg" alt="Alley 3 with galvanized steel planter boxes - Unreal Engine render" style="width: 100%; height: 380px; object-fit: cover; display: block;" loading="lazy">
+                    <img src="/static/images/unreal/photo-2.webp" alt="Alley 3 with galvanized steel planter boxes - Unreal Engine render" style="width: 100%; height: 380px; object-fit: cover; display: block;" loading="lazy">
                 </div>
                 <p style="text-align: center; color: var(--text-muted); font-size: 0.8rem; margin-top: var(--spacing-sm);">Container gardens along alley edges / raised planters with clear circulation path</p>
             </div>
@@ -770,6 +848,61 @@
             <p style="color: var(--text-secondary); line-height: 1.8; font-size: 0.95rem; max-width: 800px; margin: 0 auto; text-align: center;">
                 This intervention installs raised bed containers along Water Alley's edges, creating a community garden that produces fresh vegetables for neighborhood families. Containers are positioned to maintain pedestrian circulation while maximizing growing space.
             </p>
+
+            <!-- Planter Component Gallery -->
+            <div style="margin-top: var(--spacing-xl); max-width: 1000px; margin-left: auto; margin-right: auto;">
+                <h3 style="text-align: center; color: var(--highlight); font-size: 1.1rem; margin-bottom: var(--spacing-lg); font-weight: 600;">Modular Planter Components</h3>
+                
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--spacing-lg);">
+                    <!-- Object 1: Raised Bed with Trellis -->
+                    <div style="text-align: center;">
+                        <div style="background: rgba(0,0,0,0.3); border-radius: var(--radius-md); overflow: hidden; border: 1px solid rgba(15, 164, 175, 0.2); padding: var(--spacing-md);">
+                            <img src="/static/images/urban-farming-object-1.webp" alt="Raised bed planter with vertical trellis support" style="width: 100%; height: 200px; object-fit: contain; display: block;" loading="lazy">
+                        </div>
+                        <h4 style="color: var(--accent); font-size: 0.9rem; margin-top: var(--spacing-sm); margin-bottom: var(--spacing-xs); font-weight: 600;">Raised Bed with Trellis</h4>
+                        <p style="color: var(--text-muted); font-size: 0.8rem; line-height: 1.5;">Vertical growing system for climbing plants like tomatoes, beans, and cucumbers. Maximizes vertical space in narrow alleys.</p>
+                    </div>
+
+                    <!-- Object 2: Tiered Pyramid Planter -->
+                    <div style="text-align: center;">
+                        <div style="background: rgba(0,0,0,0.3); border-radius: var(--radius-md); overflow: hidden; border: 1px solid rgba(15, 164, 175, 0.2); padding: var(--spacing-md);">
+                            <img src="/static/images/urban-farming-object-2.webp" alt="Tiered pyramid planter for herbs and small vegetables" style="width: 100%; height: 200px; object-fit: contain; display: block;" loading="lazy">
+                        </div>
+                        <h4 style="color: var(--accent); font-size: 0.9rem; margin-top: var(--spacing-sm); margin-bottom: var(--spacing-xs); font-weight: 600;">Tiered Pyramid Planter</h4>
+                        <p style="color: var(--text-muted); font-size: 0.8rem; line-height: 1.5;">Multi-level design for herbs, strawberries, and leafy greens. Compact footprint with high yield capacity for small spaces.</p>
+                    </div>
+
+                    <!-- Object 3: Modular Trellis System -->
+                    <div style="text-align: center;">
+                        <div style="background: rgba(0,0,0,0.3); border-radius: var(--radius-md); overflow: hidden; border: 1px solid rgba(15, 164, 175, 0.2); padding: var(--spacing-md);">
+                            <img src="/static/images/urban-farming-object-3.webp" alt="Modular trellis system with integrated planters" style="width: 100%; height: 200px; object-fit: contain; display: block;" loading="lazy">
+                        </div>
+                        <h4 style="color: var(--accent); font-size: 0.9rem; margin-top: var(--spacing-sm); margin-bottom: var(--spacing-xs); font-weight: 600;">Modular Trellis System</h4>
+                        <p style="color: var(--text-muted); font-size: 0.8rem; line-height: 1.5;">Expandable grid system for vining plants. Can be configured in multiple arrangements along fence lines for privacy and food production.</p>
+                    </div>
+
+                    <!-- Object 4: Stacked Vertical Garden -->
+                    <div style="text-align: center;">
+                        <div style="background: rgba(0,0,0,0.3); border-radius: var(--radius-md); overflow: hidden; border: 1px solid rgba(15, 164, 175, 0.2); padding: var(--spacing-md);">
+                            <img src="/static/images/urban-farming-object-4.webp" alt="Stacked vertical garden tower with multiple growing levels" style="width: 100%; height: 200px; object-fit: contain; display: block;" loading="lazy">
+                        </div>
+                        <h4 style="color: var(--accent); font-size: 0.9rem; margin-top: var(--spacing-sm); margin-bottom: var(--spacing-xs); font-weight: 600;">Stacked Vertical Garden</h4>
+                        <p style="color: var(--text-muted); font-size: 0.8rem; line-height: 1.5;">Modular tower system for intensive growing. Ideal for lettuce, herbs, and flowers. Multiple units create visual interest and maximize production.</p>
+                    </div>
+                </div>
+
+                <p style="text-align: center; color: var(--text-secondary); font-size: 0.85rem; margin-top: var(--spacing-lg); font-style: italic;">All components are lightweight, movable, and designed for easy community maintenance and seasonal rotation.</p>
+            </div>
+
+            <!-- Concept Reference with Plants -->
+            <div style="margin-top: var(--spacing-xxl); max-width: 90%; margin-left: auto; margin-right: auto;">
+                <p style="text-align: center; color: var(--highlight); font-size: 0.9rem; margin-bottom: var(--spacing-xs); font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">Concept Reference</p>
+                <p style="text-align: center; color: var(--text-secondary); font-size: 0.85rem; margin-bottom: var(--spacing-md); font-weight: 500;">Planter components with mature plants and growing systems</p>
+                <div style="background: rgba(255,255,255,0.05); border-radius: var(--radius-lg); overflow: hidden; border: 1px solid rgba(15, 164, 175, 0.2); padding: var(--spacing-xl); box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+                    <img src="/static/images/urban-farming-objects-with-plants.png" alt="Urban farming planter components with mature plants - concept reference" style="width: 100%; height: auto; display: block;" loading="lazy">
+                </div>
+                <p style="text-align: center; color: var(--text-muted); font-size: 0.8rem; margin-top: var(--spacing-sm);">Complete planter system showing stacked vertical gardens, tiered pyramids, trellis systems, and raised beds with mature vegetables and herbs</p>
+            </div>
         </section>
 
         <!-- C. Pavement Foundation -->
@@ -850,7 +983,7 @@
                     </div>
                     <div>
                         <div style="background: rgba(0,0,0,0.3); border-radius: var(--radius-lg); overflow: hidden; border: 1px solid rgba(15, 164, 175, 0.2);">
-                            <img src="/static/images/unreal/photo-3.jpg" alt="Alley 3 planter boxes along corridor - Unreal Engine render" style="width: 100%; height: 280px; object-fit: cover; display: block;" loading="lazy">
+                            <img src="/static/images/unreal/photo-3.webp" alt="Alley 3 planter boxes along corridor - Unreal Engine render" style="width: 100%; height: 280px; object-fit: cover; display: block;" loading="lazy">
                         </div>
                         <p style="text-align: center; color: var(--text-muted); font-size: 0.8rem; margin-top: var(--spacing-xs);">Proposed: Planter boxes along corridor / Unreal Engine render</p>
                     </div>
@@ -872,7 +1005,7 @@
                     </div>
                     <div>
                         <div style="background: rgba(0,0,0,0.3); border-radius: var(--radius-lg); overflow: hidden; border: 1px solid rgba(15, 164, 175, 0.2);">
-                            <img src="/static/images/unreal/photo-4.jpg" alt="Alley 3 with iron fencing and planter infrastructure - Unreal Engine render" style="width: 100%; height: 280px; object-fit: cover; display: block;" loading="lazy">
+                            <img src="/static/images/unreal/photo-4.webp" alt="Alley 3 with iron fencing and planter infrastructure - Unreal Engine render" style="width: 100%; height: 280px; object-fit: cover; display: block;" loading="lazy">
                         </div>
                         <p style="text-align: center; color: var(--text-muted); font-size: 0.8rem; margin-top: var(--spacing-xs);">Proposed: Iron fencing with planter infrastructure / Unreal Engine render</p>
                     </div>

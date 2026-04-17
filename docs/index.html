@@ -572,8 +572,8 @@
         <div class="intervention-grid" style="grid-template-columns: repeat(3, 1fr);">
             <!-- Shade Structures -->
             <a href="solar-shades" class="intervention-card">
-                <img src="static/images/heroes/shade-structures-hero.png" alt="Shade Structures" class="intervention-card-image" loading="lazy">
-                <p style="text-align: center; color: var(--text-muted); font-size: 0.7rem; padding: 4px 8px; margin: 0; background: rgba(0,0,0,0.3);">Design intervention</p>
+                <img src="static/images/unreal/photo-3.webp" alt="Shade Structures - Alley 3 canopy system" class="intervention-card-image" loading="lazy">
+                <p style="text-align: center; color: var(--text-muted); font-size: 0.7rem; padding: 4px 8px; margin: 0; background: rgba(0,0,0,0.3);">Unreal Engine render</p>
                 <div class="intervention-card-content">
                     <div class="intervention-icon">INFRASTRUCTURE</div>
                     <h3 class="intervention-title">Shade Structures</h3>
@@ -586,8 +586,8 @@
 
             <!-- Murals -->
             <a href="murals" class="intervention-card">
-                <img src="static/images/heroes/community-murals-hero.png" alt="Community Murals" class="intervention-card-image" loading="lazy">
-                <p style="text-align: center; color: var(--text-muted); font-size: 0.7rem; padding: 4px 8px; margin: 0; background: rgba(0,0,0,0.3);">Design intervention</p>
+                <img src="static/images/unreal/photo-5.webp" alt="Community Murals - Water-themed murals on alley walls" class="intervention-card-image" loading="lazy">
+                <p style="text-align: center; color: var(--text-muted); font-size: 0.7rem; padding: 4px 8px; margin: 0; background: rgba(0,0,0,0.3);">Unreal Engine render</p>
                 <div class="intervention-card-content">
                     <div class="intervention-icon">CULTURAL</div>
                     <h3 class="intervention-title">Community Murals</h3>
@@ -600,8 +600,8 @@
 
             <!-- Urban Farming -->
             <a href="urban-farming" class="intervention-card">
-                <img src="static/images/heroes/urban-farming-hero.png" alt="Urban Farming" class="intervention-card-image" loading="lazy">
-                <p style="text-align: center; color: var(--text-muted); font-size: 0.7rem; padding: 4px 8px; margin: 0; background: rgba(0,0,0,0.3);">Design intervention</p>
+                <img src="static/images/unreal/photo-2.webp" alt="Urban Farming - Container gardens with planter boxes" class="intervention-card-image" loading="lazy">
+                <p style="text-align: center; color: var(--text-muted); font-size: 0.7rem; padding: 4px 8px; margin: 0; background: rgba(0,0,0,0.3);">Unreal Engine render</p>
                 <div class="intervention-card-content">
                     <div class="intervention-icon">FOOD</div>
                     <h3 class="intervention-title">Urban Farming</h3>
@@ -703,6 +703,18 @@
                 exploreMenu.classList.remove('show');
             });
         }
+
+        // Submenu toggle functionality
+        const submenuLabels = document.querySelectorAll('.nav-dropdown-submenu-label');
+        submenuLabels.forEach(label => {
+            label.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const submenuItems = label.nextElementSibling;
+                if (submenuItems) {
+                    submenuItems.classList.toggle('show');
+                }
+            });
+        });
 
         // Highlight active nav tab
         const currentPath = window.location.pathname;

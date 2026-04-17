@@ -107,6 +107,85 @@
         .benefit-card:hover {
             border-color: var(--accent);
             transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(15, 164, 175, 0.3);
+        }
+
+        /* ============================================
+           UX ENHANCEMENTS
+           ============================================ */
+        /* Hero shimmer effect */
+        .intervention-hero {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .intervention-hero::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(15, 164, 175, 0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        /* Image hover effects */
+        img {
+            transition: transform 0.4s ease, filter 0.4s ease;
+        }
+
+        img:hover {
+            transform: scale(1.02);
+            filter: brightness(1.1);
+        }
+
+        /* Smooth scroll */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Loading animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .content-section {
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        /* Interactive image containers */
+        [style*="background: rgba(0,0,0,0.3)"] {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        [style*="background: rgba(0,0,0,0.3)"]:hover {
+            background: rgba(15, 164, 175, 0.15) !important;
+            border-color: var(--accent) !important;
+        }
+
+        /* Better focus states */
+        a:focus, button:focus {
+            outline: 2px solid var(--highlight);
+            outline-offset: 4px;
+        }
+
+        /* Button active state */
+        .hero-cta:active {
+            transform: translateY(0);
         }
 
         .benefit-icon {
@@ -343,22 +422,22 @@
             <!-- Digital Twin Render -->
             <div style="margin: 0 auto var(--spacing-lg); max-width: 80%;">
                 <div style="background: rgba(0,0,0,0.3); border-radius: var(--radius-lg); overflow: hidden; border: 1px solid rgba(15, 164, 175, 0.2);">
-                    <img src="static/images/unreal/photo-2.jpg" alt="Alley 3 shade canopy with planter boxes - Unreal Engine render" style="width: 100%; height: 380px; object-fit: cover; display: block;" loading="lazy">
+                    <img src="static/images/unreal/photo-3.webp" alt="Alley 3 overhead solar canopy frame with trellises - Unreal Engine render" style="width: 100%; height: 380px; object-fit: cover; display: block;" loading="lazy">
                 </div>
-                <p style="text-align: center; color: var(--text-muted); font-size: 0.8rem; margin-top: var(--spacing-sm);">Integrated shade system in Alley 3 / solar canopy + trellises + medallions</p>
+                <p style="text-align: center; color: var(--text-muted); font-size: 0.8rem; margin-top: var(--spacing-sm);">Overhead solar canopy frame looking north / integrated trellis system with medallions</p>
             </div>
 
             <!-- Concept Reference -->
             <div style="margin: 0 auto var(--spacing-lg); max-width: 55%; text-align: center;">
                 <p style="text-align: center; color: var(--highlight); font-size: 0.9rem; margin-bottom: var(--spacing-xs); font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">Concept Reference</p>
-                <p style="text-align: center; color: var(--text-secondary); font-size: 0.85rem; margin-bottom: var(--spacing-xs); font-weight: 500;">Generic solar canopy system for reference</p>
-                <div style="background: rgba(0,0,0,0.3); border-radius: var(--radius-lg); overflow: hidden; border: 1px solid rgba(15, 164, 175, 0.2); box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
-                    <img src="static/images/solar-canopy-system.png" alt="Solar canopy shade structure prototype in a narrow urban alley" style="width: 100%; height: auto; display: block;" loading="lazy">
+                <p style="text-align: center; color: var(--text-secondary); font-size: 0.85rem; margin-bottom: var(--spacing-xs); font-weight: 500;">Shade sail canopy design concept</p>
+                <div style="background: rgba(255,255,255,0.05); border-radius: var(--radius-lg); overflow: hidden; border: 1px solid rgba(15, 164, 175, 0.2); padding: var(--spacing-lg); box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+                    <img src="static/images/solar-canopy-concept-new.png" alt="Shade sail canopy design with corner mounting points" style="width: 100%; height: auto; display: block;" loading="lazy">
                 </div>
             </div>
 
             <p style="color: var(--text-secondary); line-height: 1.8; font-size: 0.95rem; max-width: 800px; margin: 0 auto; text-align: center;">
-                Integrated overhead canopy system combining solar panels, structural trellises, and decorative medallions. Designed for thermal regulation, energy generation, and visual identity.
+                This intervention installs an integrated overhead canopy system spanning the alley corridor. The structure combines solar panels for energy generation, vertical trellises for climbing plants, and decorative water medallions for cultural identity. The system provides shade, reduces heat island effect, and creates a visually cohesive corridor experience.
             </p>
         </section>
 
@@ -475,7 +554,7 @@
                     </div>
                     <div>
                         <div style="background: rgba(0,0,0,0.3); border-radius: var(--radius-lg); overflow: hidden; border: 1px solid rgba(15, 164, 175, 0.2);">
-                            <img src="static/images/unreal/photo-3.jpg" alt="Alley 3 canopy frame looking north - Unreal Engine render" style="width: 100%; height: 280px; object-fit: cover; display: block;" loading="lazy">
+                            <img src="static/images/unreal/photo-3.webp" alt="Alley 3 canopy frame looking north - Unreal Engine render" style="width: 100%; height: 280px; object-fit: cover; display: block;" loading="lazy">
                         </div>
                         <p style="text-align: center; color: var(--text-muted); font-size: 0.8rem; margin-top: var(--spacing-xs);">Proposed: Overhead solar canopy with trellises and medallions</p>
                     </div>
@@ -497,7 +576,7 @@
                     </div>
                     <div>
                         <div style="background: rgba(0,0,0,0.3); border-radius: var(--radius-lg); overflow: hidden; border: 1px solid rgba(15, 164, 175, 0.2);">
-                            <img src="static/images/unreal/photo-4.jpg" alt="Alley 3 iron fencing with murals and canopy - Unreal Engine render" style="width: 100%; height: 280px; object-fit: cover; display: block;" loading="lazy">
+                            <img src="static/images/unreal/photo-4.webp" alt="Alley 3 iron fencing with murals and canopy - Unreal Engine render" style="width: 100%; height: 280px; object-fit: cover; display: block;" loading="lazy">
                         </div>
                         <p style="text-align: center; color: var(--text-muted); font-size: 0.8rem; margin-top: var(--spacing-xs);">Proposed: Solar canopy system with vertical trellises</p>
                     </div>
@@ -532,48 +611,6 @@
                 <div class="metric-item">
                     <div class="metric-value">20yr</div>
                     <div class="metric-label">Expected Lifespan</div>
-                </div>
-            </div>
-        </section>
-
-        <!-- G. Visual Identity Elements -->
-        <section class="content-section" style="padding-top: 0;">
-            <h2 class="section-title"><span style="color: var(--accent); font-weight: 700; margin-right: 8px;">G.</span>Visual Identity Elements</h2>
-            <p style="text-align: center; color: var(--text-secondary); max-width: 600px; margin: 0 auto var(--spacing-lg); font-size: 0.9rem;">
-                Water-themed medallions mounted on shade structure posts reinforce the Water Alley identity.
-            </p>
-            <div style="display: flex; justify-content: center; gap: var(--spacing-sm); flex-wrap: wrap; margin-bottom: var(--spacing-lg);">
-                <div style="background: rgba(15, 164, 175, 0.1); border: 1px solid rgba(15, 164, 175, 0.3); border-radius: var(--radius-md); padding: var(--spacing-sm); text-align: center; width: 100px;">
-                    <img src="static/images/medallions/jellyfish.png" alt="Jellyfish Medallion" style="width: 100%; height: 90px; object-fit: contain;" loading="lazy">
-                    <div style="font-size: 0.75rem; color: var(--text-primary); font-weight: 600; margin-top: 4px;">Jellyfish</div>
-                </div>
-                <div style="background: rgba(15, 164, 175, 0.1); border: 1px solid rgba(15, 164, 175, 0.3); border-radius: var(--radius-md); padding: var(--spacing-sm); text-align: center; width: 100px;">
-                    <img src="static/images/medallions/turtle.png" alt="Sea Turtle Medallion" style="width: 100%; height: 90px; object-fit: contain;" loading="lazy">
-                    <div style="font-size: 0.75rem; color: var(--text-primary); font-weight: 600; margin-top: 4px;">Sea Turtle</div>
-                </div>
-                <div style="background: rgba(15, 164, 175, 0.1); border: 1px solid rgba(15, 164, 175, 0.3); border-radius: var(--radius-md); padding: var(--spacing-sm); text-align: center; width: 100px;">
-                    <img src="static/images/medallions/whale.png" alt="Whale Medallion" style="width: 100%; height: 90px; object-fit: contain;" loading="lazy">
-                    <div style="font-size: 0.75rem; color: var(--text-primary); font-weight: 600; margin-top: 4px;">Whale</div>
-                </div>
-                <div style="background: rgba(15, 164, 175, 0.1); border: 1px solid rgba(15, 164, 175, 0.3); border-radius: var(--radius-md); padding: var(--spacing-sm); text-align: center; width: 100px;">
-                    <img src="static/images/medallions/octopus.png" alt="Octopus Medallion" style="width: 100%; height: 90px; object-fit: contain;" loading="lazy">
-                    <div style="font-size: 0.75rem; color: var(--text-primary); font-weight: 600; margin-top: 4px;">Octopus</div>
-                </div>
-                <div style="background: rgba(15, 164, 175, 0.1); border: 1px solid rgba(15, 164, 175, 0.3); border-radius: var(--radius-md); padding: var(--spacing-sm); text-align: center; width: 100px;">
-                    <img src="static/images/medallions/clownfish.png" alt="Clownfish Medallion" style="width: 100%; height: 90px; object-fit: contain;" loading="lazy">
-                    <div style="font-size: 0.75rem; color: var(--text-primary); font-weight: 600; margin-top: 4px;">Clownfish</div>
-                </div>
-                <div style="background: rgba(15, 164, 175, 0.1); border: 1px solid rgba(15, 164, 175, 0.3); border-radius: var(--radius-md); padding: var(--spacing-sm); text-align: center; width: 100px;">
-                    <img src="static/images/medallions/coral.png" alt="Coral Medallion" style="width: 100%; height: 90px; object-fit: contain;" loading="lazy">
-                    <div style="font-size: 0.75rem; color: var(--text-primary); font-weight: 600; margin-top: 4px;">Coral</div>
-                </div>
-                <div style="background: rgba(15, 164, 175, 0.1); border: 1px solid rgba(15, 164, 175, 0.3); border-radius: var(--radius-md); padding: var(--spacing-sm); text-align: center; width: 100px;">
-                    <img src="static/images/medallions/shells.png" alt="Shells Medallion" style="width: 100%; height: 90px; object-fit: contain;" loading="lazy">
-                    <div style="font-size: 0.75rem; color: var(--text-primary); font-weight: 600; margin-top: 4px;">Shells</div>
-                </div>
-                <div style="background: rgba(15, 164, 175, 0.1); border: 1px solid rgba(15, 164, 175, 0.3); border-radius: var(--radius-md); padding: var(--spacing-sm); text-align: center; width: 100px;">
-                    <img src="static/images/medallions/fish.png" alt="Fish Medallion" style="width: 100%; height: 90px; object-fit: contain;" loading="lazy">
-                    <div style="font-size: 0.75rem; color: var(--text-primary); font-weight: 600; margin-top: 4px;">Fish</div>
                 </div>
             </div>
         </section>
