@@ -1903,9 +1903,10 @@ function applyTransform() {
             fenceOverlay.style.transformOrigin = transformOrigin;
             fenceOverlay.style.transform = transform;
         }
-        
-        // DO NOT transform medallion container - medallions are positioned in absolute coords
-        // They should stay in place when panning/zooming
+        if (medallionContainer) {
+            medallionContainer.style.transformOrigin = transformOrigin;
+            medallionContainer.style.transform = transform;
+        }
         
         transformPending = false;
     });
