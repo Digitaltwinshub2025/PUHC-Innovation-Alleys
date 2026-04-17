@@ -2240,11 +2240,25 @@ canvas.addEventListener("drop", function(e) {
     var x = canvasCoords.x - medSize / 2;
     var y = canvasCoords.y - medSize / 2;
     
-    // Validate drop is within fence bounds
+    // Validate drop is within fence bounds (using transformed coordinates)
     var centerX = x + medSize / 2;
     var centerY = y + medSize / 2;
+    
+    // IMPORTANT: When zoomed in, we need to check bounds against the base canvas size
+    // The transformed coordinates are already in the correct space
+    var rect = canvas.getBoundingClientRect();
+    var baseWidth = rect.width;
+    var baseHeight = rect.height;
+    
+    // Check if within canvas bounds first (basic validation)
+    if (centerX < 0 || centerX > baseWidth || centerY < 0 || centerY > baseHeight) {
+        console.log("Drop outside canvas bounds - medallion not placed");
+        return;
+    }
+    
+    // Then check fence region bounds
     if (!isWithinFenceBounds(centerX, centerY)) {
-        console.log("Drop outside fence bounds - medallion not placed");
+        console.log("Drop outside fence region - medallion not placed. X:", centerX, "Y:", centerY);
         return; // Don't place if outside fence region
     }
 
@@ -2252,9 +2266,8 @@ canvas.addEventListener("drop", function(e) {
     x = snap.x;
     y = clampToFenceHeight(y, medSize);
 
-    var rect = canvas.getBoundingClientRect();
-    x = Math.max(0, Math.min(x, rect.width - medSize));
-    y = Math.max(0, Math.min(y, rect.height - medSize));
+    x = Math.max(0, Math.min(x, baseWidth - medSize));
+    y = Math.max(0, Math.min(y, baseHeight - medSize));
 
     placeMedallion(medId, x, y, false, { anchorIndex: snap.anchorIndex });
     recordAction("place", { medId: medId, x: x, y: y, anchorIndex: snap.anchorIndex });
