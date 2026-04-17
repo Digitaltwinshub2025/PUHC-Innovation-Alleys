@@ -105,15 +105,9 @@ body {
     font-size: 1rem;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    opacity: 0;
-    animation: fadeIn 0.5s ease-in forwards;
+    will-change: auto;
 }
 
-@keyframes fadeIn {
-    to {
-        opacity: 1;
-    }
-}
 
 /* ============================================
    NAVIGATION TABS
@@ -138,7 +132,6 @@ body {
 
 .global-nav a:hover {
     color: var(--highlight);
-    transform: translateY(-1px);
 }
 
 .nav-container {
@@ -202,7 +195,6 @@ body {
 .nav-tab a:hover {
     background: rgba(15, 164, 175, 0.15);
     color: var(--text-primary);
-    transform: translateY(-1px);
 }
 
 .nav-tab.active a {
@@ -238,7 +230,6 @@ body {
 .nav-dropdown-toggle:hover {
     background: rgba(15, 164, 175, 0.15);
     color: var(--text-primary);
-    transform: translateY(-1px);
 }
 
 .nav-dropdown-toggle.active {
@@ -453,8 +444,8 @@ a:focus-visible {
 }
 
 .btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-glow);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(15, 164, 175, 0.4);
 }
 
 .btn-primary:active {
@@ -471,8 +462,8 @@ a:focus-visible {
 
 .btn-secondary:hover {
     border-color: var(--highlight);
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-md);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
 }
 
 .btn-secondary:active {
@@ -489,8 +480,8 @@ a:focus-visible {
 .btn-outline:hover {
     background: var(--highlight);
     color: #0a1929;
-    box-shadow: var(--shadow-glow);
-    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(15, 164, 175, 0.3);
+    transform: translateY(-1px);
 }
 
 .btn-outline:active {
@@ -507,8 +498,8 @@ a:focus-visible {
 }
 
 .btn-cta:hover {
-    transform: translateY(-3px);
-    box-shadow: var(--shadow-xl);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(15, 164, 175, 0.3);
 }
 
 .btn-cta:active {
@@ -532,7 +523,7 @@ a:focus-visible {
 .card:hover {
     border-color: var(--border-hover);
     box-shadow: 0 8px 24px rgba(0,0,0,0.25), 0 0 12px rgba(15,164,175,0.1);
-    transform: translateY(-2px);
+    transform: translateY(-1px);
 }
 
 .card-dark {
