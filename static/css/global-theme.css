@@ -333,6 +333,73 @@ body {
     height: 60%;
 }
 
+/* Submenu Styles */
+.nav-dropdown-submenu {
+    position: relative;
+}
+
+.nav-dropdown-submenu-label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.625rem 1rem;
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    font-weight: 500;
+    border-radius: var(--radius-md);
+    transition: all var(--transition-fast);
+    cursor: pointer;
+    user-select: none;
+}
+
+.nav-dropdown-submenu-label:hover {
+    background: var(--accent-light);
+    color: var(--text-primary);
+}
+
+.nav-dropdown-submenu-items {
+    list-style: none;
+    padding: 0;
+    margin: 0.25rem 0 0 0;
+    padding-left: 0.75rem;
+    border-left: 2px solid rgba(15, 164, 175, 0.2);
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: all var(--transition-fast);
+}
+
+.nav-dropdown-submenu:hover .nav-dropdown-submenu-items,
+.nav-dropdown-submenu-items.show {
+    max-height: 200px;
+    opacity: 1;
+}
+
+.nav-dropdown-submenu-items li {
+    margin: 0;
+}
+
+.nav-dropdown-submenu-items a {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.8125rem;
+}
+
+/* Fix: Prevent blue outline on dropdown toggle */
+.nav-dropdown-toggle:focus {
+    outline: none;
+}
+
+.nav-dropdown-toggle:focus-visible {
+    outline: 2px solid var(--highlight);
+    outline-offset: 2px;
+}
+
+/* Fix: Keep dropdown open when hovering menu */
+.nav-dropdown:hover .nav-dropdown-toggle {
+    background: rgba(15, 164, 175, 0.15);
+    color: var(--text-primary);
+}
+
 /* Mobile Menu Toggle */
 .nav-toggle {
     display: none;
