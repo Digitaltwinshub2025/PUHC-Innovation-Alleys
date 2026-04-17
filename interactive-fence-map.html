@@ -1382,16 +1382,24 @@ function buildMedallionLibrary() {
 }
 
 function getCurrentMedallionSize() {
-    // Calculate realistic medallion size based on fence height
-    var rect = getCanvasRect();
+    // Calculate realistic medallion size based on BASE fence height (unzoomed)
+    // This ensures medallions maintain consistent size relative to fence regardless of zoom
+    var canvas = document.getElementById("fenceCanvas");
+    if (!canvas) return 40;
+    
+    var rect = canvas.getBoundingClientRect();
     var projectConfig = projectConfigs[activeProjectId];
     
     if (!projectConfig || !rect.height) {
         return 40; // Fallback size
     }
     
-    // Get fence region height in pixels
-    var fenceHeight = rect.height * projectConfig.fenceRegion.height;
+    // IMPORTANT: Use base canvas height, not zoomed/transformed height
+    // The medallion container is also transformed, so we need base size
+    var baseHeight = rect.height;
+    
+    // Get fence region height in pixels (at base scale)
+    var fenceHeight = baseHeight * projectConfig.fenceRegion.height;
     
     // Medallion size is a percentage of fence height (architectural scale)
     var medallionSize = fenceHeight * MEDALLION_SCALE_FACTOR;
@@ -1928,22 +1936,22 @@ function screenToCanvasCoords(screenX, screenY) {
     var rect = canvas.getBoundingClientRect();
     var projectConfig = projectConfigs[activeProjectId];
     
-    // Get fence focal point for this project
+    // Get fence focal point for this project (transform origin)
     var focalPoint = projectConfig && projectConfig.fenceFocalPoint ? 
                      projectConfig.fenceFocalPoint : { x: 0.5, y: 0.68 };
-    
-    var fenceY = rect.height * focalPoint.y;
-    var scaledFenceY = fenceY * zoomLevel;
-    var verticalOffset = fenceY - scaledFenceY;
     
     // Convert screen position to canvas-relative position
     var canvasX = screenX - rect.left;
     var canvasY = screenY - rect.top;
     
-    // Apply inverse transform to get actual canvas coordinates
-    // Account for both zoom and pan
-    var transformedX = (canvasX - panX) / zoomLevel;
-    var transformedY = (canvasY - verticalOffset) / zoomLevel;
+    // Calculate transform origin in canvas pixels
+    var originX = rect.width * 0.5;  // center horizontally
+    var originY = rect.height * focalPoint.y;  // fence Y position
+    
+    // Apply inverse transform accounting for transform-origin
+    // Formula: inverse = (point - origin) / scale - pan/scale + origin
+    var transformedX = ((canvasX - originX) / zoomLevel) - (panX / zoomLevel) + originX;
+    var transformedY = ((canvasY - originY) / zoomLevel) + originY;
     
     return { x: transformedX, y: transformedY };
 }
