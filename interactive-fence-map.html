@@ -1897,23 +1897,15 @@ function applyTransform() {
         
         if (img) {
             img.style.transformOrigin = transformOrigin;
-        }
-        if (fenceOverlay) {
-            fenceOverlay.style.transformOrigin = transformOrigin;
-        }
-        if (medallionContainer) {
-            medallionContainer.style.transformOrigin = transformOrigin;
-        }
-        
-        if (img) {
             img.style.transform = transform;
         }
         if (fenceOverlay) {
+            fenceOverlay.style.transformOrigin = transformOrigin;
             fenceOverlay.style.transform = transform;
         }
-        if (medallionContainer) {
-            medallionContainer.style.transform = transform;
-        }
+        
+        // DO NOT transform medallion container - medallions are positioned in absolute coords
+        // They should stay in place when panning/zooming
         
         transformPending = false;
     });
