@@ -2132,9 +2132,9 @@ var SNAP_RADIUS = 12;  // pixels in screen space
 
 // Realistic medallion sizing system
 // Medallions are scaled as a percentage of fence height for architectural realism
-var MEDALLION_SCALE_FACTOR = 0.12;  // 12% of fence height (realistic decorative size)
-var MIN_MEDALLION_SCALE = 0.08;     // 8% minimum (small decorative piece)
-var MAX_MEDALLION_SCALE = 0.18;     // 18% maximum (large feature piece)
+var MEDALLION_SCALE_FACTOR = 0.08;  // 8% of fence height (realistic decorative size)
+var MIN_MEDALLION_SCALE = 0.06;     // 6% minimum (small decorative piece)
+var MAX_MEDALLION_SCALE = 0.12;     // 12% maximum (large feature piece)
 
 // Convert normalized elevation coordinates (0-1) to canvas pixels
 function normalizedToCanvas(normalizedX, normalizedY) {
@@ -2254,23 +2254,13 @@ canvas.addEventListener("drop", function(e) {
     
     var rect = canvas.getBoundingClientRect();
     
-    console.log("=== DROP DEBUG ===");
-    console.log("Screen coords:", e.clientX, e.clientY);
-    console.log("Canvas coords:", canvasCoords.x, canvasCoords.y);
-    console.log("Placement coords:", x, y);
-    console.log("Center coords:", centerX, centerY);
-    console.log("Canvas rect:", rect.width, "x", rect.height);
-    console.log("Zoom level:", zoomLevel);
-    console.log("Pan X:", panX);
-    
     // Check fence region bounds (this is the main validation)
     var withinBounds = isWithinFenceBounds(centerX, centerY);
-    console.log("Within fence bounds:", withinBounds);
     
     if (!withinBounds) {
         console.log("⚠️ Drop outside fence region - medallion not placed");
-        // TEMPORARILY DISABLED FOR TESTING - allow drops anywhere
-        // return;
+        console.log("Center coords:", centerX, centerY);
+        return;
     }
 
     var snap = snapToAnchor(x);
