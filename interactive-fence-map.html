@@ -1878,7 +1878,6 @@ function applyTransform() {
         var transformOrigin = "center " + (focalPoint.y * 100) + "%";
         
         var transform = "scale(" + zoomLevel + ") translateX(" + (panX / zoomLevel) + "px)";
-        console.log("Zoom:", zoomLevel, "PanX:", panX, "Origin:", transformOrigin);
         
         if (img) {
             img.style.transformOrigin = transformOrigin;
