@@ -1,0 +1,70 @@
+/* Blend Mode Panel */
+.blend-mode-panel {
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    background: #024950;
+    backdrop-filter: blur(20px);
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 12px 48px rgba(0, 0, 0, 0.4);
+    z-index: 1000;
+    min-width: 280px;
+    border: 2px solid #003135;
+    animation: slideInRight 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.blend-mode-options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.blend-option {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid transparent;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: white;
+    text-align: left;
+}
+
+.blend-option:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: #0FA4AF;
+    transform: translateX(4px);
+}
+
+.blend-option.active {
+    background: rgba(15, 164, 175, 0.2);
+    border-color: #0FA4AF;
+}
+
+.blend-option span {
+    display: block;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.blend-option small {
+    display: block;
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.6);
+    margin-top: 0.25rem;
+}
