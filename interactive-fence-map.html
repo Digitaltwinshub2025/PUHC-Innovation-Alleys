@@ -1511,6 +1511,14 @@ function isWithinFenceBounds(x, y) {
     
     if (!projectConfig || !rect.width || !rect.height) return true; // Allow if no config
     
+    // In detail view (zoomed to fence), the entire visible area is the fence
+    // So we can be more lenient with bounds checking
+    if (viewMode === 'detail' || zoomLevel > 2) {
+        // Just check if within canvas bounds
+        return x >= 0 && x <= rect.width && y >= 0 && y <= rect.height;
+    }
+    
+    // In full view, check against fence region
     var fenceRegion = projectConfig.fenceRegion;
     var fenceLeft = rect.width * fenceRegion.x;
     var fenceRight = rect.width * (fenceRegion.x + fenceRegion.width);
