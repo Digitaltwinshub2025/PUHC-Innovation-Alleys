@@ -1,0 +1,2997 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Fence Map — Alley 3 | PUHC Innovation Alleys</title>
+    <link rel="stylesheet" href="static/css/global-theme.css">
+    <link rel="stylesheet" href="static/css/fence-map-improvements.css">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: var(--font-primary), 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
+        }
+        :root {
+            --bg-deep: #0a1929;
+            --bg-panel: #132f4c;
+            --bg-card: #1a3a54;
+            --bg-card-hover: #224a64;
+            --border: rgba(15, 164, 175, 0.2);
+            --accent: #0FA4AF;
+            --accent-dim: rgba(15,164,175,.15);
+            --accent-glow: rgba(15,164,175,.3);
+            --text-primary: #FFFFFF;
+            --text-secondary: #b0bec5;
+            --text-muted: #78909c;
+            --warning: #e8a838;
+            --success: #34d399;
+            --danger: #e74c3c;
+            --radius: 8px;
+            --spacing-sm: 8px;
+            --spacing-md: 12px;
+            --spacing-lg: 16px;
+            --spacing-xl: 24px;
+        }
+
+        /* Navigation handled by global-theme.css */
+
+        /* ── Page Header ── */
+        .page-header { text-align: left; }
+        .page-header h1 { font-size: 2.2rem; font-weight: 700; color: var(--text-primary); }
+        .page-header p { margin-top: 12px; font-size: 1rem; color: var(--text-secondary); max-width: 720px; line-height: 1.6; }
+
+        /* ── Medallion Showcase Video ── */
+        .medallion-showcase {
+            max-width: 960px;
+            margin: 0 auto 32px;
+            padding: 0 20px;
+        }
+        .medallion-showcase-wrapper {
+            position: relative;
+            border-radius: var(--radius);
+            overflow: hidden;
+            border: 1px solid var(--border);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+        }
+        .medallion-showcase video {
+            width: 100%;
+            display: block;
+            aspect-ratio: 16/9;
+            object-fit: cover;
+            background: #000;
+        }
+        .medallion-showcase-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 12px 16px;
+            background: linear-gradient(transparent, rgba(0,0,0,0.7));
+        }
+        .medallion-showcase-caption p {
+            margin: 0;
+            color: rgba(255,255,255,0.7);
+            font-size: 0.75rem;
+            text-align: center;
+        }
+
+        /* ── Main 3-Column Layout ── */
+        .main-layout {
+            display: grid;
+            grid-template-columns: 300px 1fr 360px;
+            gap: 24px;
+            max-width: 1800px;
+            margin: 32px auto 60px;
+            padding: 0 20px;
+        }
+
+        /* ── Left: Segment Map ── */
+        .segment-map-panel {
+            background: var(--bg-panel);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 22px;
+            height: fit-content;
+            position: sticky;
+            top: 90px;
+            z-index: 5;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+        }
+        .panel-label {
+            font-size: .7rem; text-transform: uppercase; letter-spacing: 1.5px;
+            color: var(--accent); margin-bottom: 16px; font-weight: 600;
+        }
+        .area-group { margin-bottom: 24px; }
+        .area-group-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(15,164,175,0.2);
+        }
+        .area-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            background: rgba(15,164,175,0.15);
+            border: 1px solid rgba(15,164,175,0.3);
+            border-radius: 4px;
+            font-size: .7rem;
+            font-weight: 700;
+            color: var(--accent);
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+        .area-description {
+            font-size: .7rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+        .area-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+        .segment-block {
+            background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px;
+            padding: 16px 12px; text-align: center; cursor: pointer;
+            transition: all .2s ease-out;
+            position: relative;
+            overflow: hidden;
+        }
+        .segment-block::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(15,164,175,0.05) 0%, transparent 60%);
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+        .segment-block:hover::before {
+            opacity: 1;
+        }
+        .segment-block:hover {
+            border-color: var(--accent);
+            background: var(--bg-card-hover);
+            box-shadow: 0 0 12px var(--accent-dim);
+            transform: translateY(-1px);
+        }
+        .segment-block.active { border-color: var(--accent); background: rgba(10,189,198,.08); box-shadow: 0 0 16px var(--accent-glow), inset 0 0 20px rgba(10,189,198,.05); }
+        .segment-block .seg-id { font-size: 1.1rem; font-weight: 700; color: var(--text-primary); position: relative; z-index: 1; }
+        .segment-block .seg-sections { font-size: .72rem; color: var(--text-muted); margin-top: 4px; position: relative; z-index: 1; font-weight: 500; }
+        .segment-block.empty { visibility: hidden; }
+        .map-legend { display: flex; gap: 16px; margin-top: 14px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,.05); }
+        .legend-item { display: flex; align-items: center; gap: 6px; font-size: .68rem; color: var(--text-muted); }
+        .legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+        .legend-dot.repair { background: var(--warning); }
+        .legend-dot.material { background: var(--accent); }
+        .legend-dot.alley { background: var(--text-muted); border: 1px solid var(--text-secondary); }
+        .map-footer { text-align: center; font-size: .7rem; color: var(--text-muted); margin-top: 10px; letter-spacing: 1px; }
+
+        /* ── Center: Elevation Viewer Panel ── */
+        .elevation-viewer-panel {
+            background: var(--bg-panel);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 28px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            z-index: 1;
+            min-width: 0;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+        }
+        
+        /* ── Right: Medallion Gallery Panel ── */
+        .medallion-gallery-panel {
+            background: var(--bg-panel);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 22px 18px;
+            height: fit-content;
+            position: sticky;
+            top: 90px;
+            z-index: 5;
+            max-height: calc(100vh - 120px);
+            overflow-y: auto;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+        }
+        .elevation-viewer-panel.sim-active { border-color: var(--accent); box-shadow: 0 0 20px var(--accent-dim); }
+        .detail-header { display: flex; align-items: center; margin-bottom: 16px; }
+        .detail-tabs { display: flex; gap: 4px; }
+        .detail-tab-label {
+            font-size: .7rem; text-transform: uppercase; letter-spacing: 1.5px;
+            color: var(--text-muted); margin-right: 12px; font-weight: 600; align-self: center;
+        }
+        .detail-tab {
+            padding: 7px 16px; border-radius: 6px; font-size: .78rem; font-weight: 500;
+            color: var(--text-secondary); background: transparent;
+            border: 1px solid var(--border); cursor: pointer; transition: all .2s;
+        }
+        .detail-tab:hover { border-color: var(--accent); color: var(--text-primary); }
+        .detail-tab.active { background: var(--accent); color: #fff; border-color: var(--accent); font-weight: 600; }
+
+        .project-title { font-size: 1.5rem; font-weight: 700; color: var(--text-primary); margin-bottom: 10px; line-height: 1.3; }
+        .toggle-row { display: flex; align-items: center; gap: 14px; margin-bottom: 24px; padding: 12px 0; }
+        .toggle-label { font-size: .85rem; color: var(--text-secondary); cursor: pointer; padding: 6px 0; transition: all 0.2s ease; }
+        .toggle-label:hover { color: var(--text-primary); }
+        .toggle-label.active { color: var(--accent); font-weight: 600; }
+        .toggle-switch {
+            width: 44px; height: 24px; background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 12px; position: relative; cursor: pointer; transition: all .3s;
+        }
+        .toggle-switch.on { background: var(--accent); border-color: var(--accent); }
+        .toggle-switch::after {
+            content: ''; position: absolute; width: 18px; height: 18px;
+            background: #fff; border-radius: 50%; top: 2px; left: 2px; transition: transform .3s;
+        }
+        .toggle-switch.on::after { transform: translateX(20px); }
+
+        /* ── Existing Condition ── */
+        .existing-view { display: block; }
+        .existing-view.hidden { display: none; }
+        .existing-view.compact { margin-bottom: 16px; }
+        .existing-view.compact .fence-photo-placeholder { height: 280px; margin-bottom: 12px; }
+        .fence-photo-placeholder {
+            width: 100%; height: 420px; background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: var(--radius); display: flex; align-items: center; justify-content: center;
+            color: var(--text-muted); font-size: .85rem; margin-bottom: 20px;
+            position: relative; overflow: hidden;
+        }
+        .fence-photo-placeholder img {
+            position: absolute; inset: 0; width: 100%; height: 100%;
+            object-fit: cover; filter: brightness(0.95) contrast(1.05);
+            object-position: center;
+            image-rendering: -webkit-optimize-contrast;
+            image-rendering: crisp-edges;
+        }
+        .fence-photo-placeholder .photo-label {
+            position: absolute; bottom: 8px; left: 10px; font-size: .6rem;
+            text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,.5);
+            z-index: 2;
+        }
+        .fence-photo-placeholder::before {
+            content: ''; position: absolute; inset: 0; z-index: 1;
+            background: linear-gradient(135deg, rgba(10,189,198,.03) 0%, transparent 60%);
+        }
+        .cost-summary-box { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 20px; }
+        .cost-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 16px 18px; transition: all 0.2s ease; }
+        .cost-card:hover { border-color: var(--accent); background: rgba(10,189,198,0.05); }
+        .cost-card-label { font-size: .7rem; text-transform: uppercase; letter-spacing: 1.2px; color: var(--text-muted); margin-bottom: 8px; font-weight: 600; }
+        .cost-card-value { font-size: 1.5rem; font-weight: 700; color: var(--warning); line-height: 1; }
+        .existing-desc { font-size: .9rem; line-height: 1.7; color: var(--text-secondary); margin-bottom: 22px; }
+        .btn-launch {
+            display: inline-block; padding: 12px 28px; background: var(--accent); color: #fff;
+            border: none; border-radius: 8px; font-size: .9rem; font-weight: 600; cursor: pointer;
+            transition: all .2s ease-out; letter-spacing: 0.3px;
+        }
+        .btn-launch:hover {
+            background: #09a8b1;
+            box-shadow: 0 0 20px var(--accent-glow), 0 4px 12px rgba(0,0,0,0.3);
+            transform: translateY(-2px);
+        }
+        .btn-launch:active {
+            transform: translateY(0);
+        }
+
+        /* ── Simulation View ── */
+        .simulation-view {
+            display: none;
+        }
+        .simulation-view.visible {
+            display: block;
+        }
+        
+        .sim-workspace { display: flex; flex-direction: column; gap: 12px; margin-bottom: 16px; }
+
+        /* ── Before/After Toggle & Undo/Redo Toolbar ── */
+        .design-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            margin-bottom: 16px;
+        }
+        .toolbar-left {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        .toolbar-btn {
+            padding: 8px 14px;
+            background: var(--bg-panel);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .toolbar-btn:hover:not(:disabled) {
+            border-color: var(--accent);
+            color: var(--text-primary);
+            background: rgba(15,164,175,0.1);
+        }
+        .toolbar-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+        .toolbar-btn.active {
+            background: var(--accent);
+            color: #fff;
+            border-color: var(--accent);
+        }
+        .toolbar-divider {
+            width: 1px;
+            height: 24px;
+            background: var(--border);
+            margin: 0 4px;
+        }
+
+        /* ── Enhanced Cost Breakdown Panel ── */
+        .cost-breakdown-panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 18px;
+            margin-bottom: 16px;
+        }
+        .cost-breakdown-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border);
+        }
+        .cost-breakdown-title {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+        .cost-breakdown-total {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+        .cost-breakdown-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .cost-breakdown-row:last-child {
+            border-bottom: none;
+            padding-top: 12px;
+            margin-top: 4px;
+            border-top: 2px solid var(--border);
+        }
+        .cost-breakdown-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .cost-breakdown-value {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .cost-breakdown-value.repair { color: var(--warning); }
+        .cost-breakdown-value.medallion { color: var(--accent); }
+        .cost-breakdown-value.total { font-size: 1.2rem; color: var(--accent); }
+
+        /* ── Medallion Search & Filter ── */
+        .medallion-search-filter {
+            margin-bottom: 16px;
+        }
+        .search-box {
+            position: relative;
+            margin-bottom: 12px;
+        }
+        .search-input {
+            width: 100%;
+            padding: 10px 12px 10px 36px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-size: 0.85rem;
+            transition: all 0.2s ease;
+        }
+        .search-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            background: rgba(15,164,175,0.05);
+        }
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            pointer-events: none;
+        }
+        .filter-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .filter-chip {
+            padding: 6px 12px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .filter-chip:hover {
+            border-color: var(--accent);
+            color: var(--text-primary);
+        }
+        .filter-chip.active {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: #fff;
+        }
+
+        /* Medallion Library */
+        .medallion-library {
+            width: 100%; display: flex; flex-direction: column; gap: 10px;
+            padding: 0; background: transparent; border: none; border-radius: 0;
+            max-height: calc(100vh - 200px); overflow-y: auto;
+        }
+        .medallion-library::-webkit-scrollbar { width: 4px; }
+        .medallion-library::-webkit-scrollbar-track { background: transparent; }
+        .medallion-library::-webkit-scrollbar-thumb { background: rgba(10,189,198,.3); border-radius: 2px; }
+        
+        .med-lib-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-md);
+            padding-bottom: var(--spacing-sm);
+            border-bottom: 1px solid rgba(10, 189, 198, 0.3);
+        }
+        
+        .med-lib-count {
+            font-size: 0.75rem;
+            color: var(--accent);
+            font-weight: 600;
+        }
+        
+        .med-lib-title {
+            font-size: 0.7rem; 
+            font-weight: 700; 
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin: 0 0 16px 0;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+        .med-lib-item {
+            position: relative; 
+            display: flex; 
+            flex-direction: column;
+            align-items: center; 
+            width: 100%;
+            cursor: grab;
+            transition: background-color 0.15s ease-out, box-shadow 0.15s ease-out;
+            padding: 12px;
+            border-radius: 8px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            margin-bottom: 12px;
+        }
+        .med-lib-item:hover { 
+            background: rgba(10, 189, 198, 0.1);
+            box-shadow: 0 0 12px rgba(10, 189, 198, 0.3);
+        }
+        /* Removed conflicting .med-lib-item img styles - now handled by .med-thumbnail-frame wrapper in fence-map-improvements.css */
+        .med-lib-name {
+            font-size: 0.7rem; 
+            margin-top: 8px; 
+            color: var(--text-primary); 
+            text-align: center;
+            line-height: 1.4; 
+            white-space: normal; 
+            overflow: visible; 
+            text-overflow: clip;
+            width: 100%;
+            font-weight: 600;
+        }
+        .med-lib-item .med-cost-tag {
+            position: absolute; 
+            top: 4px; 
+            right: 4px; 
+            font-size: 0.6rem;
+            background: var(--accent); 
+            color: #fff; 
+            padding: 3px 6px;
+            border-radius: 4px; 
+            font-weight: 700;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+        }
+
+        /* Fence Canvas (SVG Elevation) - Professional Editor Surface */
+        .fence-canvas {
+            position: relative;
+            width: 100%;
+            height: 800px;
+            overflow: hidden;
+            background: linear-gradient(135deg, #0d1f2d 0%, #1a2f3f 100%);
+            border-radius: var(--radius);
+            border: 1px solid rgba(15, 164, 175, 0.25);
+            box-shadow: 
+                0 4px 24px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 rgba(15, 164, 175, 0.1);
+        }
+
+        #simulationView .fence-canvas {
+            min-height: clamp(600px, 75vh, 850px);
+        }
+
+        /* Layered Canvas Architecture */
+        .elevation-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+            background: transparent;
+            overflow: hidden;
+        }
+        
+        .elevation-background.loading::before {
+            content: "Loading elevation...";
+            position: absolute;
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .elevation-background img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            object-position: center;
+            image-rendering: -webkit-optimize-contrast;
+            image-rendering: crisp-edges;
+            filter: contrast(1.05) saturate(1.1);
+            transition: transform 0.5s ease;
+            /* transform-origin set dynamically per project */
+        }
+        
+        .fence-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            pointer-events: none;
+            shape-rendering: crispEdges;
+            /* Fixed overlay - no transform */
+        }
+        
+        /* Interactive Fence Workspace - Highlighted Editor Zone */
+        .fence-workspace {
+            position: absolute;
+            left: 0;
+            width: 100%;
+            height: 150px;
+            z-index: 5;
+            pointer-events: auto;
+            overflow: hidden;
+            cursor: grab;
+            transition: height 0.4s ease, top 0.4s ease;
+            background: linear-gradient(90deg,
+                transparent 0%,
+                rgba(15, 164, 175, 0.03) 10%,
+                rgba(15, 164, 175, 0.05) 50%,
+                rgba(15, 164, 175, 0.03) 90%,
+                transparent 100%);
+            border-top: 1px solid rgba(15, 164, 175, 0.15);
+            border-bottom: 1px solid rgba(15, 164, 175, 0.15);
+        }
+        
+        .fence-workspace.detail-mode {
+            height: 280px;
+            background: linear-gradient(90deg,
+                transparent 0%,
+                rgba(15, 164, 175, 0.05) 10%,
+                rgba(15, 164, 175, 0.08) 50%,
+                rgba(15, 164, 175, 0.05) 90%,
+                transparent 100%);
+            border-top: 1px solid rgba(15, 164, 175, 0.25);
+            border-bottom: 1px solid rgba(15, 164, 175, 0.25);
+            box-shadow: 
+                inset 0 2px 8px rgba(15, 164, 175, 0.1),
+                inset 0 -2px 8px rgba(15, 164, 175, 0.1);
+        }
+        
+        .fence-workspace-inner {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            transform-origin: center center;
+            transition: transform 0.4s ease;
+        }
+        
+        .fence-workspace.panning {
+            cursor: grabbing;
+        }
+        
+        /* Fence Region Highlight */
+        .fence-region-highlight {
+            position: absolute;
+            pointer-events: none;
+            z-index: 4;
+            background: linear-gradient(90deg, 
+                transparent 0%, 
+                rgba(15, 164, 175, 0.06) 20%, 
+                rgba(15, 164, 175, 0.1) 50%, 
+                rgba(15, 164, 175, 0.06) 80%, 
+                transparent 100%);
+            border-top: 1px solid rgba(15, 164, 175, 0.25);
+            border-bottom: 1px solid rgba(15, 164, 175, 0.25);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .fence-canvas.detail-mode .fence-region-highlight {
+            opacity: 1;
+        }
+        
+        .medallion-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 6;
+            pointer-events: none;
+            /* Medallions positioned relative to fence workspace */
+        }
+        
+        .medallion-container > * {
+            pointer-events: auto;
+        }
+        
+        .medallion-container > * {
+            pointer-events: auto;
+        }
+        .svg-elevation-container svg {
+            max-width: 100%;
+            max-height: 100%;
+            width: auto;
+            height: auto;
+            display: block;
+        }
+        .fence-canvas-label {
+            position: absolute; top: 12px; left: 12px; z-index: 100;
+            font-size: .7rem; color: #666; font-weight: 600;
+            background: rgba(255,255,255,.95); padding: 8px 14px;
+            border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,.15);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            width: calc(100% - 24px);
+        }
+
+        .fence-canvas-label-left {
+            display: inline-flex;
+            align-items: center;
+            min-width: 0;
+            gap: 10px;
+        }
+
+        .fence-canvas-label-left #elevationLabel {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 55vw;
+        }
+
+        .fence-canvas-label-right {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            flex: 0 0 auto;
+        }
+
+        .elevation-controls {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-left: 12px;
+        }
+
+        .elevation-controls label {
+            font-size: 0.7rem;
+            color: #666;
+            font-weight: 600;
+        }
+
+        .elevation-controls select {
+            font-size: 0.75rem;
+            padding: 4px 8px;
+            border-radius: 6px;
+            border: 1px solid rgba(0,0,0,0.15);
+            background: rgba(255,255,255,0.98);
+            color: #333;
+            outline: none;
+        }
+
+        .elevation-controls select:focus {
+            border-color: rgba(15, 164, 175, 0.65);
+            box-shadow: 0 0 0 3px rgba(15, 164, 175, 0.18);
+        }
+
+        /* Placed Medallions */
+        .placed-medallion {
+            position: absolute;
+            cursor: move;
+            z-index: 10;
+            transition: box-shadow .2s;
+            pointer-events: auto;
+        }
+        .placed-medallion:hover {
+            filter: drop-shadow(0 0 8px rgba(10,189,198,.4)) drop-shadow(0 2px 6px rgba(0,0,0,.7));
+        }
+        .placed-medallion.selected {
+            outline: 2px solid var(--accent);
+            filter: drop-shadow(0 0 12px rgba(10,189,198,.6)) drop-shadow(0 2px 6px rgba(0,0,0,.7));
+        }
+        .placed-medallion img {
+            width: var(--medallion-size, 52px);
+            height: var(--medallion-size, 52px);
+            display: block;
+            border-radius: 50%;
+            image-rendering: -webkit-optimize-contrast;
+            image-rendering: -moz-crisp-edges;
+            image-rendering: crisp-edges;
+            transition: width 0.3s ease, height 0.3s ease;
+        }
+        .placed-medallion svg { 
+            width: var(--medallion-size, 52px); 
+            height: var(--medallion-size, 52px); 
+            display: block;
+            transition: width 0.3s ease, height 0.3s ease;
+        }
+
+        /* Ghost Preview During Drag */
+        .ghost-preview {
+            position: fixed; pointer-events: none; z-index: 1000;
+            opacity: 0.7; filter: drop-shadow(0 0 12px rgba(10,189,198,.6));
+            border-radius: 50%; outline: 3px solid var(--accent);
+        }
+        .ghost-preview img { width: 70px; height: 70px; display: block; border-radius: 50%; }
+
+        /* Snap Guide Indicator */
+        .snap-guide {
+            position: absolute; width: 2px; background: var(--accent);
+            box-shadow: 0 0 8px rgba(10,189,198,.6); z-index: 5;
+            pointer-events: none; display: none;
+        }
+
+        /* ── Cost Summary Panel ── */
+        .sim-cost-panel {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: var(--radius); padding: 14px 18px; margin-bottom: 12px;
+        }
+        .sim-cost-header {
+            font-size: .6rem; text-transform: uppercase; letter-spacing: 1.2px;
+            color: var(--text-muted); font-weight: 600; margin-bottom: 8px;
+        }
+        .sim-cost-row {
+            display: flex; align-items: flex-start; gap: 16px; flex-wrap: wrap;
+        }
+        .sim-cost-item {
+            display: flex; flex-direction: column; gap: 2px;
+        }
+        .sim-cost-item .label {
+            font-size: .55rem; text-transform: uppercase; letter-spacing: .8px;
+            color: var(--text-muted);
+        }
+        .sim-cost-item .value {
+            font-size: 1.15rem; font-weight: 700;
+        }
+        .sim-cost-item .value.repair { color: var(--warning); }
+        .sim-cost-item .value.fab { color: var(--accent); }
+        .sim-cost-item .value.total { color: var(--success); font-size: 1.3rem; }
+        .sim-cost-divider {
+            width: 1px; align-self: stretch; min-height: 32px; background: rgba(255,255,255,.08);
+        }
+        .sim-cost-breakdown { flex: 1; min-width: 180px; }
+        .fab-breakdown-table {
+            font-size: .72rem; color: var(--text-secondary); line-height: 1.7;
+        }
+        .fab-breakdown-table .fab-row {
+            display: flex; gap: 8px; align-items: baseline;
+        }
+        .fab-breakdown-table .fab-name { color: var(--text-primary); font-weight: 500; min-width: 80px; }
+        .fab-breakdown-table .fab-unit { color: var(--text-muted); }
+        .fab-breakdown-table .fab-qty { color: var(--accent); font-weight: 600; min-width: 16px; text-align: center; }
+        .fab-breakdown-table .fab-sub { color: var(--accent); font-weight: 600; margin-left: auto; }
+        .fab-breakdown-table .fab-empty { color: var(--text-muted); font-style: italic; }
+        .sim-cost-total { align-items: flex-end; margin-left: auto; text-align: right; }
+
+        /* Footer: description + actions */
+        .sim-footer {
+            display: flex; align-items: center; gap: 16px; padding: 10px 0;
+        }
+        .sim-footer-desc {
+            flex: 1; font-size: .75rem; color: var(--text-muted); line-height: 1.5;
+        }
+        .sim-actions {
+            display: flex; gap: 6px; flex-shrink: 0;
+        }
+        .btn-sim {
+            padding: 7px 14px; border-radius: 6px; font-size: .75rem; font-weight: 600;
+            cursor: pointer; border: 1px solid var(--border); transition: all .2s;
+        }
+        .btn-sim:disabled { opacity: .35; cursor: not-allowed; }
+        .btn-remove { background: transparent; color: var(--text-secondary); }
+        .btn-remove:hover:not(:disabled) { border-color: var(--danger); color: var(--danger); }
+        .btn-duplicate { background: transparent; color: var(--text-secondary); }
+        .btn-duplicate:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+        .btn-clear-all { background: transparent; color: var(--text-secondary); }
+        .btn-clear-all:hover { border-color: var(--danger); color: var(--danger); }
+        .btn-reset-design { background: var(--bg-deep); color: var(--text-secondary); }
+        .btn-reset-design:hover { border-color: var(--warning); color: var(--warning); }
+
+        @media (max-width: 1400px) {
+            .main-layout { 
+                grid-template-columns: 260px 1fr 220px; 
+                gap: 16px;
+                padding: 0 20px 40px;
+            }
+            .fence-canvas {
+                height: 550px;
+            }
+        }
+        
+        @media (max-width: 1200px) {
+            .main-layout { 
+                grid-template-columns: 1fr; 
+                gap: 20px;
+                padding: 0 16px 40px;
+            }
+            .segment-map-panel,
+            .medallion-gallery-panel {
+                position: static;
+                max-height: none;
+            }
+            .segment-map-panel,
+            .elevation-viewer-panel,
+            .medallion-gallery-panel {
+                min-width: unset;
+                width: 100%;
+                max-width: 100%;
+            }
+            .fence-canvas {
+                height: 500px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .page-header {
+                padding: 24px 16px 20px;
+            }
+            .page-header h1 {
+                font-size: 1.5rem;
+            }
+            .main-layout {
+                padding: 0 12px 32px;
+            }
+            .fence-canvas {
+                height: 400px;
+            }
+            .medallion-library {
+                max-height: 400px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Global Navigation -->
+<nav class="global-nav">
+    <div class="nav-container">
+        <a href="/" class="nav-logo">
+            <span class="nav-logo-text">PUHC Innovation Alleys</span>
+        </a>
+        
+        <ul class="nav-tabs" id="navTabs">
+            <li class="nav-tab"><a href="/">Alley 3</a></li>
+            <li class="nav-tab"><a href="/existing">Before</a></li>
+            <li class="nav-tab active"><a href="/fence-map">Fence Map</a></li>
+            <li class="nav-tab nav-dropdown">
+                <button class="nav-dropdown-toggle" id="exploreDropdown">
+                    Explore <span style="font-size: 0.7em;">▼</span>
+                </button>
+                <ul class="nav-dropdown-menu" id="exploreMenu">
+                    <li><a href="/unreal-viewer">Digital Twin</a></li>
+                    <li><a href="/puhc-puede">PUHC PUEDE</a></li>
+                </ul>
+            </li>
+            <li class="nav-tab"><a href="/compare">Compare</a></li>
+        </ul>
+        
+        <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+            ☰
+        </button>
+    </div>
+</nav>
+
+<div class="page-header" style="background: linear-gradient(135deg, #0a1929 0%, #132f4c 100%); padding: 48px 20px; margin-top: 70px; border-bottom: 1px solid rgba(15,164,175,0.2);">
+    <div style="max-width: 1400px; margin: 0 auto;">
+        <div style="display: inline-block; padding: 4px 12px; background: rgba(15,164,175,0.15); color: var(--accent); border-radius: 4px; font-size: 0.72rem; font-weight: 700; letter-spacing: 1px; margin-bottom: 16px;">FENCE DESIGN STUDIO</div>
+        <h1 style="font-size: 2.2rem; font-weight: 700; color: #fff; margin-bottom: 12px; line-height: 1.2;">Interactive Fence Map</h1>
+        <p style="font-size: 1rem; color: #b0bec5; max-width: 720px; line-height: 1.6; margin: 0;">
+            Select a fence segment from the map to view existing conditions, explore repair estimates, and design custom medallion interventions for Alley 3.
+        </p>
+    </div>
+</div>
+
+
+<!-- Medallion Art Showcase Video -->
+<div class="medallion-showcase">
+    <div class="medallion-showcase-wrapper">
+        <video autoplay muted loop playsinline controls>
+            <source src="static/videos/Medallion Art show piece.mp4" type="video/mp4">
+        </video>
+        <div class="medallion-showcase-caption">
+            <p>Water-themed medallion art designs for Alley 3 fence customization</p>
+        </div>
+    </div>
+</div>
+
+<div class="main-layout">
+
+    <!-- LEFT: Segment Map -->
+    <div class="segment-map-panel">
+        <div class="panel-label">Alley 3 Segment Map</div>
+        <div id="segmentMap"></div>
+        <div class="map-legend">
+            <div class="legend-item"><span class="legend-dot repair"></span> Fence Project</div>
+            <div class="legend-item"><span class="legend-dot material"></span> Selected</div>
+        </div>
+        <div class="map-footer">ALLEY 3 (N-S)</div>
+    </div>
+
+    <!-- CENTER: Elevation Viewer Panel -->
+    <div class="elevation-viewer-panel" id="elevationViewerPanel">
+        <div class="detail-header">
+            <div class="detail-tabs">
+                <button class="detail-tab active" data-tab="details" id="tabDetails">Area A -- Project 2</button>
+                <button class="detail-tab" data-tab="simulation" id="tabSim">Intervention Simulation</button>
+            </div>
+        </div>
+
+        <div class="project-title" id="projectTitle">Area A -- Project 2</div>
+        <div class="toggle-row">
+            <span class="toggle-label active" id="labelExisting">Existing Condition</span>
+            <div class="toggle-switch" id="modeToggle"></div>
+            <span class="toggle-label" id="labelSim">Intervention Simulation</span>
+        </div>
+
+        <!-- Existing Condition View -->
+        <div class="existing-view" id="existingView">
+            <div class="fence-photo-placeholder" id="photoPlaceholder">
+                Fence condition photograph -- select a segment
+            </div>
+            <div class="cost-summary-box">
+                <div class="cost-card">
+                    <div class="cost-card-label">Low Estimate</div>
+                    <div class="cost-card-value" id="costLow">$6,190</div>
+                </div>
+                <div class="cost-card">
+                    <div class="cost-card-label">High Estimate</div>
+                    <div class="cost-card-value" id="costHigh">$10,215</div>
+                </div>
+            </div>
+            <p class="existing-desc" id="existingDesc">Full revitalization of residential alleyway fencing. Includes demolition of damaged sections, concrete repair, new metal fence installation, surface treatment, and final cleanup. Cost range reflects material quality tiers and site access complexity.</p>
+            <button class="btn-launch" id="btnLaunchSim">Launch Customization</button>
+        </div>
+
+        <!-- Intervention Simulation View -->
+        <div class="simulation-view" id="simulationView">
+            <!-- Design Toolbar: Before/After + Undo/Redo -->
+            <div class="design-toolbar">
+                <div class="toolbar-left">
+                    <button class="toolbar-btn" id="btnUndo" disabled title="Undo last action">
+                        <span>↶</span> Undo
+                    </button>
+                    <button class="toolbar-btn" id="btnRedo" disabled title="Redo last action">
+                        <span>↷</span> Redo
+                    </button>
+                    <div class="toolbar-divider"></div>
+                    <button class="toolbar-btn active" id="btnShowAfter" title="Toggle medallion visibility">
+                        <span>👁</span> Show Medallions
+                    </button>
+                </div>
+                <div class="toolbar-right">
+                    <span style="font-size: 0.75rem; color: var(--text-muted);" id="historyStatus">Ready to design</span>
+                </div>
+            </div>
+
+            <div class="sim-workspace">
+                <!-- Layered Elevation Canvas -->
+                <div class="fence-canvas" id="fenceCanvas">
+                    <div class="fence-canvas-label">
+                        <span class="fence-canvas-label-left">
+                            <span id="elevationLabel">Building Elevation — Architectural View</span>
+                        </span>
+                        <span class="fence-canvas-label-right">
+                            <button id="fenceFocusBtn" title="Zoom in to see fence details (3.5x zoom)" style="padding:6px 16px; background:var(--accent); color:#fff; border:none; border-radius:6px; font-size:0.75rem; font-weight:600; cursor:pointer; transition:all 0.2s;">Fence Detail View</button>
+                            <span class="elevation-controls">
+                                <label for="elevationSelect">Elevation</label>
+                                <select id="elevationSelect">
+                                    <option value="auto" selected>Auto (Project Default)</option>
+                                    <option value="static/images/Building 2 PNG.png">Building 2</option>
+                                    <option value="static/images/Building 3 PNG.png">Building 3</option>
+                                    <option value="static/images/Building 4 PNG.png">Building 4</option>
+                                    <option value="static/images/Building 5 Section Pic.png">Building 5</option>
+                                    <option value="static/images/Building 6 PNG.png">Building 6</option>
+                                    <option value="static/images/Building 7 PNG.png">Building 7</option>
+                                    <option value="static/images/Building 8 PNG.png">Building 8</option>
+                                    <option value="static/images/Building 9 PNG.png">Building 9</option>
+                                    <option value="static/images/Building 10 PNG.png">Building 10</option>
+                                    <option value="static/images/Building 11 PNG.png">Building 11</option>
+                                </select>
+                            </span>
+                        </span>
+                    </div>
+                    
+                    <!-- Layer 1: Background Elevation Image (from Rhino export) -->
+                    <div class="elevation-background" id="elevationBackground">
+                        <img id="elevationImage" src="" alt="Building Elevation">
+                    </div>
+                    
+                    <!-- Layer 2: Fence Overlay with Project Segments -->
+                    <svg class="fence-overlay" id="fenceOverlay" style="position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none;">
+                        <!-- Fence line and segment markers will be drawn here -->
+                    </svg>
+                    
+                    <!-- Layer 3: Interactive Fence Workspace (zooms/pans independently) -->
+                    <div class="fence-workspace" id="fenceWorkspace">
+                        <div class="fence-workspace-inner" id="fenceWorkspaceInner">
+                            <!-- This layer handles fence-region zoom and pan -->
+                        </div>
+                    </div>
+                    
+                    <!-- Layer 4: Medallion Container (positioned absolutely) -->
+                    <div class="medallion-container" id="medallionContainer" style="position:absolute; top:0; left:0; width:100%; height:100%;">
+                        <!-- Placed medallions will be added here -->
+                    </div>
+                    
+                    <!-- Layer 5: Snap Guide -->
+                    <div class="snap-guide" id="snapGuide"></div>
+                </div>
+            </div>
+
+            <!-- Cost Summary Panel -->
+            <div class="sim-cost-panel">
+                <div class="sim-cost-header">Cost Summary Panel</div>
+                <div class="sim-cost-row">
+                    <div class="sim-cost-item">
+                        <span class="value repair" id="simRepairCost">$10,215</span>
+                        <span class="label">Repair Estimate:</span>
+                    </div>
+                    <div class="sim-cost-item">
+                        <span class="value fab" id="simFabCost">$0</span>
+                        <span class="label">Fabrication Add-On</span>
+                    </div>
+                    <div class="sim-cost-divider"></div>
+                    <div class="sim-cost-breakdown">
+                        <div class="sim-cost-header" style="margin-bottom:6px;">Fabrication Add-On Breakdown</div>
+                        <div id="fabBreakdown" class="fab-breakdown-table">
+                            <span class="fab-empty">No medallions placed</span>
+                        </div>
+                    </div>
+                    <div class="sim-cost-divider"></div>
+                    <div class="sim-cost-item sim-cost-total">
+                        <span class="label">Combined Total (Repair + Fabrication):</span>
+                        <span class="value total" id="simTotalCost">$10,215</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer row: description + actions -->
+            <div class="sim-footer">
+                <p class="sim-footer-desc">Addition of decorative medallions adds fabrication and installation costs to the original repair estimate.</p>
+                <div class="sim-actions">
+                    <button class="btn-sim btn-remove" id="btnRemove" disabled>Remove</button>
+                    <button class="btn-sim btn-duplicate" id="btnDuplicate" disabled>Duplicate</button>
+                    <button class="btn-sim btn-clear-all" id="btnClearAll">Clear All</button>
+                    <button class="btn-sim btn-reset-design" id="btnReset">Reset Design</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- RIGHT: Medallion Gallery Panel -->
+    <div class="medallion-gallery-panel">
+        <div class="panel-label">Medallion Gallery</div>
+        
+        <!-- Cost Breakdown Panel -->
+        <div class="cost-breakdown-panel" id="costBreakdownPanel">
+            <div class="cost-breakdown-header">
+                <div class="cost-breakdown-title">Cost Breakdown</div>
+                <div class="cost-breakdown-total" id="totalCostDisplay">$10,215</div>
+            </div>
+            <div class="cost-breakdown-row">
+                <div class="cost-breakdown-label">Base Repair</div>
+                <div class="cost-breakdown-value repair" id="baseRepairCost">$10,215</div>
+            </div>
+            <div class="cost-breakdown-row">
+                <div class="cost-breakdown-label">
+                    Medallions
+                    <span style="font-size: 0.7rem; color: var(--text-muted);" id="medallionCount">(0)</span>
+                </div>
+                <div class="cost-breakdown-value medallion" id="medallionCost">$0</div>
+            </div>
+            <div class="cost-breakdown-row">
+                <div class="cost-breakdown-label" style="font-weight: 700;">Project Total</div>
+                <div class="cost-breakdown-value total" id="projectTotalCost">$10,215</div>
+            </div>
+        </div>
+
+        <!-- Search & Filter -->
+        <div class="medallion-search-filter">
+            <div class="search-box">
+                <span class="search-icon">🔍</span>
+                <input type="text" class="search-input" id="medallionSearch" placeholder="Search medallions...">
+            </div>
+            <div class="filter-chips">
+                <button class="filter-chip active" data-filter="all">All</button>
+                <button class="filter-chip" data-filter="ocean">Ocean</button>
+                <button class="filter-chip" data-filter="water">Water</button>
+                <button class="filter-chip" data-filter="marine">Marine</button>
+            </div>
+        </div>
+
+        <div class="medallion-library" id="medallionLibrary">
+            <div class="med-lib-title">Medallions</div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+/* ═══════════════════════════════════════════
+   PROJECT DATA
+   ═══════════════════════════════════════════ */
+var projects = [
+    { id:"P2",  area:"A", label:"P2",  sections:"S1-S6", title:"Area A -- Project 2", costLow:6190,  costHigh:10215, desc:"Full revitalization of residential alleyway fencing. Includes demolition of damaged sections, concrete repair, new metal fence installation, surface treatment, and final cleanup.", fencePhoto:"static/images/alley_zones/area_a/existing/Overgrown Fence with Vegetation and Cracked Pavement 1.png" },
+    { id:"P3",  area:"A", label:"P3",  sections:"S1-S7", title:"Area A -- Project 3", costLow:7450,  costHigh:12380, desc:"Extended fence replacement along property line. Addresses corroded metal panels, cracked concrete posts, and graffiti-covered surfaces across seven sections.", fencePhoto:"static/images/alley_zones/area_a/existing/Warped and Tagged Wooden Fence 1.png" },
+    { id:"P3c", area:"A", label:"P3",  sections:"cont.",  title:"Area A -- Project 3 (cont.)", costLow:3200, costHigh:5100, desc:"Continuation of Project 3 fencing repairs. Covers remaining sections with moderate damage.", fencePhoto:"static/images/alley_zones/area_a/existing/White Wooden Fence (Graffiti Removal + Repaint + Ground Detailing) 1.png" },
+    { id:"P4",  area:"B", label:"P4",  sections:"S1-S3", title:"Area B -- Project 4", costLow:4320,  costHigh:7150,  desc:"Targeted repair of iron and wood composite fencing. Three sections with hinge damage, wood rot, and structural misalignment.", fencePhoto:"static/images/alley_zones/area_b/existing/Iron & Wood Fence with Concrete Columns and Pavement Issues 1.png" },
+    { id:"P5",  area:"B", label:"P5",  sections:"S1-S3", title:"Area B -- Project 5", costLow:5680,  costHigh:9420,  desc:"Replacement of deteriorated chain-link and wood panel sections. Includes new concrete footings.", fencePhoto:"static/images/alley_zones/area_b/existing/Metal Fence with Grime + Rod Repair 1.png" },
+    { id:"P4c", area:"B", label:"P4",  sections:"cont.",  title:"Area B -- Project 4 (cont.)", costLow:2800, costHigh:4600, desc:"Continuation of Project 4 covering secondary access points.", fencePhoto:"static/images/alley_zones/area_b/existing/Curved Black Iron Fence with Concrete Base (Right of Gate) 1.png" },
+    { id:"P5c", area:"B", label:"P5",  sections:"cont.",  title:"Area B -- Project 5 (cont.)", costLow:3100, costHigh:5200, desc:"Final sections of Project 5. Gate mechanisms and perimeter fencing.", fencePhoto:"static/images/alley_zones/area_b/existing/Iron Fence + Concrete Base1.png" },
+    { id:"P7",  area:"C", label:"P7",  sections:"",       title:"Area C -- Project 7", costLow:8200,  costHigh:13500, desc:"Major concrete wall and fence rehabilitation. Graffiti removal, surface sealing, and anti-graffiti coating.", fencePhoto:"static/images/alley_zones/area_c/existing/Concrete Wall with Graffiti, Chipping, and Surface Burn 1.png" },
+    { id:"P8",  area:"C", label:"P8",  sections:"",       title:"Area C -- Project 8", costLow:6100,  costHigh:10050, desc:"Mixed-material fence repair. Steel post replacement, mesh panel installation, concrete cap repairs.", fencePhoto:"static/images/alley_zones/area_c/existing/Concrete Wall with Graffiti, Chipping, and Surface Burn 1.png" },
+    { id:"P9",  area:"D", label:"P9",  sections:"S1-S7", title:"Area D -- Project 9", costLow:9500,  costHigh:15700, desc:"Comprehensive fence overhaul across seven sections. White iron gate and wall sections requiring structural repair and surface treatment.", fencePhoto:"static/images/alley_zones/area_d/existing/White Iron Gate Near Sidewalk 1.png" },
+    { id:"P10", area:"D", label:"P10", sections:"S1-S8", title:"Area D -- Project 10",costLow:11200, costHigh:18500, desc:"Largest segment. Garage doors and wall sections with graffiti removal, surface sealing, and structural reinforcement.", fencePhoto:"static/images/alley_zones/area_d/existing/Garage Doors + Wall Sections (Excludes Roof) 1.png" },
+    { id:"P9c", area:"D", label:"P9",  sections:"Cont.",  title:"Area D -- Project 9 (cont.)", costLow:4200, costHigh:6900, desc:"Continuation sections of Project 9. Additional gate sections and wall rehabilitation with graffiti removal.", fencePhoto:"static/images/alley_zones/area_d/existing/Wall with Graffiti Wall Removal and Pavement Detail 1.png" },
+    { id:"P10c",area:"D", label:"P10", sections:"S1-S8", title:"Area D -- Project 10 (cont.)",costLow:5800, costHigh:9600, desc:"Final sections of Project 10. Garage roof repairs and upper wall sections requiring weatherproofing and structural work.", fencePhoto:"static/images/alley_zones/area_d/existing/Garage Roof of Units #2–#5 1.png" }
+];
+var areaLayout = [
+    { area:"A", rows:[["P2","P3"],["P3c",null]] },
+    { area:"B", rows:[["P4","P5"],["P4c","P5c"]] },
+    { area:"C", rows:[["P7",null],["P8",null]] },
+    { area:"D", rows:[["P9","P10"],["P9c","P10c"]] }
+];
+function findProject(id) { return projects.find(function(p){return p.id===id;}); }
+
+/* ═══════════════════════════════════════════
+   MEDALLION DATA (Water-themed from Shade Structures)
+   ═══════════════════════════════════════════ */
+var medallions = [
+    { id:"m1",  name:"Ocean 1",   cost:250, defaultScale:1, img:"static/images/medallions/Image 1.webp" },
+    { id:"m2",  name:"Ocean 2",   cost:250, defaultScale:1, img:"static/images/medallions/image 2.webp" },
+    { id:"m3",  name:"Ocean 3",   cost:250, defaultScale:1, img:"static/images/medallions/image 3.webp" },
+    { id:"m4",  name:"Ocean 4",   cost:250, defaultScale:1, img:"static/images/medallions/image 4.webp" },
+    { id:"m5",  name:"Ocean 5",   cost:250, defaultScale:1, img:"static/images/medallions/image 5.webp" },
+    { id:"m6",  name:"Ocean 6",   cost:250, defaultScale:1, img:"static/images/medallions/image 6.webp" },
+    { id:"m7",  name:"Ocean 7",   cost:250, defaultScale:1, img:"static/images/medallions/image 7.webp" },
+    { id:"m8",  name:"Ocean 8",   cost:250, defaultScale:1, img:"static/images/medallions/image 8.webp" },
+    { id:"m9",  name:"Ocean 9",   cost:250, defaultScale:1, img:"static/images/medallions/image 9.webp" },
+    { id:"m10", name:"Ocean 10",  cost:250, defaultScale:1, img:"static/images/medallions/image 10.webp" },
+    { id:"m11", name:"Ocean 11",  cost:250, defaultScale:1, img:"static/images/medallions/image 11.webp" },
+    { id:"m12", name:"Ocean 12",  cost:250, defaultScale:1, img:"static/images/medallions/image 12.webp" },
+    { id:"m13", name:"Ocean 13",  cost:250, defaultScale:1, img:"static/images/medallions/image 13.webp" },
+    { id:"m14", name:"Ocean 14",  cost:250, defaultScale:1, img:"static/images/medallions/image 14.webp" },
+    { id:"m15", name:"Ocean 15",  cost:250, defaultScale:1, img:"static/images/medallions/image 15.webp" },
+    { id:"m16", name:"Ocean 16",  cost:250, defaultScale:1, img:"static/images/medallions/image 16.webp" },
+    { id:"m17", name:"Ocean 17",  cost:250, defaultScale:1, img:"static/images/medallions/image 17.webp" },
+    { id:"m18", name:"Ocean 18",  cost:250, defaultScale:1, img:"static/images/medallions/image 18.webp" },
+    { id:"m19", name:"Ocean 19",  cost:250, defaultScale:1, img:"static/images/medallions/image 19.webp" },
+    { id:"m20", name:"Ocean 20",  cost:250, defaultScale:1, img:"static/images/medallions/image 20.webp" },
+    { id:"m21", name:"Ocean 21",  cost:250, defaultScale:1, img:"static/images/medallions/image 21.webp" },
+    { id:"m22", name:"Ocean 22",  cost:250, defaultScale:1, img:"static/images/medallions/image 22.webp" },
+    { id:"m23", name:"Ocean 23",  cost:250, defaultScale:1, img:"static/images/medallions/image 23.webp" },
+    { id:"m24", name:"Ocean 24",  cost:250, defaultScale:1, img:"static/images/medallions/image 24.webp" },
+    { id:"m25", name:"Ocean 25",  cost:250, defaultScale:1, img:"static/images/medallions/image 25.webp" },
+    { id:"m26", name:"Ocean 26",  cost:250, defaultScale:1, img:"static/images/medallions/image 26.webp" },
+    { id:"m27", name:"Ocean 27",  cost:250, defaultScale:1, img:"static/images/medallions/image 27.webp" },
+    { id:"m28", name:"Ocean 28",  cost:250, defaultScale:1, img:"static/images/medallions/image 28.webp" },
+    { id:"m29", name:"Ocean 29",  cost:250, defaultScale:1, img:"static/images/medallions/image 29.webp" },
+    { id:"m30", name:"Ocean 30",  cost:250, defaultScale:1, img:"static/images/medallions/image 30.webp" },
+    { id:"m31", name:"Ocean 31",  cost:250, defaultScale:1, img:"static/images/medallions/image 31.webp" },
+    { id:"m32", name:"Ocean 32",  cost:250, defaultScale:1, img:"static/images/medallions/image 32.webp" },
+    { id:"m33", name:"Ocean 33",  cost:250, defaultScale:1, img:"static/images/medallions/image 33.webp" },
+    { id:"m34", name:"Ocean 34",  cost:250, defaultScale:1, img:"static/images/medallions/image 34.webp" },
+    { id:"m35", name:"Ocean 35",  cost:250, defaultScale:1, img:"static/images/medallions/image 35.webp" },
+    { id:"m36", name:"Ocean 36",  cost:250, defaultScale:1, img:"static/images/medallions/image 36.webp" },
+    { id:"m37", name:"Ocean 37",  cost:250, defaultScale:1, img:"static/images/medallions/image 37.webp" },
+    { id:"m39", name:"Ocean 39",  cost:250, defaultScale:1, img:"static/images/medallions/image 39.webp" },
+    { id:"m40", name:"Ocean 40",  cost:250, defaultScale:1, img:"static/images/medallions/image 40.webp" },
+    { id:"m41", name:"Ocean 41",  cost:250, defaultScale:1, img:"static/images/medallions/image 41.webp" },
+    { id:"m43", name:"Ocean 43",  cost:250, defaultScale:1, img:"static/images/medallions/image 43.webp" },
+    { id:"m44", name:"Ocean 44",  cost:250, defaultScale:1, img:"static/images/medallions/image 44.webp" },
+    { id:"m45", name:"Ocean 45",  cost:250, defaultScale:1, img:"static/images/medallions/image 45.webp" }
+];
+
+/* ═══════════════════════════════════════════
+   STATE
+   ═══════════════════════════════════════════ */
+var activeProjectId = "P2";
+var simMode = false;
+var placedItems = [];
+var placedUID = 0;
+var elevationOverride = "auto";
+var selectedUID = null;
+
+// Undo/Redo System
+var undoStack = [];
+var redoStack = [];
+var MAX_HISTORY = 50;
+
+// Before/After Toggle
+var showMedallions = true;
+
+// Search & Filter
+var currentFilter = 'all';
+var searchQuery = '';
+var projectDesigns = {};
+
+// Undo/Redo system
+var actionHistory = [];
+var historyIndex = -1;
+var maxHistory = 10;
+
+// Ghost preview
+var ghostPreview = null;
+var snapGuide = null;
+var zoomPanInitialized = false;
+var pendingDesignRestore = false;
+
+/* ═══════════════════════════════════════════
+   BUILD SEGMENT MAP
+   ═══════════════════════════════════════════ */
+function buildSegmentMap() {
+    var c = document.getElementById("segmentMap");
+    c.innerHTML = "";
+    
+    var areaDescriptions = {
+        'A': 'Residential Fencing',
+        'B': 'Mixed Commercial',
+        'C': 'Wall Rehabilitation',
+        'D': 'Gate Systems'
+    };
+    
+    areaLayout.forEach(function(ag) {
+        var g = document.createElement("div");
+        g.className = "area-group";
+        
+        var header = document.createElement("div");
+        header.className = "area-group-header";
+        header.innerHTML = '<div class="area-badge">Area ' + ag.area + '</div>' +
+                          '<div class="area-description">' + (areaDescriptions[ag.area] || '') + '</div>';
+        g.appendChild(header);
+        
+        ag.rows.forEach(function(row) {
+            var rd = document.createElement("div");
+            rd.className = "area-row";
+            row.forEach(function(pid) {
+                var proj = findProject(pid);
+                var b = document.createElement("div");
+                if (proj) {
+                    b.className = "segment-block";
+                    b.setAttribute("data-project-id", pid);
+                    b.innerHTML = '<div class="seg-id">'+proj.label+'</div><div class="seg-sections">'+proj.sections+'</div>';
+                    b.addEventListener("click", function() { selectProject(pid); });
+                } else {
+                    b.className = "segment-block empty";
+                }
+                rd.appendChild(b);
+            });
+            g.appendChild(rd);
+        });
+        c.appendChild(g);
+    });
+}
+
+/* ═══════════════════════════════════════════
+   BUILD MEDALLION LIBRARY
+   ═══════════════════════════════════════════ */
+function buildMedallionLibrary() {
+    var lib = document.getElementById("medallionLibrary");
+    if (!lib) return;
+    
+    lib.innerHTML = "";
+    
+    var header = document.createElement("div");
+    header.className = "med-lib-header";
+    header.innerHTML = '<div class="med-lib-title">Medallion Library</div>' +
+                      '<div class="med-lib-count">' + medallions.length + ' designs</div>';
+    lib.appendChild(header);
+    
+    medallions.forEach(function(m) {
+        var item = document.createElement("div");
+        item.className = "med-lib-item";
+        item.setAttribute("draggable", "true");
+        item.setAttribute("data-med-id", m.id);
+        item.setAttribute("title", m.name + " - $" + m.cost);
+        
+        item.innerHTML = '<div class="med-thumbnail-frame"><img src="' + m.img + '" alt="' + m.name + '" draggable="false"></div>' +
+                        '<div class="med-lib-name">' + m.name + '</div>' +
+                        '<div class="med-cost-tag">$' + m.cost + '</div>';
+        
+        item.addEventListener("dragstart", function(e) {
+            e.dataTransfer.setData("text/plain", m.id);
+            e.dataTransfer.effectAllowed = "copy";
+            createGhostPreview(m);
+        });
+        
+        item.addEventListener("dragend", function() {
+            removeGhostPreview();
+        });
+        
+        lib.appendChild(item);
+    });
+}
+
+function getCurrentMedallionSize() {
+    // Calculate realistic medallion size based on BASE fence height (unzoomed)
+    // This ensures medallions maintain consistent size relative to fence regardless of zoom
+    var canvas = document.getElementById("fenceCanvas");
+    if (!canvas) return 40;
+    
+    var rect = canvas.getBoundingClientRect();
+    var projectConfig = projectConfigs[activeProjectId];
+    
+    if (!projectConfig || !rect.height) {
+        return 40; // Fallback size
+    }
+    
+    // IMPORTANT: Use base canvas height, not zoomed/transformed height
+    // The medallion container is also transformed, so we need base size
+    var baseHeight = rect.height;
+    
+    // Get fence region height in pixels (at base scale)
+    var fenceHeight = baseHeight * projectConfig.fenceRegion.height;
+    
+    // Medallion size is a percentage of fence height (architectural scale)
+    var medallionSize = fenceHeight * MEDALLION_SCALE_FACTOR;
+    
+    // Clamp to reasonable bounds
+    return Math.max(30, Math.min(medallionSize, 80));
+}
+
+function getCanvasRect() {
+    var activeCanvas = document.getElementById("fenceCanvas");
+    return activeCanvas ? activeCanvas.getBoundingClientRect() : { width: 0, height: 0 };
+}
+
+function getPlacedElement(uid) {
+    return canvas ? canvas.querySelector('[data-uid="' + uid + '"]') : null;
+}
+
+function syncPlacedItemPosition(item, el) {
+    var rect = getCanvasRect();
+    if (!item || !el || !rect.width || !rect.height) return;
+
+    item.x = parseFloat(el.style.left) || 0;
+    item.y = parseFloat(el.style.top) || 0;
+    item.normalizedX = item.x / rect.width;
+    item.normalizedY = item.y / rect.height;
+}
+
+function syncCurrentProjectDesign() {
+    if (!activeProjectId) return;
+
+    placedItems.forEach(function(item) {
+        var el = getPlacedElement(item.uid);
+        if (el) syncPlacedItemPosition(item, el);
+    });
+
+    projectDesigns[activeProjectId] = {
+        items: placedItems.map(function(item) {
+            return {
+                medId: item.medId,
+                cost: item.cost,
+                rotation: item.rotation || 0,
+                scale: item.scale || 1,
+                anchorIndex: item.anchorIndex !== undefined ? item.anchorIndex : -1,
+                normalizedX: item.normalizedX !== undefined ? item.normalizedX : 0,
+                normalizedY: item.normalizedY !== undefined ? item.normalizedY : 0
+            };
+        })
+    };
+}
+
+function updateProjectDetails() {
+    var proj = findProject(activeProjectId);
+    if (!proj) return;
+
+    var projectTitle = document.getElementById("projectTitle");
+    var tabDetails = document.getElementById("tabDetails");
+    var costLow = document.getElementById("costLow");
+    var costHigh = document.getElementById("costHigh");
+    var existingDesc = document.getElementById("existingDesc");
+    var photoPlaceholder = document.getElementById("photoPlaceholder");
+
+    if (projectTitle) projectTitle.textContent = proj.title;
+    if (tabDetails) tabDetails.textContent = proj.title;
+    if (costLow) costLow.textContent = "$" + proj.costLow.toLocaleString();
+    if (costHigh) costHigh.textContent = "$" + proj.costHigh.toLocaleString();
+    if (existingDesc) existingDesc.textContent = proj.desc;
+
+    if (photoPlaceholder) {
+        photoPlaceholder.innerHTML = '<img src="' + proj.fencePhoto + '" alt="' + proj.title + ' existing fence condition">' +
+            '<div class="photo-label">' + proj.title + ' Existing Condition</div>';
+    }
+}
+
+function clearCanvas(skipSync) {
+    canvas.querySelectorAll(".placed-medallion").forEach(function(el) { el.remove(); });
+    placedItems = [];
+    selectedUID = null;
+    document.getElementById("btnRemove").disabled = true;
+    document.getElementById("btnDuplicate").disabled = true;
+    if (!skipSync) syncCurrentProjectDesign();
+}
+
+function restoreProjectDesign() {
+    var stored = projectDesigns[activeProjectId];
+    if (!stored || !stored.items || !stored.items.length) {
+        clearCanvas(true);
+        updateCosts();
+        return;
+    }
+
+    clearCanvas(true);
+    var rect = getCanvasRect();
+    stored.items.forEach(function(item) {
+        placeMedallion(item.medId, (item.normalizedX || 0) * rect.width, (item.normalizedY || 0) * rect.height, true, {
+            rotation: item.rotation,
+            scale: item.scale,
+            anchorIndex: item.anchorIndex
+        });
+    });
+
+    syncCurrentProjectDesign();
+    updateCosts();
+}
+
+// Validate if coordinates are within fence region
+function isWithinFenceBounds(x, y) {
+    var rect = getCanvasRect();
+    var projectConfig = projectConfigs[activeProjectId];
+    
+    if (!projectConfig || !rect.width || !rect.height) return true; // Allow if no config
+    
+    // In detail view (zoomed to fence), the entire visible area is the fence
+    // So we can be more lenient with bounds checking
+    if (viewMode === 'detail' || zoomLevel > 2) {
+        // Just check if within canvas bounds
+        return x >= 0 && x <= rect.width && y >= 0 && y <= rect.height;
+    }
+    
+    // In full view, check against fence region
+    var fenceRegion = projectConfig.fenceRegion;
+    var fenceLeft = rect.width * fenceRegion.x;
+    var fenceRight = rect.width * (fenceRegion.x + fenceRegion.width);
+    var fenceTop = rect.height * fenceRegion.y;
+    var fenceBottom = rect.height * (fenceRegion.y + fenceRegion.height);
+    
+    return x >= fenceLeft && x <= fenceRight && y >= fenceTop && y <= fenceBottom;
+}
+
+function refreshPlacedMedallionLayout() {
+    if (!placedItems.length) return;
+
+    var rect = getCanvasRect();
+    var medSize = getCurrentMedallionSize();
+
+    placedItems.forEach(function(item) {
+        var el = getPlacedElement(item.uid);
+        if (!el) return;
+
+        var x = item.normalizedX !== undefined ? item.normalizedX * rect.width : (parseFloat(el.style.left) || 0);
+        var y = item.normalizedY !== undefined ? item.normalizedY * rect.height : (parseFloat(el.style.top) || 0);
+        
+        // Update medallion size to maintain fence-proportional scaling
+        el.style.width = medSize + 'px';
+        el.style.height = medSize + 'px';
+
+        if (item.anchorIndex !== undefined && item.anchorIndex >= 0 && fenceAnchors[item.anchorIndex]) {
+            x = fenceAnchors[item.anchorIndex].x - medSize / 2;
+        }
+
+        x = Math.max(0, Math.min(x, rect.width - medSize));
+        y = clampToFenceHeight(y, medSize);
+
+        el.style.left = x + "px";
+        el.style.top = y + "px";
+        el.style.setProperty('--medallion-size', medSize + 'px');
+        syncPlacedItemPosition(item, el);
+    });
+
+    syncCurrentProjectDesign();
+}
+
+function setFenceViewMode(mode) {
+    var canvas = document.getElementById('fenceCanvas');
+    var btn = document.getElementById('fenceFocusBtn');
+
+    viewMode = mode === 'detail' ? 'detail' : 'full';
+    
+    if (canvas) {
+        canvas.classList.toggle('detail-mode', viewMode === 'detail');
+    }
+    
+    if (btn) {
+        btn.textContent = viewMode === 'detail' ? 'Full Elevation' : 'Fence Detail View';
+        btn.style.background = viewMode === 'detail' ? 'rgba(15, 164, 175, 0.3)' : 'var(--accent)';
+    }
+    
+    // Smooth zoom transition
+    var startZoom = zoomLevel;
+    var startPanX = panX;
+    var targetZoom = viewMode === 'detail' ? detailZoomLevel : 1;
+    var targetPanX = viewMode === 'detail' ? panX : 0;
+    
+    var duration = 500;
+    var startTime = Date.now();
+    
+    function animateZoom() {
+        var elapsed = Date.now() - startTime;
+        var progress = Math.min(elapsed / duration, 1);
+        var eased = progress < 0.5 ? 2 * progress * progress : 1 - Math.pow(-2 * progress + 2, 2) / 2;
+        
+        zoomLevel = startZoom + (targetZoom - startZoom) * eased;
+        panX = startPanX + (targetPanX - startPanX) * eased;
+        
+        constrainPan();
+        applyTransform();
+        updateMedallionScales();
+        refreshPlacedMedallionLayout();
+        
+        if (progress < 1) {
+            requestAnimationFrame(animateZoom);
+        }
+    }
+
+    animateZoom();
+}
+
+/* ═══════════════════════════════════════════
+   SVG ELEVATION LOADER
+   ═══════════════════════════════════════════ */
+var fenceAnchors = [];    // {x, y, normalizedX, normalizedY} snap anchor positions
+var elevationDimensions = {width: 1920, height: 1080}; // Will be updated when image loads
+var elevationLoaded = false;
+
+// Constrained Camera System for Architectural Elevation
+var zoomLevel = 1;
+var panX = 0;
+var isPanning = false;
+var panStartX = 0;
+var transformPending = false;
+var MIN_ZOOM = 1;
+var MAX_ZOOM = 4.5; // Increased for fence inspection
+var FENCE_CENTER_Y = 0.65;
+
+// Fence Detail View System
+var viewMode = 'full'; // 'full' or 'detail'
+var detailZoomLevel = 3.5; // Higher zoom for clear fence inspection
+var detailMedallionScale = 1.5; // Medallion scale multiplier in detail view
+
+// Structured Project Configuration System
+// Each project has its own building elevation, fence guides, and metadata
+var projectConfigs = {
+    // Area A - Building 5
+    "P2": {
+        buildingImage: "static/images/Building 2 PNG.png",
+        alleySegment: "Area A",
+        projectName: "Project 2",
+        fenceRegion: { x: 0.15, width: 0.25, y: 0.50, height: 0.50 },
+        fenceFocalPoint: { x: 0.275, y: 0.68 },
+        snapPoints: 20
+    },
+    "P3": {
+        buildingImage: "static/images/Building 3 PNG.png",
+        alleySegment: "Area A",
+        projectName: "Project 3",
+        fenceRegion: { x: 0.42, width: 0.30, y: 0.50, height: 0.50 },
+        fenceFocalPoint: { x: 0.57, y: 0.68 },
+        snapPoints: 20
+    },
+    "P3c": {
+        buildingImage: "static/images/Building 3 PNG.png",
+        alleySegment: "Area A",
+        projectName: "Project 3 (cont.)",
+        fenceRegion: { x: 0.73, width: 0.12, y: 0.50, height: 0.50 },
+        fenceFocalPoint: { x: 0.79, y: 0.68 },
+        snapPoints: 20
+    },
+    // Area B - Building 4
+    "P4": {
+        buildingImage: "static/images/Building 4 PNG.png",
+        alleySegment: "Area B",
+        projectName: "Project 4",
+        fenceRegion: { x: 0.15, width: 0.20, y: 0.50, height: 0.50 },
+        fenceFocalPoint: { x: 0.25, y: 0.70 },
+        snapPoints: 20
+    },
+    "P5": {
+        buildingImage: "static/images/Building 5 Section Pic.png",
+        alleySegment: "Area B",
+        projectName: "Project 5",
+        fenceRegion: { x: 0.37, width: 0.25, y: 0.50, height: 0.50 },
+        fenceFocalPoint: { x: 0.495, y: 0.70 },
+        snapPoints: 20
+    },
+    "P4c": {
+        buildingImage: "static/images/Building 4 PNG.png",
+        alleySegment: "Area B",
+        projectName: "Project 4 (cont.)",
+        fenceRegion: { x: 0.63, width: 0.15, y: 0.50, height: 0.50 },
+        fenceFocalPoint: { x: 0.705, y: 0.70 },
+        snapPoints: 20
+    },
+    "P5c": {
+        buildingImage: "static/images/Building 5 Section Pic.png",
+        alleySegment: "Area B",
+        projectName: "Project 5 (cont.)",
+        fenceRegion: { x: 0.80, width: 0.15, y: 0.50, height: 0.50 },
+        fenceFocalPoint: { x: 0.875, y: 0.70 },
+        snapPoints: 20
+    },
+    // Area C - Building 5
+    "P7": {
+        buildingImage: "static/images/Building 7 PNG.png",
+        alleySegment: "Area C",
+        projectName: "Project 7",
+        fenceRegion: { x: 0.15, width: 0.35, y: 0.50, height: 0.50 },
+        fenceFocalPoint: { x: 0.325, y: 0.68 },
+        snapPoints: 20
+    },
+    "P8": {
+        buildingImage: "static/images/Building 8 PNG.png",
+        alleySegment: "Area C",
+        projectName: "Project 8",
+        fenceRegion: { x: 0.52, width: 0.35, y: 0.50, height: 0.50 },
+        fenceFocalPoint: { x: 0.695, y: 0.68 },
+        snapPoints: 20
+    },
+    // Area D - Building 4
+    "P9": {
+        buildingImage: "static/images/Building 9 PNG.png",
+        alleySegment: "Area D",
+        projectName: "Project 9",
+        fenceRegion: { x: 0.10, width: 0.40, y: 0.50, height: 0.50 },
+        fenceFocalPoint: { x: 0.30, y: 0.58 },
+        snapPoints: 20
+    },
+    "P10": {
+        buildingImage: "static/images/Building 10 PNG.png",
+        alleySegment: "Area D",
+        projectName: "Project 10",
+        fenceRegion: { x: 0.52, width: 0.40, y: 0.50, height: 0.50 },
+        fenceFocalPoint: { x: 0.72, y: 0.55 },
+        snapPoints: 20
+    },
+    "P9c": {
+        buildingImage: "static/images/Building 9 PNG.png",
+        alleySegment: "Area D",
+        projectName: "Project 9 (cont.)",
+        fenceRegion: { x: 0.10, width: 0.20, y: 0.50, height: 0.50 },
+        fenceFocalPoint: { x: 0.20, y: 0.58 },
+        snapPoints: 20
+    },
+    "P10c": {
+        buildingImage: "static/images/Building 10 PNG.png",
+        alleySegment: "Area D",
+        projectName: "Project 10 (cont.)",
+        fenceRegion: { x: 0.32, width: 0.20, y: 0.50, height: 0.50 },
+        fenceFocalPoint: { x: 0.42, y: 0.55 },
+        snapPoints: 20
+    }
+};
+
+// Legacy fence regions for backward compatibility
+var fenceRegions = {};
+Object.keys(projectConfigs).forEach(function(pid) {
+    fenceRegions[pid] = projectConfigs[pid].fenceRegion;
+});
+
+function load2DElevation() {
+    var elevationImg = document.getElementById("elevationImage");
+    var elevationBg = document.getElementById("elevationBackground");
+    var elevationLabel = document.getElementById("elevationLabel");
+    
+    if (!elevationImg || !elevationBg) return;
+    
+    var projectConfig = projectConfigs[activeProjectId];
+    var defaultPath = projectConfig ? projectConfig.buildingImage : "static/images/Building 5 Section Pic.png";
+    var imagePath = (elevationOverride && elevationOverride !== "auto") ? elevationOverride : defaultPath;
+
+    if (elevationLabel) {
+        var labelText = "Building Elevation — Architectural View";
+        var m = imagePath && imagePath.match(/Building\s+(\d+)/i);
+        if (m && m[1]) {
+            labelText = "Building " + m[1] + " Elevation — Architectural View";
+        } else if (imagePath && imagePath.indexOf("Building 4 Snip") !== -1) {
+            labelText = "Building 4 Elevation — Architectural View";
+        } else if (imagePath && imagePath.indexOf("Building 5 Snip") !== -1) {
+            labelText = "Building 5 Elevation — Architectural View";
+        }
+        elevationLabel.textContent = labelText;
+    }
+    
+    elevationBg.classList.add("loading");
+    
+    elevationImg.onload = function() {
+        elevationBg.classList.remove("loading");
+        if (elevationBg) {
+            elevationBg.style.background = "transparent";
+        }
+        
+        elevationImg.style.display = "block";
+        elevationImg.style.opacity = "1";
+        
+        elevationDimensions = {
+            width: elevationImg.naturalWidth,
+            height: elevationImg.naturalHeight
+        };
+        
+        drawFenceOverlay();
+        generateFenceAnchors();
+        
+        elevationLoaded = true;
+        initZoomPan();
+        refreshPlacedMedallionLayout();
+        if (pendingDesignRestore) {
+            restoreProjectDesign();
+            pendingDesignRestore = false;
+        } else {
+            updateCosts();
+        }
+    };
+    
+    elevationImg.onerror = function() {
+        elevationBg.classList.remove("loading");
+        if (elevationBg) {
+            elevationBg.innerHTML = '<div style="color:#e74c3c;padding:20px;text-align:center;">Failed to load elevation image</div>';
+        }
+    };
+    
+    elevationImg.src = imagePath;
+}
+
+function drawFenceOverlay() {
+    var overlay = document.getElementById("fenceOverlay");
+    var canvas = document.getElementById("fenceCanvas");
+    if (!overlay || !canvas) return;
+    
+    var rect = canvas.getBoundingClientRect();
+    overlay.setAttribute("viewBox", "0 0 " + rect.width + " " + rect.height);
+    overlay.innerHTML = "";
+    
+    if (activeProjectId && fenceRegions[activeProjectId]) {
+        var region = fenceRegions[activeProjectId];
+        var x1 = region.x * rect.width;
+        var x2 = (region.x + region.width) * rect.width;
+        var y = (region.y + region.height / 2) * rect.height;
+        
+        var line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        line.setAttribute("x1", x1);
+        line.setAttribute("y1", y);
+        line.setAttribute("x2", x2);
+        line.setAttribute("y2", y);
+        line.setAttribute("stroke", "#0abdc6");
+        line.setAttribute("stroke-width", "2");
+        line.setAttribute("stroke-opacity", "0.6");
+        line.setAttribute("vector-effect", "non-scaling-stroke");
+        line.setAttribute("shape-rendering", "crispEdges");
+        overlay.appendChild(line);
+    }
+}
+
+function generateFenceAnchors() {
+    fenceAnchors = [];
+    
+    if (!activeProjectId || !fenceRegions[activeProjectId]) return;
+    
+    var region = fenceRegions[activeProjectId];
+    var canvas = document.getElementById("fenceCanvas");
+    if (!canvas) return;
+    
+    var rect = canvas.getBoundingClientRect();
+    var projectConfig = projectConfigs[activeProjectId] || {};
+    var numAnchors = projectConfig.snapPoints || 20;
+    
+    for (var i = 0; i < numAnchors; i++) {
+        var normalizedX = region.x + (region.width / numAnchors) * (i + 0.5);
+        var normalizedY = region.y + region.height / 2;
+        
+        fenceAnchors.push({
+            x: normalizedX * rect.width,
+            y: normalizedY * rect.height,
+            normalizedX: normalizedX,
+            normalizedY: normalizedY
+        });
+    }
+}
+
+/* ═══════════════════════════════════════════
+   ZOOM & PAN SYSTEM
+   ═══════════════════════════════════════════ */
+var transformPending = false;
+var panY = 0; // Add vertical pan for camera system
+
+function applyTransform() {
+    if (transformPending) return;
+    transformPending = true;
+    
+    requestAnimationFrame(function() {
+        var img = document.querySelector("#elevationBackground img");
+        var fenceOverlay = document.getElementById("fenceOverlay");
+        var medallionContainer = document.getElementById("medallionContainer");
+        
+        if (!img) {
+            transformPending = false;
+            return;
+        }
+        
+        // Figma-style zoom: scale from fence Y position, pan horizontally
+        var projectConfig = projectConfigs[activeProjectId];
+        var focalPoint = projectConfig && projectConfig.fenceFocalPoint ? projectConfig.fenceFocalPoint : { x: 0.5, y: 0.68 };
+        
+        // Set transform origin to fence position
+        var transformOrigin = "center " + (focalPoint.y * 100) + "%";
+        
+        var transform = "scale(" + zoomLevel + ") translateX(" + (panX / zoomLevel) + "px)";
+        
+        if (img) {
+            img.style.transformOrigin = transformOrigin;
+            img.style.transform = transform;
+        }
+        if (fenceOverlay) {
+            fenceOverlay.style.transformOrigin = transformOrigin;
+            fenceOverlay.style.transform = transform;
+        }
+        if (medallionContainer) {
+            medallionContainer.style.transformOrigin = transformOrigin;
+            medallionContainer.style.transform = transform;
+        }
+        
+        transformPending = false;
+    });
+}
+
+function constrainPan() {
+    if (zoomLevel <= 1) {
+        panX = 0;
+        return;
+    }
+    
+    var canvas = document.getElementById("fenceCanvas");
+    if (!canvas) return;
+    
+    var canvasRect = canvas.getBoundingClientRect();
+    
+    // Constrain horizontal pan based on zoom level
+    var maxPan = (canvasRect.width * (zoomLevel - 1)) / 2;
+    panX = Math.max(-maxPan, Math.min(panX, maxPan));
+}
+
+// Convert screen coordinates to canvas coordinates (inverse transform)
+// This properly handles zoom and pan to place medallions exactly under cursor
+function screenToCanvasCoords(screenX, screenY) {
+    var canvas = document.getElementById("fenceCanvas");
+    if (!canvas) return { x: 0, y: 0 };
+    
+    var rect = canvas.getBoundingClientRect();
+    var projectConfig = projectConfigs[activeProjectId];
+    
+    // Get fence focal point for this project (transform origin)
+    var focalPoint = projectConfig && projectConfig.fenceFocalPoint ? 
+                     projectConfig.fenceFocalPoint : { x: 0.5, y: 0.68 };
+    
+    // Convert screen position to canvas-relative position
+    var canvasX = screenX - rect.left;
+    var canvasY = screenY - rect.top;
+    
+    // Calculate transform origin in canvas pixels
+    var originX = rect.width * 0.5;  // center horizontally
+    var originY = rect.height * focalPoint.y;  // fence Y position
+    
+    // Apply inverse transform accounting for transform-origin
+    // Formula: inverse = (point - origin) / scale - pan/scale + origin
+    var transformedX = ((canvasX - originX) / zoomLevel) - (panX / zoomLevel) + originX;
+    var transformedY = ((canvasY - originY) / zoomLevel) + originY;
+    
+    return { x: transformedX, y: transformedY };
+}
+
+// Update all placed medallion sizes based on current view mode
+function updateMedallionScales() {
+    var medSize = getCurrentMedallionSize();
+    var medallions = document.querySelectorAll('.placed-medallion');
+    medallions.forEach(function(el) {
+        el.style.setProperty('--medallion-size', medSize + 'px');
+    });
+}
+
+// Update medallion scales when zoom changes
+function handleZoomChange() {
+    // Medallions scale with detail view, not with manual zoom
+    // This keeps them consistently sized relative to the fence
+}
+
+function initZoomPan() {
+    var canvas = document.getElementById("fenceCanvas");
+    if (!canvas || zoomPanInitialized) return;
+    zoomPanInitialized = true;
+
+    // Mouse wheel zoom (constrained 1x-4.5x) with smooth 60fps performance
+    canvas.addEventListener("wheel", function(e) {
+        e.preventDefault();
+        var delta = e.deltaY > 0 ? -0.2 : 0.2;
+        var oldZoom = zoomLevel;
+        zoomLevel = Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, zoomLevel + delta));
+        
+        var rect = canvas.getBoundingClientRect();
+        var mouseX = e.clientX - rect.left;
+        var zoomRatio = zoomLevel / oldZoom;
+        panX = mouseX - (mouseX - panX) * zoomRatio;
+        
+        constrainPan();
+        applyTransform();
+        refreshPlacedMedallionLayout();
+    }, { passive: false });
+
+    // Horizontal-only panning with click + drag
+    canvas.addEventListener("mousedown", function(e) {
+        if (e.button !== 0) return;
+        var target = e.target;
+        if (target.classList.contains("placed-medallion") || target.closest(".placed-medallion")) return;
+        isPanning = true;
+        panStartX = e.clientX - panX;
+        canvas.classList.add("panning");
+        canvas.style.cursor = "grabbing";
+    });
+
+    var rafId = null;
+    document.addEventListener("mousemove", function(e) {
+        if (!isPanning) return;
+        
+        if (rafId) cancelAnimationFrame(rafId);
+        rafId = requestAnimationFrame(function() {
+            panX = e.clientX - panStartX;
+            constrainPan();
+            applyTransform();
+            refreshPlacedMedallionLayout();
+            rafId = null;
+        });
+    });
+
+    document.addEventListener("mouseup", function() {
+        if (isPanning) {
+            isPanning = false;
+            if (rafId) {
+                cancelAnimationFrame(rafId);
+                rafId = null;
+            }
+            canvas.classList.remove("panning");
+            canvas.style.cursor = "grab";
+        }
+    });
+    
+    canvas.style.cursor = "grab";
+}
+
+/* ═══════════════════════════════════════════
+   MODE SWITCHING
+   ═══════════════════════════════════════════ */
+function setMode(on) {
+    simMode = on;
+    
+    var existingView = document.getElementById("existingView");
+    var simulationView = document.getElementById("simulationView");
+    var panel = document.getElementById("elevationViewerPanel");
+    var tabDetails = document.getElementById("tabDetails");
+    var tabSim = document.getElementById("tabSim");
+    
+    if (!existingView || !simulationView) return;
+    
+    if (on) {
+        existingView.style.display = "none";
+        simulationView.style.display = "block";
+        simulationView.classList.add("visible");
+        if (panel) panel.classList.add("sim-active");
+        if (tabDetails) tabDetails.classList.remove("active");
+        if (tabSim) tabSim.classList.add("active");
+        
+        if (!elevationLoaded) {
+            pendingDesignRestore = true;
+            load2DElevation();
+        } else {
+            setTimeout(function() {
+                drawFenceOverlay();
+                generateFenceAnchors();
+                setFenceViewMode('detail');
+                restoreProjectDesign();
+            }, 150);
+        }
+    } else {
+        existingView.style.display = "block";
+        simulationView.style.display = "none";
+        simulationView.classList.remove("visible");
+        if (panel) panel.classList.remove("sim-active");
+        if (tabDetails) tabDetails.classList.add("active");
+        if (tabSim) tabSim.classList.remove("active");
+        setFenceViewMode('full');
+    }
+}
+
+document.getElementById("tabSim").addEventListener("click", function() { setMode(true); });
+document.getElementById("tabDetails").addEventListener("click", function() { setMode(false); });
+document.getElementById("btnLaunchSim").addEventListener("click", function() { setMode(true); });
+
+/* ═══════════════════════════════════════════
+   PROJECT SELECTION
+   ═══════════════════════════════════════════ */
+function selectProject(pid) {
+    var proj = findProject(pid);
+    if (!proj) return;
+
+    syncCurrentProjectDesign();
+    activeProjectId = pid;
+    updateProjectDetails();
+    deselectAll();
+
+    elevationOverride = "auto";
+    var elevationSelect = document.getElementById("elevationSelect");
+    if (elevationSelect) {
+        elevationSelect.value = "auto";
+    }
+    
+    var allBlocks = document.querySelectorAll(".segment-block");
+    allBlocks.forEach(function(b) {
+        b.classList.remove("active");
+    });
+    var selectedBlock = document.querySelector('[data-project-id="' + pid + '"]');
+    if (selectedBlock) {
+        selectedBlock.classList.add("active");
+    }
+    
+    if (simMode) {
+        pendingDesignRestore = true;
+    }
+
+    if (simMode && elevationLoaded) {
+        elevationLoaded = false;
+        load2DElevation();
+    } else if (elevationLoaded) {
+        drawFenceOverlay();
+        generateFenceAnchors();
+        restoreProjectDesign();
+    } else {
+        updateCosts();
+    }
+}
+
+/* ═══════════════════════════════════════════
+   SVG-BASED SNAPPING (real fence geometry)
+   ═══════════════════════════════════════════ */
+var canvas = document.getElementById("fenceCanvas");
+var SNAP_RADIUS = 12;  // pixels in screen space
+
+// Realistic medallion sizing system
+// Medallions are scaled as a percentage of fence height for architectural realism
+var MEDALLION_SCALE_FACTOR = 0.08;  // 8% of fence height (realistic decorative size)
+var MIN_MEDALLION_SCALE = 0.06;     // 6% minimum (small decorative piece)
+var MAX_MEDALLION_SCALE = 0.12;     // 12% maximum (large feature piece)
+
+// Convert normalized elevation coordinates (0-1) to canvas pixels
+function normalizedToCanvas(normalizedX, normalizedY) {
+    var canvas = document.getElementById("fenceCanvas");
+    if (!canvas) return { x: 0, y: 0 };
+    var rect = canvas.getBoundingClientRect();
+    return {
+        x: normalizedX * rect.width,
+        y: normalizedY * rect.height
+    };
+}
+
+// Convert canvas pixels to normalized elevation coordinates (0-1)
+function canvasToNormalized(px, py) {
+    var canvas = document.getElementById("fenceCanvas");
+    if (!canvas) return { x: 0, y: 0 };
+    var rect = canvas.getBoundingClientRect();
+    return {
+        x: px / rect.width,
+        y: py / rect.height
+    };
+}
+
+function snapToAnchor(pxX) {
+    if (!elevationLoaded || fenceAnchors.length === 0) return { x: pxX, anchorIndex: -1 };
+
+    var medSize = getCurrentMedallionSize();
+    var bestIdx = -1, bestDist = 9999;
+    for (var i = 0; i < fenceAnchors.length; i++) {
+        var d = Math.abs(pxX + medSize / 2 - fenceAnchors[i].x);
+        if (d < bestDist) { bestDist = d; bestIdx = i; }
+    }
+
+    if (bestDist < SNAP_RADIUS && bestIdx >= 0) {
+        return { x: fenceAnchors[bestIdx].x - medSize / 2, anchorIndex: bestIdx };
+    }
+    return { x: pxX, anchorIndex: -1 };
+}
+
+function clampToFenceHeight(pxY, medSizeOverride) {
+    if (!elevationLoaded || !activeProjectId || !fenceRegions[activeProjectId]) return pxY;
+
+    var region = fenceRegions[activeProjectId];
+    var canvas = document.getElementById("fenceCanvas");
+    if (!canvas) return pxY;
+
+    var rect = canvas.getBoundingClientRect();
+    var medSize = medSizeOverride || getCurrentMedallionSize();
+    var topPx = region.y * rect.height - medSize / 2;
+    var botPx = (region.y + region.height) * rect.height - medSize / 2;
+
+    pxY = Math.max(topPx, Math.min(pxY, botPx));
+    return pxY;
+}
+
+function showSnapGuide(pxX) {
+    if (!elevationLoaded || fenceAnchors.length === 0) return;
+    var snap = snapToAnchor(pxX);
+    var guide = document.getElementById("snapGuide");
+    if (snap.anchorIndex >= 0 && guide) {
+        guide.style.left = fenceAnchors[snap.anchorIndex].x + "px";
+        guide.style.top = "0";
+        guide.style.height = "100%";
+        guide.style.display = "block";
+    } else {
+        hideSnapGuide();
+    }
+}
+
+function hideSnapGuide() {
+    var guide = document.getElementById("snapGuide");
+    if (guide) guide.style.display = "none";
+}
+
+/* ═══════════════════════════════════════════
+   DRAG & DROP
+   ═══════════════════════════════════════════ */
+canvas.addEventListener("dragover", function(e) {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "copy";
+    canvas.classList.add("drag-over");
+    
+    var medSize = getCurrentMedallionSize();
+    
+    if (ghostPreview) {
+        ghostPreview.style.left = e.clientX - (medSize / 2) + "px";
+        ghostPreview.style.top = e.clientY - (medSize / 2) + "px";
+        ghostPreview.style.width = medSize + "px";
+        ghostPreview.style.height = medSize + "px";
+    }
+    
+    var canvasCoords = screenToCanvasCoords(e.clientX, e.clientY);
+    showSnapGuide(canvasCoords.x - medSize / 2);
+});
+canvas.addEventListener("dragleave", function() {
+    canvas.classList.remove("drag-over");
+    hideSnapGuide();
+});
+canvas.addEventListener("drop", function(e) {
+    e.preventDefault();
+    canvas.classList.remove("drag-over");
+    hideSnapGuide();
+    removeGhostPreview();
+    var medId = e.dataTransfer.getData("text/plain");
+    if (!medId) return;
+
+    var medSize = getCurrentMedallionSize();
+    
+    // Convert screen coordinates to canvas coordinates (accounting for zoom/pan)
+    var canvasCoords = screenToCanvasCoords(e.clientX, e.clientY);
+    var x = canvasCoords.x - medSize / 2;
+    var y = canvasCoords.y - medSize / 2;
+    
+    // Validate drop is within fence bounds
+    var centerX = x + medSize / 2;
+    var centerY = y + medSize / 2;
+    
+    var rect = canvas.getBoundingClientRect();
+    
+    // Check fence region bounds (this is the main validation)
+    var withinBounds = isWithinFenceBounds(centerX, centerY);
+    
+    if (!withinBounds) {
+        console.log("⚠️ Drop outside fence region - medallion not placed");
+        console.log("Center coords:", centerX, centerY);
+        return;
+    }
+
+    var snap = snapToAnchor(x);
+    x = snap.x;
+    y = clampToFenceHeight(y, medSize);
+
+    // Clamp to canvas bounds
+    x = Math.max(0, Math.min(x, rect.width - medSize));
+    y = Math.max(0, Math.min(y, rect.height - medSize));
+
+    placeMedallion(medId, x, y, false, { anchorIndex: snap.anchorIndex });
+    recordAction("place", { medId: medId, x: x, y: y, anchorIndex: snap.anchorIndex });
+    saveToHistory("place medallion");
+    updateCostBreakdown();
+});
+
+canvas.addEventListener("click", function(e) {
+    var t = e.target;
+    if (t === canvas || t.id === "svgContainer" || t.closest(".svg-elevation-container") || t.classList.contains("fence-canvas-label") || t.classList.contains("snap-guide")) {
+        deselectAll();
+    }
+});
+
+/* ═══════════════════════════════════════════
+   GHOST PREVIEW
+   ═══════════════════════════════════════════ */
+function createGhostPreview(medallion) {
+    removeGhostPreview();
+    var ghostSize = getCurrentMedallionSize();
+    ghostPreview = document.createElement("div");
+    ghostPreview.className = "ghost-preview";
+    ghostPreview.innerHTML = '<img src="'+medallion.img+'" alt="'+medallion.name+'" style="width:'+ghostSize+'px;height:'+ghostSize+'px;display:block;opacity:0.7;filter:drop-shadow(0 0 12px var(--accent));">';
+    document.body.appendChild(ghostPreview);
+}
+
+function removeGhostPreview() {
+    if (ghostPreview) {
+        ghostPreview.remove();
+        ghostPreview = null;
+    }
+}
+
+/* ═══════════════════════════════════════════
+   PLACE MEDALLION (SVG-wrapped)
+   ═══════════════════════════════════════════ */
+function placeMedallion(medId, x, y, silent, extra) {
+    var m = medallions.find(function(mm) { return mm.id === medId; });
+    if (!m) return;
+    extra = extra || {};
+
+    placedUID++;
+    var thisUID = placedUID;
+    var rotation = extra.rotation || 0;
+    var mScale = extra.scale || m.defaultScale;
+    var anchorIdx = extra.anchorIndex !== undefined ? extra.anchorIndex : -1;
+
+    var el = document.createElement("div");
+    el.className = "placed-medallion";
+    el.setAttribute("data-uid", thisUID);
+    el.setAttribute("data-med-id", medId);
+    var medSize = getCurrentMedallionSize();
+    el.style.setProperty('--medallion-size', medSize + 'px');
+    el.innerHTML = '<img src="'+m.img+'" alt="'+m.name+'" style="display:block;">';
+    el.style.left = x + "px";
+    el.style.top = y + "px";
+    if (mScale !== 1 || rotation !== 0) el.style.transform = "scale(" + mScale + ") rotate(" + rotation + "deg)";
+
+    el.addEventListener("click", function(e) {
+        e.stopPropagation();
+        selectPlaced(el);
+    });
+
+    // Drag-to-move
+    var dragging = false;
+    var ox = 0, oy = 0;
+    el.addEventListener("mousedown", function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        if (e.altKey) { duplicateSelectedMedallion(); return; }
+        dragging = true;
+        var canvasCoords = screenToCanvasCoords(e.clientX, e.clientY);
+        ox = canvasCoords.x - (parseFloat(el.style.left) || 0);
+        oy = canvasCoords.y - (parseFloat(el.style.top) || 0);
+        el.style.zIndex = 20;
+        selectPlaced(el);
+    });
+    var startX = x, startY = y;
+    var moveHandler = function(e) {
+        if (!dragging) return;
+        var cr = canvas.getBoundingClientRect();
+        var canvasCoords = screenToCanvasCoords(e.clientX, e.clientY);
+        var nx = canvasCoords.x - ox;
+        var ny = canvasCoords.y - oy;
+        var liveMedSize = getCurrentMedallionSize();
+        var snap = snapToAnchor(nx);
+        nx = snap.x;
+        ny = clampToFenceHeight(ny, liveMedSize);
+        showSnapGuide(nx);
+        nx = Math.max(0, Math.min(nx, cr.width - liveMedSize));
+        ny = Math.max(0, Math.min(ny, cr.height - liveMedSize));
+        el.style.left = nx + "px";
+        el.style.top = ny + "px";
+    };
+    var upHandler = function() {
+        if (dragging) {
+            dragging = false;
+            el.style.zIndex = 10;
+            hideSnapGuide();
+            var endX = parseFloat(el.style.left);
+            var endY = parseFloat(el.style.top);
+            // Update anchor reference
+            var snap = snapToAnchor(endX);
+            var pi = placedItems.find(function(p) { return p.uid === thisUID; });
+            if (pi) pi.anchorIndex = snap.anchorIndex;
+            if (pi) syncPlacedItemPosition(pi, el);
+            if (startX !== endX || startY !== endY) {
+                recordAction("move", { uid: thisUID, fromX: startX, fromY: startY, toX: endX, toY: endY });
+            }
+            startX = endX;
+            startY = endY;
+            syncCurrentProjectDesign();
+        }
+    };
+    document.addEventListener("mousemove", moveHandler);
+    document.addEventListener("mouseup", upHandler);
+
+    var medallionContainer = document.getElementById("medallionContainer");
+    if (medallionContainer) {
+        medallionContainer.appendChild(el);
+    } else {
+        canvas.appendChild(el);
+    }
+    
+    placedItems.push({
+        uid: thisUID, medId: medId, cost: m.cost,
+        rotation: rotation, scale: mScale, anchorIndex: anchorIdx,
+        x: x, y: y,
+        normalizedX: 0,
+        normalizedY: 0
+    });
+    syncPlacedItemPosition(placedItems[placedItems.length - 1], el);
+
+    if (!silent) {
+        updateCosts();
+        selectPlaced(el);
+    }
+}
+
+/* ═══════════════════════════════════════════
+   SELECTION
+   ═══════════════════════════════════════════ */
+function selectPlaced(el) {
+    deselectAll();
+    el.classList.add("selected");
+    selectedUID = parseInt(el.getAttribute("data-uid"));
+    var item = placedItems.find(function(p) { return p.uid === selectedUID; });
+    var m = item ? medallions.find(function(mm) { return mm.id === item.medId; }) : null;
+    document.getElementById("btnRemove").disabled = false;
+    document.getElementById("btnDuplicate").disabled = false;
+}
+
+function deselectAll() {
+    canvas.querySelectorAll(".placed-medallion.selected").forEach(function(el) { el.classList.remove("selected"); });
+    selectedUID = null;
+    document.getElementById("btnRemove").disabled = true;
+    document.getElementById("btnDuplicate").disabled = true;
+}
+
+function updateCosts() {
+    var proj = findProject(activeProjectId);
+    var repairBase = proj ? proj.costHigh : 10215;
+    var fabTotal = 0;
+    var typeCounts = {};
+
+    placedItems.forEach(function(p) {
+        fabTotal += p.cost;
+        typeCounts[p.medId] = (typeCounts[p.medId] || 0) + 1;
+    });
+
+    var combined = repairBase + fabTotal;
+
+    document.getElementById("simRepairCost").textContent = "$" + repairBase.toLocaleString();
+    document.getElementById("simFabCost").textContent = "$" + fabTotal.toLocaleString();
+    document.getElementById("simTotalCost").textContent = "$" + combined.toLocaleString();
+
+    // Breakdown table
+    var bd = document.getElementById("fabBreakdown");
+    if (placedItems.length === 0) {
+        bd.innerHTML = '<span class="fab-empty">No medallions placed</span>';
+    } else {
+        var html = "";
+        for (var medId in typeCounts) {
+            var m = medallions.find(function(mm) { return mm.id === medId; });
+            if (m) {
+                var sub = typeCounts[medId] * m.cost;
+                html += '<div class="fab-row">'
+                    + '<span class="fab-name">' + m.name + '</span>'
+                    + '<span class="fab-unit">$' + m.cost + '</span>'
+                    + '<span class="fab-qty">' + typeCounts[medId] + '</span>'
+                    + '<span class="fab-sub">$' + sub.toLocaleString() + '</span>'
+                    + '</div>';
+            }
+        }
+        bd.innerHTML = html;
+    }
+
+    syncCurrentProjectDesign();
+}
+
+/* ═══════════════════════════════════════════
+   CONTROLS
+   ═══════════════════════════════════════════ */
+document.getElementById("btnRemove").addEventListener("click", function() {
+    if (selectedUID === null) return;
+    var el = canvas.querySelector('[data-uid="'+selectedUID+'"]');
+    var item = placedItems.find(function(p) { return p.uid === selectedUID; });
+    if (el && item) {
+        recordAction("delete", { uid: selectedUID, medId: item.medId, x: parseFloat(el.style.left), y: parseFloat(el.style.top) });
+        el.remove();
+        placedItems = placedItems.filter(function(p) { return p.uid !== selectedUID; });
+        deselectAll();
+        updateCosts();
+        saveToHistory("remove medallion");
+        updateCostBreakdown();
+    }
+});
+
+document.getElementById("btnDuplicate").addEventListener("click", function() {
+    duplicateSelectedMedallion();
+    saveToHistory("duplicate medallion");
+    updateCostBreakdown();
+});
+
+document.getElementById("btnClearAll").addEventListener("click", function() {
+    clearCanvas();
+    updateCosts();
+    saveToHistory("clear all");
+    updateCostBreakdown();
+});
+
+document.getElementById("btnReset").addEventListener("click", function() {
+    clearCanvas(true);
+    projectDesigns[activeProjectId] = { items: [] };
+    updateCosts();
+    saveToHistory("reset design");
+    updateCostBreakdown();
+});
+
+/* ═══════════════════════════════════════════
+   UNDO/REDO SYSTEM
+   ═══════════════════════════════════════════ */
+function recordAction(type, data) {
+    if (historyIndex < actionHistory.length - 1) {
+        actionHistory = actionHistory.slice(0, historyIndex + 1);
+    }
+    actionHistory.push({ type: type, data: data });
+    if (actionHistory.length > maxHistory) {
+        actionHistory.shift();
+    } else {
+        historyIndex++;
+    }
+}
+
+function undo() {
+    if (historyIndex < 0) return;
+    var action = actionHistory[historyIndex];
+    historyIndex--;
+
+    if (action.type === "place" || action.type === "duplicate") {
+        var lastItem = placedItems[placedItems.length - 1];
+        if (lastItem) {
+            var el = canvas.querySelector('[data-uid="'+lastItem.uid+'"]');
+            if (el) el.remove();
+            placedItems.pop();
+        }
+    } else if (action.type === "delete") {
+        placeMedallion(action.data.medId, action.data.x, action.data.y, true);
+    } else if (action.type === "move") {
+        var el = canvas.querySelector('[data-uid="'+action.data.uid+'"]');
+        if (el) {
+            el.style.left = action.data.fromX + "px";
+            el.style.top = action.data.fromY + "px";
+        }
+    }
+    updateCosts();
+}
+
+function redo() {
+    if (historyIndex >= actionHistory.length - 1) return;
+    historyIndex++;
+    var action = actionHistory[historyIndex];
+
+    if (action.type === "place" || action.type === "duplicate") {
+        placeMedallion(action.data.medId, action.data.x, action.data.y, true);
+    } else if (action.type === "delete") {
+        var el = canvas.querySelector('[data-uid="'+action.data.uid+'"]');
+        if (el) el.remove();
+        placedItems = placedItems.filter(function(p) { return p.uid !== action.data.uid; });
+    } else if (action.type === "move") {
+        var el = canvas.querySelector('[data-uid="'+action.data.uid+'"]');
+        if (el) {
+            el.style.left = action.data.toX + "px";
+            el.style.top = action.data.toY + "px";
+        }
+    }
+    updateCosts();
+}
+
+/* ═══════════════════════════════════════════
+   DUPLICATE FUNCTION
+   ═══════════════════════════════════════════ */
+function duplicateSelectedMedallion() {
+    if (selectedUID === null) return;
+    var el = canvas.querySelector('[data-uid="'+selectedUID+'"]');
+    var item = placedItems.find(function(p) { return p.uid === selectedUID; });
+    if (!el || !item) return;
+
+    var x = parseFloat(el.style.left) + 20;
+    var y = parseFloat(el.style.top) + 20;
+    var rect = canvas.getBoundingClientRect();
+    var medSize = getCurrentMedallionSize();
+    x = Math.max(0, Math.min(x, rect.width - medSize));
+    y = Math.max(0, Math.min(y, rect.height - medSize));
+
+    placeMedallion(item.medId, x, y, false, { rotation: item.rotation, scale: item.scale });
+    recordAction("duplicate", { medId: item.medId, x: x, y: y });
+}
+
+/* ═══════════════════════════════════════════
+   KEYBOARD CONTROLS
+   ═══════════════════════════════════════════ */
+document.addEventListener("keydown", function(e) {
+    // Enable keyboard shortcuts in all modes (removed simMode check)
+    
+    if (e.ctrlKey && e.key === "z") {
+        e.preventDefault(); undo();
+    } else if (e.ctrlKey && e.key === "y") {
+        e.preventDefault(); redo();
+    } else if ((e.key === "Delete" || e.key === "Backspace") && selectedUID !== null) {
+        e.preventDefault();
+        document.getElementById("btnRemove").click();
+    } else if (selectedUID !== null && ["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"].indexOf(e.key) >= 0) {
+        e.preventDefault();
+        var el = canvas.querySelector('[data-uid="'+selectedUID+'"]');
+        if (!el) return;
+        var step = e.shiftKey ? 10 : 2;
+        var x = parseFloat(el.style.left);
+        var y = parseFloat(el.style.top);
+        var sX = x, sY = y;
+
+        if (e.key === "ArrowLeft") x -= step;
+        else if (e.key === "ArrowRight") x += step;
+        else if (e.key === "ArrowUp") y -= step;
+        else if (e.key === "ArrowDown") y += step;
+
+        var snap = snapToAnchor(x);
+        x = snap.x;
+        var medSize = getCurrentMedallionSize();
+        y = clampToFenceHeight(y, medSize);
+        var rect = canvas.getBoundingClientRect();
+        x = Math.max(0, Math.min(x, rect.width - medSize));
+        y = Math.max(0, Math.min(y, rect.height - medSize));
+        el.style.left = x + "px";
+        el.style.top = y + "px";
+
+        var item = placedItems.find(function(p) { return p.uid === selectedUID; });
+        if (item) {
+            item.anchorIndex = snap.anchorIndex;
+            syncPlacedItemPosition(item, el);
+        }
+
+        if (sX !== x || sY !== y) {
+            recordAction("move", { uid: selectedUID, fromX: sX, fromY: sY, toX: x, toY: y });
+        }
+        syncCurrentProjectDesign();
+    }
+});
+
+
+/* ═══════════════════════════════════════════
+   UNDO/REDO SYSTEM
+   ═══════════════════════════════════════════ */
+function saveToHistory(action) {
+    // Clear redo stack when new action is performed
+    redoStack = [];
+    
+    // Add to undo stack
+    undoStack.push(JSON.parse(JSON.stringify({
+        action: action,
+        placedItems: placedItems,
+        timestamp: Date.now()
+    })));
+    
+    // Limit history size
+    if (undoStack.length > MAX_HISTORY) {
+        undoStack.shift();
+    }
+    
+    updateHistoryButtons();
+}
+
+function undo() {
+    if (undoStack.length === 0) return;
+    
+    // Save current state to redo stack
+    redoStack.push(JSON.parse(JSON.stringify({
+        placedItems: placedItems,
+        timestamp: Date.now()
+    })));
+    
+    // Restore previous state
+    var prevState = undoStack.pop();
+    placedItems = JSON.parse(JSON.stringify(prevState.placedItems));
+    
+    // Redraw canvas
+    redrawAllMedallions();
+    updateCostBreakdown();
+    updateHistoryButtons();
+    
+    document.getElementById('historyStatus').textContent = 'Undo: ' + (prevState.action || 'action');
+}
+
+function redo() {
+    if (redoStack.length === 0) return;
+    
+    // Save current state to undo stack
+    undoStack.push(JSON.parse(JSON.stringify({
+        placedItems: placedItems,
+        timestamp: Date.now()
+    })));
+    
+    // Restore next state
+    var nextState = redoStack.pop();
+    placedItems = JSON.parse(JSON.stringify(nextState.placedItems));
+    
+    // Redraw canvas
+    redrawAllMedallions();
+    updateCostBreakdown();
+    updateHistoryButtons();
+    
+    document.getElementById('historyStatus').textContent = 'Redo applied';
+}
+
+function updateHistoryButtons() {
+    var btnUndo = document.getElementById('btnUndo');
+    var btnRedo = document.getElementById('btnRedo');
+    
+    if (btnUndo) btnUndo.disabled = undoStack.length === 0;
+    if (btnRedo) btnRedo.disabled = redoStack.length === 0;
+    
+    var status = document.getElementById('historyStatus');
+    if (status && undoStack.length === 0 && redoStack.length === 0) {
+        status.textContent = 'Ready to design';
+    }
+}
+
+function redrawAllMedallions() {
+    var container = document.getElementById('medallionContainer');
+    if (!container) return;
+    
+    container.innerHTML = '';
+    
+    placedItems.forEach(function(item) {
+        var el = createMedallionElement(item);
+        container.appendChild(el);
+    });
+    
+    updateCosts();
+}
+
+function createMedallionElement(item) {
+    var el = document.createElement('div');
+    el.className = 'placed-medallion';
+    el.setAttribute('data-uid', item.uid);
+    el.setAttribute('data-med-id', item.medId);
+    
+    var medallion = medallions.find(function(m) { return m.id === item.medId; });
+    if (medallion) {
+        el.innerHTML = '<img src="' + medallion.img + '" alt="' + medallion.name + '" draggable="false">';
+    }
+    
+    var size = getCurrentMedallionSize();
+    el.style.width = size + 'px';
+    el.style.height = size + 'px';
+    el.style.left = item.x + 'px';
+    el.style.top = item.y + 'px';
+    
+    el.addEventListener('click', function() {
+        selectMedallion(item.uid);
+    });
+    
+    return el;
+}
+
+/* ═══════════════════════════════════════════
+   BEFORE/AFTER TOGGLE
+   ═══════════════════════════════════════════ */
+function toggleMedallionVisibility() {
+    showMedallions = !showMedallions;
+    
+    var container = document.getElementById('medallionContainer');
+    var btn = document.getElementById('btnShowAfter');
+    
+    if (container) {
+        container.style.opacity = showMedallions ? '1' : '0';
+        container.style.pointerEvents = showMedallions ? 'auto' : 'none';
+    }
+    
+    if (btn) {
+        btn.classList.toggle('active', showMedallions);
+        btn.innerHTML = showMedallions ? '<span>👁</span> Show Medallions' : '<span>👁</span> Hide Medallions';
+    }
+}
+
+/* ═══════════════════════════════════════════
+   COST BREAKDOWN PANEL
+   ═══════════════════════════════════════════ */
+function updateCostBreakdown() {
+    var proj = findProject(activeProjectId);
+    if (!proj) return;
+    
+    var baseRepair = proj.costHigh || 0;
+    var medallionTotal = 0;
+    var medallionCountVal = 0;
+    
+    placedItems.forEach(function(item) {
+        var med = medallions.find(function(m) { return m.id === item.medId; });
+        if (med) {
+            medallionTotal += med.cost;
+            medallionCountVal++;
+        }
+    });
+    
+    var projectTotal = baseRepair + medallionTotal;
+    
+    // Update Cost Breakdown Panel (right side)
+    var baseRepairEl = document.getElementById('baseRepairCost');
+    var medallionCostEl = document.getElementById('medallionCost');
+    var medallionCountEl = document.getElementById('medallionCount');
+    var projectTotalEl = document.getElementById('projectTotalCost');
+    var totalDisplayEl = document.getElementById('totalCostDisplay');
+    
+    if (baseRepairEl) baseRepairEl.textContent = '$' + baseRepair.toLocaleString();
+    if (medallionCostEl) medallionCostEl.textContent = '$' + medallionTotal.toLocaleString();
+    if (medallionCountEl) medallionCountEl.textContent = '(' + medallionCountVal + ')';
+    if (projectTotalEl) projectTotalEl.textContent = '$' + projectTotal.toLocaleString();
+    if (totalDisplayEl) totalDisplayEl.textContent = '$' + projectTotal.toLocaleString();
+}
+
+/* ═══════════════════════════════════════════
+   SEARCH & FILTER
+   ═══════════════════════════════════════════ */
+function filterMedallions() {
+    var items = document.querySelectorAll('.med-lib-item');
+    var visibleCount = 0;
+    
+    items.forEach(function(item) {
+        var medId = item.getAttribute('data-med-id');
+        var medallion = medallions.find(function(m) { return m.id === medId; });
+        
+        if (!medallion) {
+            item.style.display = 'none';
+            return;
+        }
+        
+        var matchesFilter = currentFilter === 'all' || 
+                           medallion.name.toLowerCase().includes(currentFilter.toLowerCase());
+        
+        var matchesSearch = searchQuery === '' || 
+                           medallion.name.toLowerCase().includes(searchQuery.toLowerCase());
+        
+        if (matchesFilter && matchesSearch) {
+            item.style.display = 'flex';
+            visibleCount++;
+        } else {
+            item.style.display = 'none';
+        }
+    });
+    
+    // Update count
+    var countEl = document.querySelector('.med-lib-count');
+    if (countEl) {
+        countEl.textContent = visibleCount + ' designs';
+    }
+}
+
+function setFilter(filter) {
+    currentFilter = filter;
+    
+    // Update filter chip states
+    document.querySelectorAll('.filter-chip').forEach(function(chip) {
+        chip.classList.toggle('active', chip.getAttribute('data-filter') === filter);
+    });
+    
+    filterMedallions();
+}
+
+function setSearch(query) {
+    searchQuery = query;
+    filterMedallions();
+}
+
+/* ═══════════════════════════════════════════
+   EVENT LISTENERS FOR NEW FEATURES
+   ═══════════════════════════════════════════ */
+function initializeNewFeatures() {
+    // Undo/Redo buttons
+    var btnUndo = document.getElementById('btnUndo');
+    var btnRedo = document.getElementById('btnRedo');
+    
+    if (btnUndo) {
+        btnUndo.addEventListener('click', undo);
+    }
+    
+    if (btnRedo) {
+        btnRedo.addEventListener('click', redo);
+    }
+    
+    // Before/After toggle
+    var btnShowAfter = document.getElementById('btnShowAfter');
+    if (btnShowAfter) {
+        btnShowAfter.addEventListener('click', toggleMedallionVisibility);
+    }
+    
+    // Search input
+    var searchInput = document.getElementById('medallionSearch');
+    if (searchInput) {
+        searchInput.addEventListener('input', function(e) {
+            setSearch(e.target.value);
+        });
+    }
+    
+    // Filter chips
+    document.querySelectorAll('.filter-chip').forEach(function(chip) {
+        chip.addEventListener('click', function() {
+            setFilter(this.getAttribute('data-filter'));
+        });
+    });
+    
+    // Keyboard shortcuts
+    document.addEventListener('keydown', function(e) {
+        if (e.ctrlKey || e.metaKey) {
+            if (e.key === 'z' && !e.shiftKey) {
+                e.preventDefault();
+                undo();
+            } else if (e.key === 'z' && e.shiftKey || e.key === 'y') {
+                e.preventDefault();
+                redo();
+            }
+        }
+    });
+    
+    updateHistoryButtons();
+    updateCostBreakdown();
+}
+
+/* ═══════════════════════════════════════════
+   INITIALIZATION
+   ═══════════════════════════════════════════ */
+// Wait for DOM to be fully loaded
+if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initializeFenceMap);
+} else {
+    initializeFenceMap();
+}
+
+
+function preloadImages() {
+    var imagesToPreload = [
+        "static/images/Building 4 PNG.png",
+        "static/images/Building 5 Section Pic.png"
+    ];
+    
+    imagesToPreload.forEach(function(src) {
+        var img = new Image();
+        img.src = src;
+    });
+}
+
+function initializeFenceMap() {
+    preloadImages();
+    buildSegmentMap();
+    buildMedallionLibrary();
+    selectProject("P2");
+    initializeNewFeatures();
+    
+    // Dropdown menu functionality
+    var exploreDropdown = document.getElementById('exploreDropdown');
+    var exploreMenu = document.getElementById('exploreMenu');
+    
+    if (exploreDropdown && exploreMenu) {
+        exploreDropdown.addEventListener('click', function(e) {
+            e.stopPropagation();
+            exploreMenu.classList.toggle('show');
+        });
+        
+        document.addEventListener('click', function() {
+            exploreMenu.classList.remove('show');
+        });
+    }
+
+    var elevationSelect = document.getElementById("elevationSelect");
+    if (elevationSelect) {
+        elevationSelect.addEventListener("change", function() {
+            elevationOverride = elevationSelect.value || "auto";
+            if (simMode) {
+                load2DElevation();
+            }
+        });
+    }
+    
+    var fenceFocusBtn = document.getElementById("fenceFocusBtn");
+    if (fenceFocusBtn) {
+        fenceFocusBtn.addEventListener("click", function() {
+            setFenceViewMode(viewMode === 'detail' ? 'full' : 'detail');
+        });
+    }
+
+    updateProjectDetails();
+    updateCosts();
+    load2DElevation();
+}
+
+window.addEventListener("resize", function() {
+    if (!elevationLoaded) return;
+    drawFenceOverlay();
+    generateFenceAnchors();
+    refreshPlacedMedallionLayout();
+});
+</script>
+
+</body>
+</html>
