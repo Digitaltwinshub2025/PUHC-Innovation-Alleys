@@ -1050,7 +1050,7 @@
                             <span id="elevationLabel">Building Elevation — Architectural View</span>
                         </span>
                         <span class="fence-canvas-label-right">
-                            <button id="fenceFocusBtn" style="padding:6px 16px; background:var(--accent); color:#fff; border:none; border-radius:6px; font-size:0.75rem; font-weight:600; cursor:pointer; transition:all 0.2s;">Fence Detail View</button>
+                            <button id="fenceFocusBtn" title="Zoom in to see fence details (3.5x zoom)" style="padding:6px 16px; background:var(--accent); color:#fff; border:none; border-radius:6px; font-size:0.75rem; font-weight:600; cursor:pointer; transition:all 0.2s;">Fence Detail View</button>
                             <span class="elevation-controls">
                                 <label for="elevationSelect">Elevation</label>
                                 <select id="elevationSelect">
@@ -2594,8 +2594,8 @@ function duplicateSelectedMedallion() {
    KEYBOARD CONTROLS
    ═══════════════════════════════════════════ */
 document.addEventListener("keydown", function(e) {
-    if (!simMode) return;
-
+    // Enable keyboard shortcuts in all modes (removed simMode check)
+    
     if (e.ctrlKey && e.key === "z") {
         e.preventDefault(); undo();
     } else if (e.ctrlKey && e.key === "y") {
