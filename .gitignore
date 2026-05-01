@@ -57,3 +57,16 @@ exports/
 # Large media files (use Git LFS or external hosting)
 static/videos/Puede Center flythrough.mp4
 static/videos/*.mp4
+
+# Static site build output (regenerate with build_static.py)
+docs/
+
+# Large images (over 2MB)
+static/images/urban-farming.png
+static/images/Alley 3 Urban Farming concept photo.png
+static/images/intervention-murals.png
+static/images/murals/Water Mural.png
+static/images/murals/water-mural.png
+
+# Git metadata
+.git/

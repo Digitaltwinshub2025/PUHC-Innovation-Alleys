@@ -301,11 +301,6 @@ def fence_map():
     # Interactive fence map with medallion customization
     return send_file('interactive-fence-map.html')
 
-@app.route('/innovation-alleys-map')
-def innovation_alleys_map():
-    # ArcGIS map showing all 12 Innovation Alleys in Pico-Union
-    return render_template('innovation_alleys_map.html')
-
 @app.route('/api/cost-data')
 def api_cost_data():
     # Serve structured cost data JSON for fence map and other dynamic pages
