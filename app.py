@@ -281,11 +281,6 @@ def compare():
     page_content = content_manager.load_page_content('compare') or {}
     return render_template('compare.html', edit_mode=edit_mode, content=page_content)
 
-@app.route('/urban-farming')
-def urban_farming():
-    # Urban Farming education and Digital Twin integration page
-    return render_template('urban_farming.html')
-
 @app.route('/solar-shades')
 def solar_shades():
     # Solar Shades intervention page for Alley 3
@@ -296,34 +291,20 @@ def murals():
     # Community Murals intervention page for Alley 3
     return render_template('murals.html')
 
-@app.route('/trellises')
-def trellises():
-    # Redirect to solar-shades - trellises and medallions are part of the integrated shade structure system
-    return redirect('/solar-shades')
+@app.route('/urban-farming')
+def urban_farming():
+    # Urban Farming education and Digital Twin integration page
+    return render_template('urban_farming.html')
 
 @app.route('/fence-map')
 def fence_map():
-    # Redirect to new interactive fence map
-    return redirect('/interactive-fence-map')
-
-@app.route('/interactive-fence-map')
-def interactive_fence_map():
-    # Serve the standalone interactive fence map with medallion customization
+    # Interactive fence map with medallion customization
     return send_file('interactive-fence-map.html')
 
-@app.route('/rhino-viewer')
-def rhino_viewer():
-    # 3DM file viewer using Three.js + rhino3dm.js
-    return send_file('rhino-viewer.html')
-
-@app.route('/rhino-file/<path:filename>')
-def serve_rhino_file(filename):
-    # Serve .3dm files from the user's Desktop for viewing
-    desktop_path = os.path.expanduser('~/Desktop')
-    file_path = os.path.join(desktop_path, filename)
-    if os.path.exists(file_path) and filename.endswith('.3dm'):
-        return send_file(file_path, mimetype='application/octet-stream')
-    return jsonify({'error': 'File not found'}), 404
+@app.route('/innovation-alleys-map')
+def innovation_alleys_map():
+    # ArcGIS map showing all 12 Innovation Alleys in Pico-Union
+    return render_template('innovation_alleys_map.html')
 
 @app.route('/api/cost-data')
 def api_cost_data():
@@ -509,8 +490,6 @@ def get_plants():
             'plants': fallback_plants,
             'message': 'Using cached plant data'
         }), 200
-
-# Route removed - Innovation Alleys Map deprecated
 
 @app.route('/puhc-puede')
 def puhc_puede():

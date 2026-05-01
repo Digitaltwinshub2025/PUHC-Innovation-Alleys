@@ -6,6 +6,7 @@
     <title>Urban Farming - Innovation Alley 3 | PUHC Innovation Alleys</title>
     <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='images/favicon.svg') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/global-theme.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar-fix.css') }}">
     <script src="{{ url_for('static', filename='js/cache-buster.js') }}"></script>
     <style>
         body {
@@ -764,34 +765,7 @@
     {% include 'includes/edit_mode.html' ignore missing %}
 </head>
 <body data-edit-page="urban_farming">
-    <!-- Global Navigation -->
-    <nav class="global-nav">
-        <div class="nav-container">
-            <a href="/" class="nav-logo">
-                <span class="nav-logo-text">PUHC Innovation Alleys</span>
-            </a>
-            
-            <ul class="nav-tabs" id="navTabs">
-                <li class="nav-tab"><a href="/">Alley 3</a></li>
-                <li class="nav-tab"><a href="/existing">Before</a></li>
-                <li class="nav-tab"><a href="/fence-map">Fence Map</a></li>
-                <li class="nav-tab nav-dropdown">
-                    <button class="nav-dropdown-toggle" id="exploreDropdown">
-                        Explore <span style="font-size: 0.7em;">▼</span>
-                    </button>
-                    <ul class="nav-dropdown-menu" id="exploreMenu">
-                        <li><a href="/unreal-viewer">Digital Twin</a></li>
-                        <li><a href="/puhc-puede">PUHC PUEDE</a></li>
-                    </ul>
-                </li>
-                <li class="nav-tab"><a href="/compare">Compare</a></li>
-            </ul>
-            
-            <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
-                ☰
-            </button>
-        </div>
-    </nav>
+    {% include 'includes/navbar.html' %}
 
     <div class="page-container">
         <!-- ============================================
@@ -1524,5 +1498,6 @@
         `;
         document.head.appendChild(style);
     </script>
+    <script src="{{ url_for('static', filename='js/navbar.js') }}"></script>
 </body>
 </html>

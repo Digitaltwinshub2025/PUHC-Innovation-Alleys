@@ -7,6 +7,7 @@
     <meta name="description" content="Interactive 3D visualization of Water Alley design interventions - explore the modeled environment and spatial scenarios in Unreal Engine.">
     <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='images/favicon.svg') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/global-theme.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar-fix.css') }}">
     <script src="{{ url_for('static', filename='js/cache-buster.js') }}"></script>
     <style>
         * {
@@ -983,34 +984,7 @@
     {% include 'includes/edit_mode.html' ignore missing %}
 </head>
 <body data-edit-page="unreal_viewer">
-    <!-- Global Navigation -->
-    <nav class="global-nav">
-        <div class="nav-container">
-            <a href="/" class="nav-logo">
-                <span class="nav-logo-text">PUHC Innovation Alleys</span>
-            </a>
-            
-            <ul class="nav-tabs" id="navTabs">
-                <li class="nav-tab"><a href="/">Alley 3</a></li>
-                <li class="nav-tab"><a href="/existing">Before</a></li>
-                <li class="nav-tab"><a href="/fence-map">Fence Map</a></li>
-                <li class="nav-tab nav-dropdown active">
-                    <button class="nav-dropdown-toggle active" id="exploreDropdown">
-                        Explore <span style="font-size: 0.7em;">▼</span>
-                    </button>
-                    <ul class="nav-dropdown-menu" id="exploreMenu">
-                        <li><a href="/unreal-viewer" class="active">Digital Twin</a></li>
-                        <li><a href="/puhc-puede">PUHC PUEDE</a></li>
-                    </ul>
-                </li>
-                <li class="nav-tab"><a href="/compare">Compare</a></li>
-            </ul>
-            
-            <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
-                ☰
-            </button>
-        </div>
-    </nav>
+    {% include 'includes/navbar.html' %}
 
     <!-- Page Container -->
     <div class="page-container" id="pageContainer">
@@ -1792,5 +1766,6 @@
             }
         });
     </script>
+    <script src="{{ url_for('static', filename='js/navbar.js') }}"></script>
 </body>
 </html>

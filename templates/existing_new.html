@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Before the Transformation | PUHC Innovation Alleys</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/global-theme.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar-fix.css') }}">
     <style>
         body {
             background: var(--primary);
@@ -341,30 +342,7 @@
     </style>
 </head>
 <body>
-    <!-- Global Navigation -->
-    <nav class="global-nav">
-        <div class="nav-container">
-            <a href="/" class="nav-logo">
-                <span class="nav-logo-text">PUHC Innovation Alleys</span>
-            </a>
-            <ul class="nav-tabs">
-                <li class="nav-tab"><a href="/">Alley 3</a></li>
-                <li class="nav-tab active"><a href="/existing">Before</a></li>
-                <li class="nav-tab"><a href="/fence-map">Fence Map</a></li>
-                <li class="nav-tab nav-dropdown">
-                    <button class="nav-dropdown-toggle" id="exploreDropdown">
-                        Explore <span style="font-size: 0.7em;">▼</span>
-                    </button>
-                    <ul class="nav-dropdown-menu" id="exploreMenu">
-                        <li><a href="/unreal-viewer">Digital Twin</a></li>
-                        <li><a href="/puhc-puede">PUHC PUEDE</a></li>
-                    </ul>
-                </li>
-                <li class="nav-tab"><a href="/compare">Compare</a></li>
-            </ul>
-            <button class="nav-toggle" aria-label="Toggle navigation">☰</button>
-        </div>
-    </nav>
+    {% include 'includes/navbar.html' %}
 
     <!-- Page Header -->
     <div class="page-header-section">
@@ -934,5 +912,6 @@
             }
         });
     </script>
+    <script src="{{ url_for('static', filename='js/navbar.js') }}"></script>
 </body>
 </html>

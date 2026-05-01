@@ -1,0 +1,111 @@
+/* ============================================
+   NAVBAR DROPDOWN FIX - Seamless Interaction
+   ============================================ */
+
+/* Override default dropdown toggle styles for cleaner state management */
+.nav-dropdown-toggle {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    font-weight: 500;
+    border-radius: var(--radius-sm);
+    transition: background 0.2s ease, color 0.2s ease;
+    text-decoration: none;
+    white-space: nowrap;
+    font-family: var(--font-primary);
+    cursor: pointer;
+}
+
+/* Remove conflicting hover state when dropdown is open */
+.nav-dropdown:hover .nav-dropdown-toggle {
+    background: transparent;
+    color: var(--text-secondary);
+}
+
+/* Only show hover when NOT in dropdown menu */
+.nav-dropdown-toggle:hover {
+    background: rgba(15, 164, 175, 0.15);
+    color: var(--text-primary);
+}
+
+/* When dropdown menu is open, show active state on toggle */
+.nav-dropdown-toggle.menu-open {
+    background: rgba(15, 164, 175, 0.2);
+    color: var(--text-primary);
+}
+
+/* When hovering inside dropdown menu, remove toggle hover */
+.nav-dropdown.menu-active .nav-dropdown-toggle {
+    background: rgba(15, 164, 175, 0.2);
+    color: var(--text-primary);
+}
+
+.nav-dropdown.menu-active .nav-dropdown-toggle:hover {
+    background: rgba(15, 164, 175, 0.2);
+    color: var(--text-primary);
+}
+
+/* Current page parent dropdown - only when on a child page */
+.nav-dropdown.current-section > .nav-dropdown-toggle {
+    background: var(--highlight);
+    color: var(--text-primary);
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(15, 164, 175, 0.4);
+}
+
+/* Remove hover effect when current section */
+.nav-dropdown.current-section > .nav-dropdown-toggle:hover {
+    background: var(--highlight);
+    color: var(--text-primary);
+}
+
+/* Dropdown menu items - clear hover states */
+.nav-dropdown-menu a {
+    transition: background 0.15s ease, color 0.15s ease, padding-left 0.15s ease;
+}
+
+/* Remove hover when not actually hovering */
+.nav-dropdown-menu a:not(:hover) {
+    background: transparent;
+    padding-left: 1rem;
+}
+
+/* Active page in dropdown */
+.nav-dropdown-menu a.active {
+    background: var(--accent-medium);
+    color: var(--highlight);
+    font-weight: 600;
+    padding-left: 1.25rem;
+}
+
+/* Don't override active state on hover */
+.nav-dropdown-menu a.active:hover {
+    background: var(--accent-medium);
+    color: var(--highlight);
+}
+
+/* Submenu label - clear states */
+.nav-dropdown-submenu-label {
+    transition: background 0.15s ease, color 0.15s ease;
+}
+
+.nav-dropdown-submenu-label:not(:hover) {
+    background: transparent;
+}
+
+/* Prevent multiple active states */
+.nav-tab.active a:hover {
+    background: var(--highlight);
+    color: var(--text-primary);
+}
+
+/* Focus visible - keyboard navigation */
+.nav-dropdown-toggle:focus-visible {
+    outline: 2px solid var(--highlight);
+    outline-offset: 2px;
+    background: rgba(15, 164, 175, 0.15);
+}
+
+/* Remove focus outline on click */
+.nav-dropdown-toggle:focus:not(:focus-visible) {
+    outline: none;
+}
