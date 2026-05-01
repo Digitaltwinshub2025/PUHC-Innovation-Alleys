@@ -933,12 +933,28 @@
             <li class="nav-tab"><a href="/existing">Before</a></li>
             <li class="nav-tab active"><a href="/fence-map">Fence Map</a></li>
             <li class="nav-tab nav-dropdown">
+                <button class="nav-dropdown-toggle" id="interventionsDropdown">
+                    Interventions <span style="font-size: 0.7em;">▼</span>
+                </button>
+                <ul class="nav-dropdown-menu" id="interventionsMenu">
+                    <li><a href="/solar-shades">Shade Structures</a></li>
+                    <li><a href="/murals">Community Murals</a></li>
+                    <li><a href="/urban-farming">Urban Farming</a></li>
+                </ul>
+            </li>
+            <li class="nav-tab nav-dropdown">
                 <button class="nav-dropdown-toggle" id="exploreDropdown">
                     Explore <span style="font-size: 0.7em;">▼</span>
                 </button>
                 <ul class="nav-dropdown-menu" id="exploreMenu">
                     <li><a href="/unreal-viewer">Digital Twin</a></li>
-                    <li><a href="/puhc-puede">PUHC PUEDE</a></li>
+                    <li class="nav-dropdown-submenu">
+                        <span class="nav-dropdown-submenu-label">PUHC PUEDE <span style="font-size: 0.7em;">›</span></span>
+                        <ul class="nav-dropdown-submenu-items">
+                            <li><a href="/puhc-puede">Overview</a></li>
+                            <li><a href="/aura-report">AURA Report</a></li>
+                        </ul>
+                    </li>
                 </ul>
             </li>
             <li class="nav-tab"><a href="/compare">Compare</a></li>
@@ -2948,20 +2964,35 @@ function initializeFenceMap() {
     selectProject("P2");
     initializeNewFeatures();
     
-    // Dropdown menu functionality
+    // Dropdown menu functionality for both Interventions and Explore
+    var interventionsDropdown = document.getElementById('interventionsDropdown');
+    var interventionsMenu = document.getElementById('interventionsMenu');
     var exploreDropdown = document.getElementById('exploreDropdown');
     var exploreMenu = document.getElementById('exploreMenu');
     
+    // Interventions dropdown
+    if (interventionsDropdown && interventionsMenu) {
+        interventionsDropdown.addEventListener('click', function(e) {
+            e.stopPropagation();
+            interventionsMenu.classList.toggle('show');
+            if (exploreMenu) exploreMenu.classList.remove('show');
+        });
+    }
+    
+    // Explore dropdown
     if (exploreDropdown && exploreMenu) {
         exploreDropdown.addEventListener('click', function(e) {
             e.stopPropagation();
             exploreMenu.classList.toggle('show');
-        });
-        
-        document.addEventListener('click', function() {
-            exploreMenu.classList.remove('show');
+            if (interventionsMenu) interventionsMenu.classList.remove('show');
         });
     }
+    
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', function() {
+        if (interventionsMenu) interventionsMenu.classList.remove('show');
+        if (exploreMenu) exploreMenu.classList.remove('show');
+    });
 
     var elevationSelect = document.getElementById("elevationSelect");
     if (elevationSelect) {
