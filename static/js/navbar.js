@@ -87,7 +87,11 @@
         });
 
         // Close all dropdowns when clicking outside
-        document.addEventListener('click', () => {
+        document.addEventListener('click', (e) => {
+            // Don't close if clicking inside a dropdown menu
+            const clickedInsideDropdown = e.target.closest('.nav-dropdown-menu');
+            if (clickedInsideDropdown) return;
+            
             dropdowns.forEach(dropdown => {
                 const menu = dropdown.querySelector('.nav-dropdown-menu');
                 const toggle = dropdown.querySelector('.nav-dropdown-toggle');
