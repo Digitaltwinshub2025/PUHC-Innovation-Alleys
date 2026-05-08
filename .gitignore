@@ -56,7 +56,8 @@ exports/
 
 # Large media files (use Git LFS or external hosting)
 static/videos/Puede Center flythrough.mp4
-static/videos/*.mp4
+static/videos/updated-alley-video-2026.mp4
+static/videos/alley-walkthrough-2026.mp4
 
 # Large images (over 2MB)
 static/images/urban-farming.png
