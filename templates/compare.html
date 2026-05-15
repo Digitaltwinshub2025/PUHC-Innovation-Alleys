@@ -315,9 +315,8 @@
             }
         }
     </style>
-    {% include 'includes/edit_mode.html' ignore missing %}
 </head>
-<body data-edit-page="compare" {% if edit_mode %}data-edit-active="true"{% endif %}>
+<body>
     {% include 'includes/navbar.html' %}
 
     <div class="page-container">
@@ -340,14 +339,14 @@
             <!-- Before Image -->
             <div style="text-align: center;">
                 <div style="width: 100%; max-width: 520px; margin: 0 auto;">
-                    <img src="{{ url_for('static', filename='images/existing-alley.jpg') }}" alt="Existing alley conditions" style="width: 100%; height: auto; max-height: 400px; object-fit: cover; border-radius: var(--radius-md); box-shadow: var(--shadow-lg);" loading="lazy">
+                    <img src="{{ url_for('static', filename='images/existing-alley.jpg') }}" alt="Existing alley conditions" style="width: 100%; height: 280px; object-fit: cover; border-radius: var(--radius-md); box-shadow: var(--shadow-lg);" loading="lazy">
                     <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: var(--spacing-sm); font-style: italic;">Existing alley conditions used as baseline reference</p>
                 </div>
             </div>
             <!-- After Image -->
             <div style="text-align: center;">
                 <div style="width: 100%; max-width: 520px; margin: 0 auto;">
-                    <img src="{{ url_for('static', filename='images/unreal/photo-4.webp') }}" alt="Alley 3 with all interventions - Unreal Engine render" style="width: 100%; height: auto; max-height: 400px; object-fit: cover; border-radius: var(--radius-md); box-shadow: var(--shadow-lg);" loading="lazy">
+                    <img src="{{ url_for('static', filename='images/unreal/URE COMPARE PAGE IMAGE.JPG') }}" alt="Alley 3 with all interventions - Unreal Engine render" style="width: 100%; height: 280px; object-fit: cover; border-radius: var(--radius-md); box-shadow: var(--shadow-lg);" loading="lazy">
                     <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: var(--spacing-sm); font-style: italic;">Integrated design interventions / Unreal Engine render</p>
                 </div>
             </div>
