@@ -10,20 +10,18 @@ html {
     scroll-behavior: smooth;
 }
 
-/* Page Fade-In Animation */
+/* Page Fade-In Animation - Disabled for smoother transitions */
 @keyframes fadeIn {
     from {
-        opacity: 0;
-        transform: translateY(20px);
+        opacity: 0.95;
     }
     to {
         opacity: 1;
-        transform: translateY(0);
     }
 }
 
 body {
-    animation: fadeIn 0.6s ease-out;
+    animation: fadeIn 0.15s ease-out;
 }
 
 /* Color Palette - Monochrome + Single Accent */
@@ -81,11 +79,11 @@ body {
     --shadow-card-hover: 0 8px 32px rgba(0, 0, 0, 0.2), 0 4px 16px rgba(15, 164, 175, 0.12);
     --shadow-nav: 0 2px 16px rgba(0, 0, 0, 0.24);
     
-    /* Transitions - Smooth & refined */
-    --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
-    --transition-normal: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-    --transition-slow: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    --transition-bounce: 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    /* Transitions - Optimized for performance */
+    --transition-fast: 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-normal: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-slow: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
     
     /* Additional Color Tokens */
     --accent-hover: #0CB5C2;
@@ -115,6 +113,8 @@ body {
 html {
     font-size: var(--font-size-base);
     scroll-behavior: smooth;
+    overflow-y: scroll;
+    overflow-anchor: none;
 }
 
 body {
@@ -123,10 +123,13 @@ body {
     color: var(--text-primary);
     line-height: 1.6;
     overflow-x: hidden;
+    overflow-y: scroll;
     font-size: 1rem;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    will-change: auto;
+    position: relative;
+    transform: translateZ(0);
+    backface-visibility: hidden;
 }
 
 
@@ -145,6 +148,9 @@ body {
     border-bottom: 1px solid rgba(15, 164, 175, 0.2);
     z-index: 1000;
     box-shadow: var(--shadow-md);
+    overflow: visible;
+    transform: translateZ(0);
+    will-change: transform;
 }
 
 .global-nav a {
@@ -193,14 +199,18 @@ body {
     display: flex;
     gap: var(--spacing-xs);
     list-style: none;
+    align-items: center;
 }
 
 .nav-tab {
     position: relative;
+    display: flex;
+    align-items: center;
 }
 
 .nav-tab a {
-    display: block;
+    display: flex;
+    align-items: center;
     padding: 8px 18px;
     color: var(--text-secondary);
     text-decoration: none;
@@ -209,8 +219,8 @@ body {
     border-radius: 10px;
     transition: all var(--transition-normal);
     white-space: nowrap;
-    text-align: center;
     font-family: var(--font-primary);
+    height: 38px;
 }
 
 .nav-tab a:hover {
@@ -228,6 +238,9 @@ body {
 /* Dropdown Menu */
 .nav-dropdown {
     position: relative;
+    overflow: visible;
+    display: flex;
+    align-items: center;
 }
 
 .nav-dropdown-toggle {
@@ -240,12 +253,16 @@ body {
     font-weight: 500;
     font-size: 0.9rem;
     border-radius: 10px;
-    transition: all var(--transition-normal);
+    transition: background var(--transition-fast), color var(--transition-fast);
     white-space: nowrap;
     font-family: var(--font-primary);
     background: none;
     border: none;
     cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    height: 38px;
 }
 
 .nav-dropdown-toggle:hover {
@@ -274,10 +291,11 @@ body {
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
-    transition: all var(--transition-normal);
+    transition: opacity var(--transition-fast), visibility var(--transition-fast), transform var(--transition-fast);
     z-index: 1001;
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
+    will-change: opacity, transform;
 }
 
 .nav-dropdown:hover .nav-dropdown-menu,

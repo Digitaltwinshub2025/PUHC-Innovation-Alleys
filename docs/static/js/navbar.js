@@ -42,6 +42,7 @@
 
             // Click to toggle dropdown
             toggle.addEventListener('click', (e) => {
+                e.preventDefault();
                 e.stopPropagation();
                 
                 // Close other dropdowns
