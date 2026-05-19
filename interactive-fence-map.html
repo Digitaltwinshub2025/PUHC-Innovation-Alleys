@@ -593,7 +593,7 @@
             z-index: 2;
             pointer-events: none;
             shape-rendering: crispEdges;
-            /* Fixed overlay - no transform */
+            display: none; /* Hidden - not needed for medallion placement */
         }
         
         /* Interactive Fence Workspace - Highlighted Editor Zone */
@@ -673,13 +673,9 @@
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 6;
+            z-index: 10;
             pointer-events: none;
-            /* Medallions positioned relative to fence workspace */
-        }
-        
-        .medallion-container > * {
-            pointer-events: auto;
+            transform-origin: center center;
         }
         
         .medallion-container > * {
@@ -1216,15 +1212,13 @@ var projects = [
     { id:"P7",  area:"C", label:"P7",  sections:"",       title:"Area C -- Project 7", costLow:8200,  costHigh:13500, desc:"Major concrete wall and fence rehabilitation. Graffiti removal, surface sealing, and anti-graffiti coating.", fencePhoto:"static/images/alley_zones/area_c/existing/Concrete Wall with Graffiti, Chipping, and Surface Burn 1.png" },
     { id:"P8",  area:"C", label:"P8",  sections:"",       title:"Area C -- Project 8", costLow:6100,  costHigh:10050, desc:"Mixed-material fence repair. Steel post replacement, mesh panel installation, concrete cap repairs.", fencePhoto:"static/images/alley_zones/area_c/existing/Concrete Wall with Graffiti, Chipping, and Surface Burn 1.png" },
     { id:"P9",  area:"D", label:"P9",  sections:"S1-S7", title:"Area D -- Project 9", costLow:9500,  costHigh:15700, desc:"Comprehensive fence overhaul across seven sections. White iron gate and wall sections requiring structural repair and surface treatment.", fencePhoto:"static/images/alley_zones/area_d/existing/White Iron Gate Near Sidewalk 1.png" },
-    { id:"P10", area:"D", label:"P10", sections:"S1-S8", title:"Area D -- Project 10",costLow:11200, costHigh:18500, desc:"Largest segment. Garage doors and wall sections with graffiti removal, surface sealing, and structural reinforcement.", fencePhoto:"static/images/alley_zones/area_d/existing/Garage Doors + Wall Sections (Excludes Roof) 1.png" },
-    { id:"P9c", area:"D", label:"P9",  sections:"Cont.",  title:"Area D -- Project 9 (cont.)", costLow:4200, costHigh:6900, desc:"Continuation sections of Project 9. Additional gate sections and wall rehabilitation with graffiti removal.", fencePhoto:"static/images/alley_zones/area_d/existing/Wall with Graffiti Wall Removal and Pavement Detail 1.png" },
-    { id:"P10c",area:"D", label:"P10", sections:"S1-S8", title:"Area D -- Project 10 (cont.)",costLow:5800, costHigh:9600, desc:"Final sections of Project 10. Garage roof repairs and upper wall sections requiring weatherproofing and structural work.", fencePhoto:"static/images/alley_zones/area_d/existing/Garage Roof of Units #2–#5 1.png" }
+    { id:"P10", area:"D", label:"P10", sections:"S1-S8", title:"Area D -- Project 10",costLow:11200, costHigh:18500, desc:"Largest segment. Garage doors and wall sections with graffiti removal, surface sealing, and structural reinforcement.", fencePhoto:"static/images/alley_zones/area_d/existing/Garage Doors + Wall Sections (Excludes Roof) 1.png" }
 ];
 var areaLayout = [
     { area:"A", rows:[["P2","P3"],["P3c",null]] },
     { area:"B", rows:[["P4","P5"],["P4c","P5c"]] },
     { area:"C", rows:[["P7",null],["P8",null]] },
-    { area:"D", rows:[["P9","P10"],["P9c","P10c"]] }
+    { area:"D", rows:[["P9","P10"]] }
 ];
 function findProject(id) { return projects.find(function(p){return p.id===id;}); }
 
@@ -1722,7 +1716,7 @@ var projectConfigs = {
         fenceFocalPoint: { x: 0.695, y: 0.68 },
         snapPoints: 20
     },
-    // Area D - Building 4
+    // Area D - Buildings 9 and 10
     "P9": {
         buildingImage: "static/images/Building 9 PNG.png",
         alleySegment: "Area D",
@@ -1737,22 +1731,6 @@ var projectConfigs = {
         projectName: "Project 10",
         fenceRegion: { x: 0.52, width: 0.40, y: 0.50, height: 0.50 },
         fenceFocalPoint: { x: 0.72, y: 0.55 },
-        snapPoints: 20
-    },
-    "P9c": {
-        buildingImage: "static/images/Building 9 PNG.png",
-        alleySegment: "Area D",
-        projectName: "Project 9 (cont.)",
-        fenceRegion: { x: 0.10, width: 0.20, y: 0.50, height: 0.50 },
-        fenceFocalPoint: { x: 0.20, y: 0.58 },
-        snapPoints: 20
-    },
-    "P10c": {
-        buildingImage: "static/images/Building 10 PNG.png",
-        alleySegment: "Area D",
-        projectName: "Project 10 (cont.)",
-        fenceRegion: { x: 0.32, width: 0.20, y: 0.50, height: 0.50 },
-        fenceFocalPoint: { x: 0.42, y: 0.55 },
         snapPoints: 20
     }
 };
@@ -1889,43 +1867,9 @@ var transformPending = false;
 var panY = 0; // Add vertical pan for camera system
 
 function applyTransform() {
-    if (transformPending) return;
-    transformPending = true;
-    
-    requestAnimationFrame(function() {
-        var img = document.querySelector("#elevationBackground img");
-        var fenceOverlay = document.getElementById("fenceOverlay");
-        var medallionContainer = document.getElementById("medallionContainer");
-        
-        if (!img) {
-            transformPending = false;
-            return;
-        }
-        
-        // Figma-style zoom: scale from fence Y position, pan horizontally
-        var projectConfig = projectConfigs[activeProjectId];
-        var focalPoint = projectConfig && projectConfig.fenceFocalPoint ? projectConfig.fenceFocalPoint : { x: 0.5, y: 0.68 };
-        
-        // Set transform origin to fence position
-        var transformOrigin = "center " + (focalPoint.y * 100) + "%";
-        
-        var transform = "scale(" + zoomLevel + ") translateX(" + (panX / zoomLevel) + "px)";
-        
-        if (img) {
-            img.style.transformOrigin = transformOrigin;
-            img.style.transform = transform;
-        }
-        if (fenceOverlay) {
-            fenceOverlay.style.transformOrigin = transformOrigin;
-            fenceOverlay.style.transform = transform;
-        }
-        if (medallionContainer) {
-            medallionContainer.style.transformOrigin = transformOrigin;
-            medallionContainer.style.transform = transform;
-        }
-        
-        transformPending = false;
-    });
+    // Pan/zoom disabled for stability - medallions work perfectly without transforms
+    // If needed in future, this requires percentage-based positioning system
+    return;
 }
 
 function constrainPan() {
@@ -1960,17 +1904,14 @@ function screenToCanvasCoords(screenX, screenY) {
     // Convert screen position to canvas-relative position
     var canvasX = screenX - rect.left;
     var canvasY = screenY - rect.top;
-    
     // Calculate transform origin in canvas pixels
     var originX = rect.width * 0.5;  // center horizontally
     var originY = rect.height * focalPoint.y;  // fence Y position
     
     // Apply inverse transform accounting for transform-origin
-    // Formula: inverse = (point - origin) / scale - pan/scale + origin
-    var transformedX = ((canvasX - originX) / zoomLevel) - (panX / zoomLevel) + originX;
-    var transformedY = ((canvasY - originY) / zoomLevel) + originY;
-    
-    return { x: transformedX, y: transformedY };
+    // The medallion container is transformed the same as the image
+    // So we don't need to apply inverse transform - just use canvas coordinates directly
+    return { x: canvasX, y: canvasY };
 }
 
 // Update all placed medallion sizes based on current view mode
@@ -1989,65 +1930,9 @@ function handleZoomChange() {
 }
 
 function initZoomPan() {
-    var canvas = document.getElementById("fenceCanvas");
-    if (!canvas || zoomPanInitialized) return;
-    zoomPanInitialized = true;
-
-    // Mouse wheel zoom (constrained 1x-4.5x) with smooth 60fps performance
-    canvas.addEventListener("wheel", function(e) {
-        e.preventDefault();
-        var delta = e.deltaY > 0 ? -0.2 : 0.2;
-        var oldZoom = zoomLevel;
-        zoomLevel = Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, zoomLevel + delta));
-        
-        var rect = canvas.getBoundingClientRect();
-        var mouseX = e.clientX - rect.left;
-        var zoomRatio = zoomLevel / oldZoom;
-        panX = mouseX - (mouseX - panX) * zoomRatio;
-        
-        constrainPan();
-        applyTransform();
-        refreshPlacedMedallionLayout();
-    }, { passive: false });
-
-    // Horizontal-only panning with click + drag
-    canvas.addEventListener("mousedown", function(e) {
-        if (e.button !== 0) return;
-        var target = e.target;
-        if (target.classList.contains("placed-medallion") || target.closest(".placed-medallion")) return;
-        isPanning = true;
-        panStartX = e.clientX - panX;
-        canvas.classList.add("panning");
-        canvas.style.cursor = "grabbing";
-    });
-
-    var rafId = null;
-    document.addEventListener("mousemove", function(e) {
-        if (!isPanning) return;
-        
-        if (rafId) cancelAnimationFrame(rafId);
-        rafId = requestAnimationFrame(function() {
-            panX = e.clientX - panStartX;
-            constrainPan();
-            applyTransform();
-            refreshPlacedMedallionLayout();
-            rafId = null;
-        });
-    });
-
-    document.addEventListener("mouseup", function() {
-        if (isPanning) {
-            isPanning = false;
-            if (rafId) {
-                cancelAnimationFrame(rafId);
-                rafId = null;
-            }
-            canvas.classList.remove("panning");
-            canvas.style.cursor = "grab";
-        }
-    });
-    
-    canvas.style.cursor = "grab";
+    // Pan/zoom disabled - not needed for fence medallion placement
+    // Medallions work perfectly on static elevation view
+    return;
 }
 
 /* ═══════════════════════════════════════════
@@ -2106,6 +1991,10 @@ function selectProject(pid) {
     if (!proj) return;
 
     syncCurrentProjectDesign();
+    
+    // Clear all medallions when switching projects
+    clearCanvas(true);
+    
     activeProjectId = pid;
     updateProjectDetails();
     deselectAll();
