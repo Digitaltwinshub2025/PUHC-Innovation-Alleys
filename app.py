@@ -486,6 +486,11 @@ def get_plants():
             'message': 'Using cached plant data'
         }), 200
 
+@app.route('/innovation-alleys-map')
+def innovation_alleys_map():
+    # Interactive map of all innovation alleys
+    return render_template('innovation_alleys_map.html')
+
 @app.route('/puhc-puede')
 def puhc_puede():
     # PUHC PUEDE case study page - Research, Mapping, and Design
